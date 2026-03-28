@@ -10,6 +10,8 @@ import taxRoutes from "./routes/tax";
 import authRoutes from "./routes/auth";
 import fireRoutes from "./routes/fire";
 import lifePlannerRoutes from "./routes/life-planner";
+import marketRoutes from "./routes/market";
+import aiRoutes from "./routes/ai";
 import { protect } from "./middleware/auth";
 
 // 1. Robust Env Loading
@@ -51,6 +53,8 @@ app.use("/api/health", protect, healthRoutes);
 app.use("/api/tax", protect, taxRoutes);
 app.use("/api/fire", protect, fireRoutes);
 app.use("/api/life-planner", protect, lifePlannerRoutes);
+app.use("/api/market", protect, marketRoutes);
+app.use("/api/ai", protect, aiRoutes);
 
 // 2. The "Database First" Startup Logic
 const startServer = async () => {
