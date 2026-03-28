@@ -140,6 +140,8 @@ export default function PortfolioXRay() {
         fileInputRef.current?.click();
     };
 
+    if (!isMounted) return <div className="min-h-screen bg-[#0A0F1E]" />;
+
     return (
         <div className="flex h-screen bg-background text-foreground overflow-hidden">
 

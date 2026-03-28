@@ -21,7 +21,10 @@ import {
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
+import { useAuth } from '@/hooks/useAuth';
+
 export function DashboardSidebar() {
+    const { logout } = useAuth();
     const pathname = usePathname();
     const [isCollapsed, setIsCollapsed] = useState(false);
     const [isLoaded, setIsLoaded] = useState(false);
@@ -129,6 +132,7 @@ export function DashboardSidebar() {
                     {!isCollapsed && <span className="text-[11px] font-black font-barlow-condensed tracking-[0.15em] uppercase animate-in fade-in slide-in-from-left-2 whitespace-nowrap">SETTINGS</span>}
                 </Link>
                 <button
+                    onClick={logout}
                     title={isCollapsed ? 'Logout' : ''}
                     className={`w-full flex items-center gap-3 py-3 rounded-xl text-muted-foreground/60 hover:bg-rose-500/10 hover:text-rose-500 transition-all group ${isCollapsed ? 'justify-center px-0' : 'px-4'}`}
                 >

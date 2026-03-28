@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, Rectangle } from 'recharts';
 
 interface TaxComparisonProps {
@@ -8,6 +8,11 @@ interface TaxComparisonProps {
 }
 
 export const TaxRegimeComparisonBar = ({ data }: TaxComparisonProps) => {
+    const [mounted, setMounted] = useState(false);
+    useEffect(() => setMounted(true), []);
+
+    if (!mounted) return <div className="w-full h-[320px]" />;
+
     const isOldBetter = data[0].tax < data[1].tax;
 
     return (

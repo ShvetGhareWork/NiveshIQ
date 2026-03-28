@@ -137,7 +137,9 @@ export default function Analytics() {
     ];
 
     if (loading || authLoading || !isMounted) {
-        return (
+        if (!isMounted) return <div className="min-h-screen bg-[#0A0F1E]" />;
+
+    return (
             <div className="min-h-screen bg-background flex items-center justify-center p-4 text-center">
                 <div className="flex flex-col items-center gap-6">
                     <div className="w-12 h-12 md:w-16 md:h-16 border-4 border-t-accent border-white/5 rounded-full animate-spin" />

@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 
 interface DeductionProps {
@@ -8,6 +8,11 @@ interface DeductionProps {
 }
 
 export const DeductionUtilisationBars = ({ data }: DeductionProps) => {
+    const [mounted, setMounted] = useState(false);
+    useEffect(() => setMounted(true), []);
+
+    if (!mounted) return <div className="w-full h-[320px]" />;
+
     return (
         <div className="w-full h-[320px] font-barlow-condensed group">
             <ResponsiveContainer width="100%" height="100%">

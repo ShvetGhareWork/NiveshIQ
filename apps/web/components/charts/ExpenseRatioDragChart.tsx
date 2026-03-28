@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 interface ExpenseDragProps {
@@ -8,6 +8,11 @@ interface ExpenseDragProps {
 }
 
 export const ExpenseRatioDragChart = ({ data }: ExpenseDragProps) => {
+    const [mounted, setMounted] = useState(false);
+    useEffect(() => setMounted(true), []);
+
+    if (!mounted) return <div className="w-full h-[250px] sm:h-[300px] md:h-[350px]" />;
+
     // Calculate final metrics from the last data point
     const lastPoint = data[data.length - 1];
     const projectedDrag = lastPoint ? lastPoint.regular : 9361;

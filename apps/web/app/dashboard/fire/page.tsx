@@ -19,7 +19,7 @@ export default function FIREProtocol() {
         setIsMounted(true);
     }, []);
 
-    if (!isMounted) return null;
+
     
     // -- FIRE Inputs --
     const [currentAge, setCurrentAge] = useState(30);
@@ -152,6 +152,8 @@ export default function FIREProtocol() {
         if (val >= 100000) return `₹ ${(val / 100000).toFixed(1)} L`;
         return `₹ ${val.toLocaleString('en-IN')}`;
     };
+
+    if (!isMounted) return <div className="min-h-screen bg-[#0A0F1E]" />;
 
     return (
         <div className="flex h-screen bg-background text-foreground overflow-hidden">

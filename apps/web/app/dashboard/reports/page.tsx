@@ -29,7 +29,12 @@ export default function Reports() {
     const [timeFilter, setTimeFilter] = useState('ALL');
     const [sortBy, setSortBy] = useState<'DATE' | 'VALUE' | 'XIRR'>('DATE');
     const [sortOrder, setSortOrder] = useState<'ASC' | 'DESC'>('DESC');
+    const [isMounted, setIsMounted] = useState(false);
     const { user, loading: authLoading } = useAuth();
+
+    useEffect(() => {
+        setIsMounted(true);
+    }, []);
 
     // Custom Modal State
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -171,6 +176,8 @@ export default function Reports() {
         setReportToDelete({ id, type: type as any });
         setIsDeleteModalOpen(true);
     };
+
+    if (!isMounted) return <div className="min-h-screen bg-[#0A0F1E]" />;
 
     return (
         <div className="flex h-screen bg-background text-foreground overflow-hidden">
