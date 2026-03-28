@@ -74,8 +74,8 @@ export function DashboardSidebar() {
                 <div className={`relative shrink-0 transition-all duration-700 rounded-2xl bg-white/[0.04] border border-white/10 flex items-center justify-center overflow-hidden hover:border-accent/50 group/logo ${isCollapsed ? 'w-10 h-10' : 'w-12 h-12'}`}>
                     <img
                         src="/logo.png"
-                        alt="NiveshIQ"
-                        className="w-[120%] h-[120%] object-cover filter drop-shadow-[0_0_12px_rgba(212,175,55,0.3)] group-hover/logo:scale-110 transition-transform duration-700"
+                        alt="NiveshIQ Logo"
+                        className="w-full h-full object-contain filter drop-shadow-[0_0_12px_rgba(212,175,55,0.4)] group-hover/logo:scale-105 transition-transform duration-700 p-1"
                     />
                 </div>
 

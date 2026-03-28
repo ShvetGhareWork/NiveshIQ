@@ -130,8 +130,8 @@ export function TopNav({ userName: propsUserName, customLinks }: TopNavProps) {
                 <div className="flex flex-col h-full">
                     <div className="p-6 border-b border-border/50 flex items-center justify-between">
                         <div className="flex items-center gap-2">
-                            <div className="w-8 h-8 rounded-lg bg-accent/20 flex items-center justify-center border border-accent/30">
-                                <span className="text-accent font-bold text-lg">N</span>
+                            <div className="w-8 h-8 rounded-lg bg-white/[0.04] flex items-center justify-center border border-white/10 overflow-hidden p-1">
+                                <img src="/logo.png" alt="NiveshIQ" className="w-full h-full object-contain" />
                             </div>
                             <span className="text-sm font-bold font-barlow-condensed tracking-widest text-accent uppercase">NIVESHIQ</span>
                         </div>
