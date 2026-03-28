@@ -202,18 +202,25 @@ export default function StockDetailPage() {
                                 {/* Key Stats Grid */}
                                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
                                     {[
-                                        { label: 'Market Cap', value: formatLarge(stock.market_cap), icon: <Globe size={14}/> },
-                                        { label: 'P/E Ratio', value: stock.pe_ratio?.toFixed(2) || 'N/A', icon: <Activity size={14}/> },
-                                        { label: 'PB Ratio', value: stock.pb_ratio?.toFixed(2) || 'N/A', icon: <PieChart size={14}/> },
-                                        { label: 'Beta', value: stock.beta?.toFixed(2) || 'N/A', icon: <Shield size={14}/> },
-                                        { label: '52W High', value: formatINR(stock.week_52_high), icon: <ChevronUp size={14} className="text-teal-400"/>, color: 'text-teal-400' },
-                                        { label: '52W Low', value: formatINR(stock.week_52_low), icon: <ChevronDown size={14} className="text-rose-400"/>, color: 'text-rose-400' },
-                                        { label: 'Volume', value: ((stock.volume || 0) / 1e6).toFixed(1) + 'M', icon: <BarChart2 size={14}/> },
-                                        { label: 'Avg Vol (3m)', value: ((stock.avg_volume || 0) / 1e6).toFixed(1) + 'M', icon: <Clock size={14}/> },
+                                        { label: 'Market Cap', value: formatLarge(stock.market_cap), type: 'market_cap' },
+                                        { label: 'P/E Ratio', value: stock.pe_ratio?.toFixed(2) || 'N/A', type: 'pe' },
+                                        { label: 'PB Ratio', value: stock.pb_ratio?.toFixed(2) || 'N/A', type: 'pb' },
+                                        { label: 'Beta', value: stock.beta?.toFixed(2) || 'N/A', type: 'beta' },
+                                        { label: '52W High', value: formatINR(stock.week_52_high), type: '52h', color: 'text-teal-400' },
+                                        { label: '52W Low', value: formatINR(stock.week_52_low), type: '52l', color: 'text-rose-400' },
+                                        { label: 'Volume', value: ((stock.volume || 0) / 1e6).toFixed(1) + 'M', type: 'volume' },
+                                        { label: 'Avg Vol (3m)', value: ((stock.avg_volume || 0) / 1e6).toFixed(1) + 'M', type: 'avg_volume' },
                                     ].map((stat) => (
                                         <div key={stat.label} className="bg-[#111827] border border-white/5 rounded-3xl p-5 space-y-3 hover:border-white/10 transition-all group">
                                             <div className="flex items-center gap-2 text-muted-foreground/40 group-hover:text-accent transition-colors">
-                                                {stat.icon}
+                                                {stat.type === 'market_cap' && <Globe size={14}/>}
+                                                {stat.type === 'pe' && <Activity size={14}/>}
+                                                {stat.type === 'pb' && <PieChart size={14}/>}
+                                                {stat.type === 'beta' && <Shield size={14}/>}
+                                                {stat.type === '52h' && <ChevronUp size={14} className="text-teal-400"/>}
+                                                {stat.type === '52l' && <ChevronDown size={14} className="text-rose-400"/>}
+                                                {stat.type === 'volume' && <BarChart2 size={14}/>}
+                                                {stat.type === 'avg_volume' && <Clock size={14}/>}
                                                 <span className="text-[9px] font-black uppercase tracking-[0.2em]">{stat.label}</span>
                                             </div>
                                             <div className={`text-xl font-black font-barlow-condensed tracking-tight ${stat.color || 'text-white'}`}>{stat.value}</div>

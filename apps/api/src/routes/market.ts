@@ -11,7 +11,7 @@ let redis: Redis | null = null;
 try {
     redis = new Redis(process.env.REDIS_URL || "redis://localhost:6379");
     redis.on('error', (err) => {
-        console.warn("⚠️ Redis Error:", err.message);
+        // console.warn("⚠️ Redis Error:", err.message);
         redis = null; // Revert to in-memory if redis fails
     });
 } catch (e: any) {

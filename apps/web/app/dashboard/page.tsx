@@ -14,11 +14,27 @@ import { PortfolioTreemap } from '@/components/charts/PortfolioTreemap';
 import { XirrvsBenchmarkLine } from '@/components/charts/XirrvsBenchmarkLine';
 import { useDashboardTour } from '@/hooks/useDashboardTour';
 import { useAuth } from '@/hooks/useAuth';
+import { useNotifications } from '@/contexts/NotificationContext';
 import { API_BASE_URL } from '@/lib/api';
 
 export default function Dashboard() {
+    const { addNotification, notifications } = useNotifications();
     useDashboardTour();
     const { user } = useAuth();
+    const userName = user?.name || 'Operator';
+
+    // Mock initial notification
+    useEffect(() => {
+        if (notifications.length === 0) {
+            addNotification({
+                title: 'SYSTEM INITIALIZED',
+                message: 'AI ORACLE V4.0 ONLINE. SECURE DATA LINK ESTABLISHED. ALL SENSORS NOMINAL.',
+                type: 'success',
+                link: '/dashboard'
+            });
+        }
+    }, []);
+
     const [latestData, setLatestData] = useState<any>(null);
     const [vaultHistory, setVaultHistory] = useState<any[]>([]);
     const [healthResult, setHealthResult] = useState<any>(null);
@@ -123,7 +139,7 @@ export default function Dashboard() {
                 <TopNav
                     userName={user?.name || 'Operator'}
                     customLinks={[
-                        { label: 'PORTFOLIO', href: '/dashboard/portfolio', icon: <Activity size={14} /> },
+                        { label: 'PORTFOLIO', href: '/dashboard/portfolio', icon: <Activity size={12} /> },
                     ]}
                 />
                 <main id="dashboard-main-content" className="flex-1 overflow-y-auto overflow-x-hidden bg-background/50 relative scrollbar-thin scrollbar-thumb-accent/10">
@@ -137,10 +153,10 @@ export default function Dashboard() {
                                     <Home className="text-background w-6 h-6 md:w-7 md:h-7" />
                                 </div>
                                 <div>
-                                    <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-foreground font-barlow-condensed tracking-tight">
+                                    <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-foreground font-barlow-condensed tracking-normal">
                                         NAMASKAR, <span className="text-accent uppercase">{user?.name || 'OPERATOR'}</span>.
                                     </h1>
-                                    <p className="text-sm md:text-base text-muted-foreground font-black tracking-widest uppercase opacity-60 mt-1">
+                                    <p className="text-sm md:text-base text-muted-foreground font-black tracking-[0.15em] uppercase opacity-60 mt-1">
                                         {latestData ? "YOUR FINANCIAL ORACLE IS READY." : "UPLOAD YOUR FIRST STATEMENT TO INITIALIZE ORACLE."}
                                     </p>
                                 </div>
@@ -157,7 +173,7 @@ export default function Dashboard() {
                                 </div>
                                 <div className="text-left">
                                     <p className="text-[10px] font-black tracking-[0.2em] text-accent uppercase mb-0.5">SERVICE 02 ACTIVE</p>
-                                    <p className="text-sm font-black text-foreground uppercase tracking-tight font-barlow-condensed">START HEALTH DIAGNOSTIC →</p>
+                                    <p className="text-sm font-black text-foreground uppercase tracking-normal font-barlow-condensed">START HEALTH DIAGNOSTIC →</p>
                                 </div>
                             </Link>
                         </div>
@@ -211,7 +227,7 @@ export default function Dashboard() {
                                                     />
                                                 </div>
                                             ) : "₹---"}
-                                            icon={<Activity size={20} />}
+                                            icon={<Activity size={24} />}
                                             trend="up"
                                             trendValue={latestData ? "Live NAV Sync Active" : "No Data Sync"}
                                         />
@@ -227,7 +243,7 @@ export default function Dashboard() {
                                                     <span className="text-muted-foreground/60 text-lg md:text-xl ml-1">/10</span>
                                                 </div>
                                             ) : "---"}
-                                            icon={<TrendingUp size={20} />}
+                                            icon={<TrendingUp size={24} />}
                                             trend={Number(riskScore) > 6 ? "down" : "up"}
                                             trendValue={latestData?.insights?.metrics?.riskLabel || "Analyzing..."}
                                         />
@@ -320,9 +336,9 @@ export default function Dashboard() {
                                                         </span>
                                                     </td>
                                                     <td className="px-8 py-6 whitespace-nowrap">
-                                                        <span className="text-sm font-black font-barlow-condensed tracking-tight text-foreground">
+                                                        <div className="text-sm md:text-base font-black font-barlow-condensed tracking-normal text-foreground">
                                                             ₹{(report.totalValue || 0).toLocaleString('en-IN')}
-                                                        </span>
+                                                        </div>
                                                     </td>
                                                     <td className="px-8 py-6 text-right whitespace-nowrap">
                                                         <span className="px-3 py-1 rounded-full bg-emerald-400/10 text-emerald-400 text-[9px] font-black tracking-widest">

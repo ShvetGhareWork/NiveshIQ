@@ -293,7 +293,12 @@ export default function MoneyHealthDashboard() {
         <div className="flex flex-col md:flex-row h-screen bg-background text-foreground overflow-hidden">
             <DashboardSidebar />
             <div className="flex-1 flex flex-col min-w-0">
-                <TopNav userName={user?.name || 'Operator'} />
+                <TopNav 
+                    userName={user?.name || 'Operator'}
+                    customLinks={[
+                        { label: 'HEALTH VITALITY', href: '/dashboard/health', icon: <Shield size={12} /> },
+                    ]}
+                />
                 <main className="flex-1 overflow-y-auto overflow-x-hidden bg-background/50 relative scrollbar-thin scrollbar-thumb-accent/10">
 
                     {/* Header Flare */}

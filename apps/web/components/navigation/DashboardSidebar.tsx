@@ -2,147 +2,125 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
     Home,
     TrendingUp,
     Calendar,
     Settings as SettingsIcon,
     LogOut,
-    Flame,
-    Users,
-    Calculator,
+    Shield,
+    BarChart3,
     Target,
+    Calculator,
+    Users,
+    Import,
+    Flame,
+    Gavel,
+    Menu,
     ChevronLeft,
     ChevronRight,
-    BarChart2,
-    LayoutGrid,
-    Shield,
-    Gavel,
-    Import
+    LayoutGrid
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
-import { useAuth } from '@/hooks/useAuth';
-
 export function DashboardSidebar() {
-    const { logout } = useAuth();
     const pathname = usePathname();
     const [isCollapsed, setIsCollapsed] = useState(false);
-    const [isLoaded, setIsLoaded] = useState(false);
-
-    // Persist sidebar state
-    useEffect(() => {
-        const stored = localStorage.getItem('sidebar-collapsed');
-        if (stored === 'true') setIsCollapsed(true);
-        setIsLoaded(true);
-    }, []);
-
-    const toggleSidebar = () => {
-        const newState = !isCollapsed;
-        setIsCollapsed(newState);
-        localStorage.setItem('sidebar-collapsed', String(newState));
-    };
 
     const menuItems = [
-        { icon: Home, label: 'OVERVIEW', href: '/dashboard' },
-        { icon: Import, label: 'PORTFOLIO X-RAY', href: '/dashboard/portfolio' },
-        { icon: Shield, label: 'MONEY HEALTH', href: '/dashboard/health' },
-        { icon: TrendingUp, label: 'ANALYTICS', href: '/dashboard/analytics' },
-        { icon: BarChart2, label: 'MARKET TRENDS', href: '/dashboard/market' },
-        { icon: Target, label: 'LIFE PLANNER', href: '/dashboard/life-planner' },
-        { icon: Calculator, label: 'TAX WIZARD', href: '/dashboard/tax-wizard' },
-        { icon: Calendar, label: 'REPORTS', href: '/dashboard/reports' },
-        { icon: Flame, label: 'FIRE PROTOCOL', href: '/dashboard/fire' },
-        { icon: Gavel, label: 'LEGAL ARCHIVES', href: '/disclaimer' },
-        { icon: Users, label: 'SUPPORT', href: '/dashboard/support' },
+        { icon: <Home size={isCollapsed ? 22 : 18} />, label: 'OVERVIEW', href: '/dashboard', id: 'sidebar-overview' },
+        { icon: <Import size={isCollapsed ? 22 : 18} />, label: 'PORTFOLIO X-RAY', href: '/dashboard/portfolio', id: 'sidebar-portfolio' },
+        { icon: <Shield size={isCollapsed ? 22 : 18} />, label: 'MONEY HEALTH', href: '/dashboard/health', id: 'sidebar-health' },
+        { icon: <TrendingUp size={isCollapsed ? 22 : 18} />, label: 'ANALYTICS', href: '/dashboard/analytics', id: 'sidebar-analytics' },
+        { icon: <BarChart3 size={isCollapsed ? 22 : 18} />, label: 'MARKET TRENDS', href: '/dashboard/market', id: 'sidebar-market' },
+        { icon: <Target size={isCollapsed ? 22 : 18} />, label: 'LIFE PLANNER', href: '/dashboard/life-planner', id: 'sidebar-life-planner' },
+        { icon: <Calculator size={isCollapsed ? 22 : 18} />, label: 'TAX WIZARD', href: '/dashboard/tax-wizard', id: 'sidebar-tax-wizard' },
+        { icon: <Calendar size={isCollapsed ? 22 : 18} />, label: 'REPORTS', href: '/dashboard/reports', id: 'sidebar-reports' },
+        { icon: <Flame size={isCollapsed ? 22 : 18} />, label: 'FIRE PROTOCOL', href: '/dashboard/fire', id: 'sidebar-fire' },
+        { icon: <Gavel size={isCollapsed ? 22 : 18} />, label: 'LEGAL ARCHIVES', href: '/disclaimer', id: 'sidebar-legal' },
+        { icon: <Users size={isCollapsed ? 22 : 18} />, label: 'SUPPORT', href: '/dashboard/support', id: 'sidebar-support' },
     ];
 
+
     return (
-        <aside
-            className={`hidden md:flex flex-col sticky top-0 h-screen bg-[#0A0F1E] border-r border-white/5 transition-all duration-300 ease-in-out group/sidebar ${isCollapsed ? 'w-20' : 'w-64'
-                } ${!isLoaded ? 'duration-0 transition-none' : ''}`}
-        >
-            {/* Collapse Toggle Button - Subtle on hover */}
-            <button
-                onClick={toggleSidebar}
-                className={`absolute -right-3 top-1/2 -translate-y-1/2 w-6 h-10 rounded-full bg-accent text-background flex items-center justify-center transition-all z-[60] shadow-lg scale-0 group-hover/sidebar:scale-100 duration-300`}
-            >
-                {isCollapsed ? <ChevronRight size={14} /> : <ChevronLeft size={14} />}
-            </button>
-
-            {/* Logo Section */}
-            <div className={`relative py-2.5 px-8 border-b border-white/5 flex items-center transition-all duration-300 ${isCollapsed ? 'justify-center p-0' : 'justify-start gap-4'}`}>
-                {/* Logo Image */}
-                <div className={`relative shrink-0 transition-all duration-700 rounded-2xl bg-white/[0.04] border border-white/10 flex items-center justify-center overflow-hidden hover:border-accent/50 group/logo ${isCollapsed ? 'w-10 h-10' : 'w-12 h-12'}`}>
-                    <img
-                        src="/logo.png"
-                        alt="NiveshIQ Logo"
-                        className="w-full h-full object-contain filter drop-shadow-[0_0_12px_rgba(212,175,55,0.4)] group-hover/logo:scale-105 transition-transform duration-700 p-1"
-                    />
+        <aside className="hidden md:flex flex-col h-screen sticky top-0 bg-background border-r border-border/50 transition-all duration-500 z-30 group" style={{ width: isCollapsed ? '80px' : '280px' }}>
+            {/* Logo/Header Section */}
+            <div id="sidebar-oracle" className={`p-6 border-b border-border/50 flex items-center transition-all ${isCollapsed ? 'justify-center' : 'gap-4'}`}>
+                <div className="w-10 h-10 rounded-xl bg-accent/20 flex items-center justify-center border border-accent/30 shadow-[0_0_20px_rgba(212,175,55,0.1)] shrink-0 group-hover:scale-110 transition-transform duration-500">
+                    <img src="/logo.png" alt="NiveshIQ" className="w-6 h-6 object-contain" />
                 </div>
-
                 {!isCollapsed && (
                     <div className="flex flex-col animate-in fade-in slide-in-from-left-4 duration-500">
-                        <div className="relative group/text">
-                            <h1 className="text-2xl font-black font-barlow-condensed tracking-[0.1em] text-white leading-none uppercase select-none">
-                                NIVESHIQ
-                            </h1>
-                            {/* Subtle Glitch Shadow */}
-
-                        </div>
-                        <p className="text-[10px] font-black font-barlow-condensed tracking-[0.4em] text-muted-foreground uppercase mt-2.5 opacity-30 select-none">
-                            ORACLE SYSTEM
-                        </p>
+                        <span className="text-lg font-black font-barlow-condensed tracking-widest text-accent uppercase leading-none">NIVESHIQ</span>
+                        <span className="text-[8px] font-black text-white/30 uppercase tracking-[0.4em] mt-1">Sovereign Layer 01</span>
                     </div>
                 )}
             </div>
 
+            {/* Collapse Trigger - Only visible on hover */}
+            <button 
+                onClick={() => setIsCollapsed(!isCollapsed)}
+                className="absolute -right-3 top-20 w-6 h-6 bg-accent rounded-full text-background flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all hover:scale-110 active:scale-95 shadow-lg border border-background/20 z-50 invisible md:visible"
+            >
+                {isCollapsed ? <ChevronRight size={14} /> : <ChevronLeft size={14} />}
+            </button>
+
             {/* Menu Items */}
-            <nav className="flex-1 px-3 py-8 space-y-2 overflow-y-auto custom-scrollbar min-h-0">
+            <nav className={`flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent py-6 space-y-1 ${isCollapsed ? 'px-2' : 'px-4'}`} id="sidebar-nav">
+            <AnimatePresence>
                 {menuItems.map((item) => {
-                    const Icon = item.icon;
                     const isActive = pathname === item.href;
                     return (
                         <Link
                             key={item.href}
                             href={item.href}
+                            id={item.id}
                             title={isCollapsed ? item.label : ''}
-                            className={`flex items-center gap-3 py-3 rounded-xl transition-all duration-300 group ${isActive
-                                ? 'bg-accent/10 text-accent border border-accent/20'
-                                : 'text-muted-foreground/60 hover:bg-white/[0.04] hover:text-foreground border border-transparent hover:border-white/5'
-                                } ${isCollapsed ? 'justify-center px-0' : 'px-4'}`}
+                            className={`
+                                flex items-center gap-4 py-3.5 rounded-xl transition-all duration-500 group relative
+                                ${isActive 
+                                    ? 'bg-accent/10 text-accent border border-accent/20' 
+                                    : 'text-muted-foreground/60 hover:bg-white/[0.03] hover:text-white border border-transparent'
+                                }
+                                ${isCollapsed ? 'justify-center px-0' : 'px-4'}
+                            `}
                         >
-                            <Icon size={18} className={`${isActive ? 'text-accent' : 'group-hover:text-accent'} transition-colors shrink-0`} />
+                            {isActive && !isCollapsed && (
+                                <motion.div 
+                                    layoutId="active-indicator"
+                                    className="absolute left-0 w-1 h-6 bg-accent rounded-r-full shadow-[4px_0_15px_rgba(212,175,55,0.5)]" 
+                                />
+                            )}
+                            <div className={`transition-all duration-500 ${isActive ? 'text-accent drop-shadow-[0_0_8px_rgba(212,175,55,0.4)]' : 'group-hover:scale-110'}`}>
+                                {item.icon}
+                            </div>
                             {!isCollapsed && (
-                                <span className="text-[11px] font-black font-barlow-condensed tracking-[0.15em] uppercase animate-in fade-in slide-in-from-left-2 lg:block whitespace-nowrap">
+                                <span className="text-[11px] font-black font-barlow-condensed tracking-[0.2em] uppercase transition-all duration-500 animate-in fade-in slide-in-from-left-2 whitespace-nowrap">
                                     {item.label}
                                 </span>
                             )}
                         </Link>
                     );
                 })}
+                </AnimatePresence>
             </nav>
 
-            {/* Bottom Actions */}
-            <div className="px-3 pb-8 pt-4 border-t border-white/5 space-y-2 relative">
-                <Link
-                    href="/dashboard/settings"
-                    title={isCollapsed ? 'Settings' : ''}
-                    className={`flex items-center gap-3 py-3 rounded-xl transition-all group ${pathname === '/dashboard/settings' ? 'bg-accent/10 text-accent' : 'text-muted-foreground/60 hover:text-foreground'} ${isCollapsed ? 'justify-center px-0' : 'px-4'}`}
-                >
-                    <SettingsIcon size={18} className="group-hover:text-accent transition-colors shrink-0" />
-                    {!isCollapsed && <span className="text-[11px] font-black font-barlow-condensed tracking-[0.15em] uppercase animate-in fade-in slide-in-from-left-2 whitespace-nowrap">SETTINGS</span>}
-                </Link>
-                <button
-                    onClick={logout}
-                    title={isCollapsed ? 'Logout' : ''}
-                    className={`w-full flex items-center gap-3 py-3 rounded-xl text-muted-foreground/60 hover:bg-rose-500/10 hover:text-rose-500 transition-all group ${isCollapsed ? 'justify-center px-0' : 'px-4'}`}
-                >
-                    <LogOut size={18} className="group-hover:text-rose-500 transition-colors shrink-0" />
-                    {!isCollapsed && <span className="text-[11px] font-black font-barlow-condensed tracking-[0.15em] uppercase animate-in fade-in slide-in-from-left-2 whitespace-nowrap">LOGOUT</span>}
-                </button>
+            {/* Footer Profiling */}
+            {!isCollapsed && (
+                <div id="sidebar-profile" className="p-6 border-t border-border/10 bg-white/[0.01]">
 
-            </div>
+                    <div className="flex items-center gap-4 mb-4">
+                        <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center font-black text-accent text-sm">
+                            OP
+                        </div>
+                        <div className="flex flex-col">
+                            <span className="text-[10px] font-black uppercase text-white/40 tracking-widest">Operator Node</span>
+                            <span className="text-[9px] font-bold text-accent uppercase tracking-widest">Active Link Established</span>
+                        </div>
+                    </div>
+                </div>
+            )}
         </aside>
     );
 }

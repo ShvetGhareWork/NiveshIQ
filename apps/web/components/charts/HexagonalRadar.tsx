@@ -15,7 +15,7 @@ export const HexagonalRadar = ({ data }: HexagonalRadarProps) => {
 
     return (
         <div className="w-full h-[300px]">
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width="100%" height={300}>
                 <RadarChart cx="50%" cy="50%" outerRadius="80%" data={data}>
                     <PolarGrid stroke="rgba(212, 175, 55, 0.1)" strokeWidth={0.5} />
                     <PolarAngleAxis 

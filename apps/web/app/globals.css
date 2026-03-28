@@ -51,7 +51,34 @@ body {
 
 .font-barlow-condensed {
   font-family: var(--font-barlow-condensed), sans-serif;
+  letter-spacing: 0.05em; /* Increased from 0.03 for even more air */
+  line-height: 1.2; /* Adjusted from 1.1 for balanced vertical density */
 }
+
+/* Global Spacing Fix Archive */
+h1, h2, h3, h4, h5, h6, .font-black, .font-bold {
+  letter-spacing: 0.06em !important;
+  line-height: 1.3 !important; /* Prevent vertical mashing, increased to 1.3 */
+}
+
+/* Relax aggressive tracking mashing */
+.tracking-tighter {
+  letter-spacing: 0.02em !important; /* Replaced negative with slightly positive */
+}
+
+.tracking-tight {
+  letter-spacing: 0.03em !important;
+}
+
+.tracking-widest {
+  letter-spacing: 0.6em !important;
+}
+
+section {
+  padding-top: 6rem !important; /* Increased from 4rem */
+  padding-bottom: 6rem !important; /* Increased from 4rem */
+}
+
 
 .nav-link { position: relative; }
 .nav-link::after {

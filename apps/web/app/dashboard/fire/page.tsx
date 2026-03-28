@@ -163,7 +163,12 @@ export default function FIREProtocol() {
             </div>
             <div className="flex-1 flex flex-col min-w-0">
                 <div className="no-print">
-                    <TopNav userName={user?.name || 'Operator'} />
+                    <TopNav 
+                        userName={user?.name || 'Operator'}
+                        customLinks={[
+                            { label: 'FIRE PROTOCOL', href: '/dashboard/fire', icon: <Flame size={12} /> },
+                        ]}
+                    />
                 </div>
                 <main className="flex-1 overflow-y-auto bg-background/50 relative scrollbar-thin scrollbar-thumb-accent/10">
 

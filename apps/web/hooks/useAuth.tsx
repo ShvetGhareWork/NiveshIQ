@@ -9,7 +9,15 @@ interface User {
   name: string;
   email: string;
   phoneNumber?: string;
+  settings?: {
+    market: boolean;
+    rebalance: boolean;
+    tax: boolean;
+    news: boolean;
+    stealth: boolean;
+  };
 }
+
 
 interface AuthContextType {
   user: User | null;
@@ -17,8 +25,12 @@ interface AuthContextType {
   loading: boolean;
   login: (email: string, password: string) => Promise<void>;
   register: (name: string, email: string, phoneNumber: string, password: string) => Promise<void>;
+  updateUser: (name?: string, phoneNumber?: string, settings?: any) => Promise<void>;
+  refreshUser: () => Promise<void>;
+
   logout: () => void;
 }
+
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -80,6 +92,44 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const refreshUser = async () => {
+    const savedToken = localStorage.getItem('oracle_token');
+    if (!savedToken) return;
+
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/auth/profile`, {
+        headers: { 'Authorization': `Bearer ${savedToken}` },
+      });
+      const data = await res.json();
+      if (data.success) {
+        localStorage.setItem('oracle_user', JSON.stringify(data.user));
+        setUser(data.user);
+      }
+    } catch (err) {
+      console.error("Refresh User Error:", err);
+    }
+  };
+
+  const updateUser = async (name?: string, phoneNumber?: string, settings?: any) => {
+    const savedToken = localStorage.getItem('oracle_token');
+    if (!savedToken) return;
+
+    const res = await fetch(`${API_BASE_URL}/api/auth/profile`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${savedToken}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ name, phoneNumber, settings }),
+    });
+    const data = await res.json();
+    if (!data.success) throw new Error(data.message);
+
+    localStorage.setItem('oracle_user', JSON.stringify(data.user));
+    setUser(data.user);
+  };
+
+
   const logout = () => {
     localStorage.removeItem('oracle_token');
     localStorage.removeItem('oracle_user');
@@ -89,10 +139,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, loading, login, register, logout }}>
+    <AuthContext.Provider value={{ user, token, loading, login, register, updateUser, refreshUser, logout }}>
       {children}
     </AuthContext.Provider>
   );
+
 }
 
 export const useAuth = () => {

@@ -1,12 +1,12 @@
 'use client';
 
 import React, { ReactNode } from 'react';
-import { TrendingUp, TrendingDown, Shield } from 'lucide-react';
+import { TrendingUp, TrendingDown } from 'lucide-react';
 
 interface MetricCardProps {
     label: string;
     value: string | number | ReactNode;
-    icon?: ReactNode;
+    icon?: React.ReactNode;
     trend?: 'up' | 'down' | null;
     trendValue?: string;
     description?: string;

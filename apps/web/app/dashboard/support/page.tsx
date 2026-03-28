@@ -26,7 +26,12 @@ export default function Support() {
         <div className="flex h-screen bg-background text-foreground overflow-hidden">
             <DashboardSidebar />
             <div className="flex-1 flex flex-col min-w-0">
-                <TopNav userName={user?.name || 'Operator'} />
+                <TopNav 
+                    userName={user?.name || 'Operator'}
+                    customLinks={[
+                        { label: 'INTEL SUPPORT', href: '/dashboard/support', icon: <HelpCircle size={12} /> },
+                    ]}
+                />
                 <main className="flex-1 overflow-y-auto bg-background/50 relative scrollbar-thin scrollbar-thumb-accent/10">
 
                     {/* Header */}

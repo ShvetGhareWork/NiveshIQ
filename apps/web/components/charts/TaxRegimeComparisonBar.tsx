@@ -13,7 +13,7 @@ export const TaxRegimeComparisonBar = ({ data }: TaxComparisonProps) => {
 
     if (!mounted) return <div className="w-full h-[320px]" />;
 
-    const isOldBetter = data[0].tax < data[1].tax;
+    const isOldBetter = data && data.length >= 2 ? data[0].tax < data[1].tax : false;
 
     return (
         <div className="w-full h-[320px] flex flex-col font-barlow-condensed group">

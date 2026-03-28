@@ -29,44 +29,28 @@ const STEPS = [
     phase: "PHASE ONE: INGESTION",
     title: "Upload CAMS PDF",
     desc: "Securely ingest your consolidated account statement. Our zero-knowledge protocol ensures your data remains yours alone.",
-    icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="17 8 12 3 7 8" /><line x1="12" y1="3" x2="12" y2="15" />
-      </svg>
-    ),
+    type: "upload",
     align: "left",
   },
   {
     phase: "PHASE TWO: PERFORMANCE",
     title: "We calculate your XIRR",
     desc: "Forget simple returns. We compute time-weighted internal rates of return across all assets to reveal actual wealth generation.",
-    icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" /><rect x="3" y="14" width="7" height="7" /><rect x="14" y="14" width="7" height="7" />
-      </svg>
-    ),
+    type: "stats",
     align: "right",
   },
   {
     phase: "PHASE THREE: EXPOSURE",
     title: "We map fund overlap",
     desc: "Identify hidden risks. We cross-reference the top 100 holdings of every fund to see if you're over-exposed to the same stocks.",
-    icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" /><rect x="3" y="14" width="7" height="7" /><rect x="14" y="14" width="7" height="7" />
-      </svg>
-    ),
+    type: "exposure",
     align: "left",
   },
   {
     phase: "PHASE FOUR: INTELLIGENCE",
     title: "AI gives you actions",
     desc: "Receive a prioritized list of rebalancing maneuvers. Optimized for tax efficiency and long-term geometric growth.",
-    icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-      </svg>
-    ),
+    type: "ai",
     align: "right",
   },
 ];
@@ -334,36 +318,38 @@ export default function NiveshIQLanding() {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             {[
               {
-                icon: (
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#D4AF37" strokeWidth="1.5">
-                    <rect x="2" y="5" width="20" height="14" rx="2" /><line x1="2" y1="10" x2="22" y2="10" />
-                  </svg>
-                ),
+                type: "fees",
                 value: "₹0 advisor fees",
                 label: "CONFLICT-FREE INTELLIGENCE",
               },
               {
-                icon: (
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#D4AF37" strokeWidth="1.5">
-                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
-                  </svg>
-                ),
+                type: "time",
                 value: "10 seconds",
                 label: "TO TOTAL PORTFOLIO CLARITY",
               },
               {
-                icon: (
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#D4AF37" strokeWidth="1.5">
-                    <polyline points="22 7 13.5 15.5 8.5 10.5 2 17" /><polyline points="16 7 22 7 22 13" />
-                  </svg>
-                ),
+                type: "precision",
                 value: "XIRR not guesswork",
                 label: "PRECISION YIELD TRACKING",
               },
             ].map((card, i) => (
               <div key={i} className="stat-card rounded-sm p-8">
                 <div className="mb-5 w-10 h-10 rounded flex items-center justify-center bg-[#D4AF37]/10">
-                  {card.icon}
+                  {card.type === "fees" && (
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#D4AF37" strokeWidth="1.5">
+                      <rect x="2" y="5" width="20" height="14" rx="2" /><line x1="2" y1="10" x2="22" y2="10" />
+                    </svg>
+                  )}
+                  {card.type === "time" && (
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#D4AF37" strokeWidth="1.5">
+                      <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+                    </svg>
+                  )}
+                  {card.type === "precision" && (
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#D4AF37" strokeWidth="1.5">
+                      <polyline points="22 7 13.5 15.5 8.5 10.5 2 17" /><polyline points="16 7 22 7 22 13" />
+                    </svg>
+                  )}
                 </div>
                 <p
                   className="text-white font-bold mb-2 text-2xl leading-tight"
@@ -433,7 +419,26 @@ export default function NiveshIQLanding() {
                   <div className={`w-[44%] ${step.align === "right" ? "mr-auto ml-0" : "ml-auto mr-0"} mt-12`}>
                     <div className="step-card rounded-sm p-6">
                       <div className="w-9 h-9 rounded flex items-center justify-center bg-[#D4AF37]/10 mb-4 text-[#D4AF37]">
-                        {step.icon}
+                        {step.type === "upload" && (
+                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="17 8 12 3 7 8" /><line x1="12" y1="3" x2="12" y2="15" />
+                          </svg>
+                        )}
+                        {step.type === "stats" && (
+                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" /><rect x="3" y="14" width="7" height="7" /><rect x="14" y="14" width="7" height="7" />
+                          </svg>
+                        )}
+                        {step.type === "exposure" && (
+                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" /><rect x="3" y="14" width="7" height="7" /><rect x="14" y="14" width="7" height="7" />
+                          </svg>
+                        )}
+                        {step.type === "ai" && (
+                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                          </svg>
+                        )}
                       </div>
                       <h3 className="text-[#D4AF37] font-bold mb-3 text-xl">
                         {step.title}
@@ -457,7 +462,26 @@ export default function NiveshIQLanding() {
               <div key={i} className="step-card rounded-sm p-6">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-9 h-9 rounded flex items-center justify-center bg-[#D4AF37]/10 text-[#D4AF37]">
-                    {step.icon}
+                    {step.type === "upload" && (
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="17 8 12 3 7 8" /><line x1="12" y1="3" x2="12" y2="15" />
+                      </svg>
+                    )}
+                    {step.type === "stats" && (
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" /><rect x="3" y="14" width="7" height="7" /><rect x="14" y="14" width="7" height="7" />
+                      </svg>
+                    )}
+                    {step.type === "exposure" && (
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" /><rect x="3" y="14" width="7" height="7" /><rect x="14" y="14" width="7" height="7" />
+                      </svg>
+                    )}
+                    {step.type === "ai" && (
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                      </svg>
+                    )}
                   </div>
                   <span className="text-[#D4AF37]/50 text-xs tracking-widest font-mono">{step.phase}</span>
                 </div>

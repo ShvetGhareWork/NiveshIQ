@@ -185,7 +185,12 @@ export default function Reports() {
             <DashboardSidebar />
 
             <div className="flex-1 flex flex-col min-w-0">
-                <TopNav userName={user?.name || 'Operator'} />
+                <TopNav 
+                    userName={user?.name || 'Operator'}
+                    customLinks={[
+                        { label: 'REPORTS VAULT', href: '/dashboard/reports', icon: <Database size={12} /> },
+                    ]}
+                />
 
                 <main className="flex-1 overflow-y-auto bg-background relative scrollbar-thin scrollbar-thumb-accent/20">
                     {/* Background Detail */}
@@ -196,11 +201,11 @@ export default function Reports() {
                         <div className="absolute inset-0 bg-[radial-gradient(circle_at_10%_20%,rgba(212,175,55,0.03)_0%,transparent_50%)] pointer-events-none" />
                         <div className="max-w-7xl mx-auto relative z-10 flex flex-col lg:flex-row lg:items-end justify-between gap-6 md:gap-8">
                             <div>
-                                <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-black font-barlow-condensed tracking-tighter leading-[0.85] uppercase">
+                                <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-black font-barlow-condensed tracking-normal leading-[0.85] uppercase">
                                     YOUR ANALYSES<br />
                                     <span className="text-accent italic">HISTORY</span>
                                 </h1>
-                                <p className="text-muted-foreground font-black tracking-[0.2em] md:tracking-[0.3em] text-[9px] sm:text-[10px] md:text-xs mt-4 md:mt-8 max-w-xl opacity-60 uppercase leading-relaxed">
+                                <p className="text-muted-foreground font-black tracking-[0.4em] md:tracking-[0.6em] text-[9px] sm:text-[10px] md:text-xs mt-4 md:mt-8 max-w-xl opacity-60 uppercase leading-relaxed">
                                     ACCESS YOUR ARCHIVED INTELLIGENCE. REVIEW PAST PORTFOLIO HEALTH CHECKS AND PERFORMANCE SNAPSHOTS.
                                 </p>
                             </div>
@@ -288,7 +293,7 @@ export default function Reports() {
                             {!loading && reports.length === 0 ? (
                                 <div className="py-16 md:py-20 px-4 text-center border border-dashed border-border/30 rounded-[1.5rem] md:rounded-3xl bg-secondary/10">
                                     <Database className="w-10 h-10 md:w-12 md:h-12 text-muted-foreground/30 mx-auto mb-4 md:mb-6" />
-                                    <h3 className="text-lg md:text-xl font-black font-barlow-condensed tracking-tight uppercase mb-2">THE VAULT IS EMPTY</h3>
+                                    <h3 className="text-lg md:text-xl font-black font-barlow-condensed tracking-normal uppercase mb-2">THE VAULT IS EMPTY</h3>
                                     <p className="text-[8px] md:text-[9px] text-muted-foreground tracking-widest uppercase mb-6 md:mb-8 leading-relaxed">NO PREVIOUS ANALYSES DETECTED IN THE SECURE NODE</p>
                                     <Link href="/dashboard/portfolio" className="text-accent text-[9px] md:text-[10px] font-black border-b border-accent/30 pb-1">START INITIAL SCAN →</Link>
                                 </div>
@@ -388,7 +393,7 @@ export default function Reports() {
                                         <FileText size={18} className="md:w-5 md:h-5" />
                                     </div>
                                     <div>
-                                        <h2 className="text-xl md:text-2xl font-black font-barlow-condensed tracking-tight uppercase">Vitality Diagnostic Archive</h2>
+                                        <h2 className="text-xl md:text-2xl font-black font-barlow-condensed tracking-normal uppercase">Vitality Diagnostic Archive</h2>
                                         <p className="text-[8px] md:text-[9px] text-muted-foreground font-black tracking-widest uppercase opacity-60 mt-0.5 md:mt-1">HISTORICAL MONEY HEALTH SCORES & ACTION ROADMAPS</p>
                                     </div>
                                 </div>
@@ -472,7 +477,7 @@ export default function Reports() {
                                         <RefreshCw size={18} className="md:w-5 md:h-5" />
                                     </div>
                                     <div>
-                                        <h2 className="text-xl md:text-2xl font-black font-barlow-condensed tracking-tight uppercase">Fiscal Assessment Archive</h2>
+                                        <h2 className="text-xl md:text-2xl font-black font-barlow-condensed tracking-normal uppercase">Fiscal Assessment Archive</h2>
                                         <p className="text-[8px] md:text-[9px] text-muted-foreground font-black tracking-widest uppercase opacity-60 mt-0.5 md:mt-1">HISTORICAL TAX VERDICTS & REGIME OPTIMIZATION</p>
                                     </div>
                                 </div>
@@ -558,7 +563,7 @@ export default function Reports() {
                                         <Flame size={18} className="md:w-5 md:h-5" />
                                     </div>
                                     <div>
-                                        <h2 className="text-xl md:text-2xl font-black font-barlow-condensed tracking-tight uppercase">FIRE Protocol Archive</h2>
+                                        <h2 className="text-xl md:text-2xl font-black font-barlow-condensed tracking-normal uppercase">FIRE Protocol Archive</h2>
                                         <p className="text-[8px] md:text-[9px] text-muted-foreground font-black tracking-widest uppercase opacity-60 mt-0.5 md:mt-1">HISTORICAL WEALTH TRAJECTORIES & RETIREMENT PLANS</p>
                                     </div>
                                 </div>
@@ -589,12 +594,12 @@ export default function Reports() {
                                                                 </span>
                                                             </td>
                                                             <td className="px-4 py-3 md:px-6 md:py-4 whitespace-nowrap">
-                                                                <div className="text-sm md:text-base font-black font-barlow-condensed tracking-tight text-foreground uppercase">
+                                                                <div className="text-sm md:text-base font-black font-barlow-condensed tracking-normal text-foreground uppercase">
                                                                     ₹ {(f.results?.targetCorpus / 10000000).toFixed(2)} CR
                                                                 </div>
                                                             </td>
                                                             <td className="px-4 py-3 md:px-6 md:py-4 whitespace-nowrap">
-                                                                <div className="text-sm md:text-base font-black font-barlow-condensed tracking-tight text-emerald-400">
+                                                                <div className="text-sm md:text-base font-black font-barlow-condensed tracking-normal text-emerald-400">
                                                                     ₹ {(f.results?.sipRequired || 0).toLocaleString('en-IN')}
                                                                 </div>
                                                             </td>
@@ -640,7 +645,7 @@ export default function Reports() {
                     <footer className="px-5 md:px-10 py-8 md:py-12 border-t border-border/10 text-center relative overflow-hidden mt-auto">
                         <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-[1px] bg-gradient-to-r from-transparent via-accent/30 to-transparent" />
                         <div className="flex flex-col items-center gap-1.5 md:gap-2">
-                            <p className="text-[8px] md:text-[10px] font-black tracking-[0.3em] md:tracking-[0.4em] text-muted-foreground/30 uppercase leading-relaxed">
+                            <p className="text-[8px] md:text-[10px] font-black tracking-[0.5em] md:tracking-[0.7em] text-muted-foreground/30 uppercase leading-relaxed">
                                 NIVESHIQ INTELLIGENCE LAYER <span className="hidden sm:inline">//</span> VAULT SYSTEM V3.0
                             </p>
                             <p className="text-[7px] md:text-[8px] font-bold text-muted-foreground/20 uppercase tracking-[0.2em]">SECURE DISTRIBUTED LEDGER DEPLOYED</p>

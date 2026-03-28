@@ -105,8 +105,9 @@ export default function MarketTrendsPage() {
     const niftyBank = findIndex('NIFTY BANK');
     const niftyIT = findIndex('NIFTY IT');
 
-    if (!mounted) return <div className="min-h-screen bg-[#0A0F1E]" />;
     const { user } = useAuth();
+
+    if (!mounted) return <div className="min-h-screen bg-[#0A0F1E]" />;
 
     const marketOpen = status?.marketState?.find(m => m.market === 'Capital Market')?.marketStatus === 'Open';
 
@@ -189,7 +190,7 @@ export default function MarketTrendsPage() {
                         <MetricCard 
                             label="NIFTY 50"
                             value={nifty50?.last.toLocaleString('en-IN') || '---'}
-                            icon={<Activity />}
+                            icon={<Activity size={24} />}
                             trend={nifty50 && nifty50.variation >= 0 ? 'up' : 'down'}
                             trendValue={`${nifty50?.percentChange.toFixed(2)}%`}
                             description="India's benchmark blue-chip index representing 50 of the largest companies."
@@ -198,7 +199,7 @@ export default function MarketTrendsPage() {
                         <MetricCard 
                             label="NIFTY BANK"
                             value={niftyBank?.last.toLocaleString('en-IN') || '---'}
-                            icon={<TrendingUp />}
+                            icon={<TrendingUp size={24} />}
                             trend={niftyBank && niftyBank.variation >= 0 ? 'up' : 'down'}
                             trendValue={`${niftyBank?.percentChange.toFixed(2)}%`}
                             description="Representative of the liquidity and solvency of the Indian banking sector."
@@ -206,7 +207,7 @@ export default function MarketTrendsPage() {
                         <MetricCard 
                             label="NIFTY IT"
                             value={niftyIT?.last.toLocaleString('en-IN') || '---'}
-                            icon={<Zap />}
+                            icon={<Zap size={24} />}
                             trend={niftyIT && niftyIT.variation >= 0 ? 'up' : 'down'}
                             trendValue={`${niftyIT?.percentChange.toFixed(2)}%`}
                             description="Companies providing IT services, products, and tech consultancy."

@@ -1,7 +1,5 @@
+import { redirect } from 'next/navigation';
+
 export default function Page() {
-  return (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', backgroundColor: '#0A0F1E', color: '#D4AF37' }}>
-      <h1>settings</h1>
-    </div>
-  );
+  redirect('/dashboard/settings');
 }

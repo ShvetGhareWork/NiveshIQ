@@ -16,7 +16,7 @@ export const PortfolioTreemap = ({ data }: PortfolioTreemapProps) => {
     return (
         // 1. Adaptive Height: Scales from 300px on mobile to 500px on desktop
         <div className="w-full h-[300px] sm:h-[400px] md:h-[500px] font-barlow-condensed group relative">
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width="100%" height={500}>
                 <Treemap
                     data={data}
                     dataKey="size"

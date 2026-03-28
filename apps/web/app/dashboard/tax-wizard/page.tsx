@@ -10,12 +10,14 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { Sparkles, Activity, AlertTriangle } from 'lucide-react';
 import type { TaxInput } from '@niveshiq/types';
 import { useAuth } from '@/hooks/useAuth';
+import { useNotifications } from '@/contexts/NotificationContext';
 
 export default function TaxWizard() {
     const [phase, setPhase] = useState<'wizard' | 'results'>('wizard');
     const [initialInput, setInitialInput] = useState<TaxInput | null>(null);
     const { calculate, result, loading, error } = useTaxCalculator();
     const { user } = useAuth();
+    const { addNotification } = useNotifications();
     const [isMounted, setIsMounted] = useState(false);
 
     useEffect(() => {
@@ -28,6 +30,12 @@ export default function TaxWizard() {
     const handleCalculate = async (input: TaxInput) => {
         setInitialInput(input);
         await calculate(input);
+        addNotification({
+            title: 'Tax Oracle Synthesis Complete',
+            message: `Your multi-regime tax analysis is ready. Potential liability optimized across Old and New regimes.`,
+            type: 'success',
+            link: '/dashboard/tax-wizard'
+        });
         setPhase('results');
     };
 
@@ -35,17 +43,22 @@ export default function TaxWizard() {
         <div className="flex h-screen bg-background text-foreground overflow-hidden">
             <DashboardSidebar />
             <div className="flex-1 flex flex-col min-w-0">
-                <TopNav userName={user?.name || 'Operator'} />
+                <TopNav 
+                    userName={user?.name || 'Operator'}
+                    customLinks={[
+                        { label: 'TAX ORACLE', href: '/dashboard/tax-wizard', icon: <Activity size={12} /> },
+                    ]}
+                />
                 <main className="flex-1 overflow-y-auto bg-background/50 relative scrollbar-thin scrollbar-thumb-accent/10">
 
                     {/* Header */}
                     <header className="px-6 md:px-10 py-12 md:py-16 border-b border-white/5 relative bg-[radial-gradient(circle_at_10%_20%,rgba(212,175,55,0.03)_0%,transparent_50%)]">
                         <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:items-end justify-between gap-8">
                             <div>
-                                <h1 className="text-5xl md:text-8xl font-black font-barlow-condensed tracking-tighter leading-[0.85] uppercase">
+                                <h1 className="text-5xl md:text-8xl font-black font-barlow-condensed tracking-normal leading-[0.85] uppercase">
                                     TAX <span className="text-accent italic">ORACLE</span>
                                 </h1>
-                                <p className="text-muted-foreground font-black tracking-[0.2em] text-[10px] md:text-xs mt-8 max-w-xl opacity-60 uppercase leading-relaxed">
+                                <p className="text-muted-foreground font-black tracking-[0.3em] text-[10px] md:text-xs mt-8 max-w-xl opacity-60 uppercase leading-relaxed">
                                     OPTIMIZE YOUR TAX LIABILITY. MULTIDIMENSIONAL SHIELDING THROUGH REGIME COMPARISON AND DEDUCTION ANALYSIS.
                                 </p>
                             </div>

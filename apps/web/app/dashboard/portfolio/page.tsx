@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { Upload, Info, Lock, Activity, Shield, BarChart3, User, Bell, ChevronRight, PieChart as PieChartIcon, TrendingUp, AlertCircle, FileText, CheckCircle2, ShieldCheck } from 'lucide-react';
+import { useNotifications } from '@/contexts/NotificationContext';
 import { DashboardSidebar } from '@/components/navigation/DashboardSidebar';
 import { TopNav } from '@/components/navigation/TopNav';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
@@ -52,6 +53,7 @@ interface ExtractionResult {
 
 export default function PortfolioXRay() {
     const { user } = useAuth();
+    const { addNotification } = useNotifications();
     const token = typeof window !== 'undefined' ? localStorage.getItem('oracle_token') : null;
     const [isUploading, setIsUploading] = useState(false);
     const [isInitialLoading, setIsInitialLoading] = useState(true);
@@ -127,6 +129,12 @@ export default function PortfolioXRay() {
             }
 
             setResult(data.data);
+            addNotification({
+                title: 'Portfolio Node Decrypted',
+                message: `${data.data.holdings.length} holdings from your PDF have been successfully indexed.`,
+                type: 'success',
+                link: '/dashboard/portfolio'
+            });
             console.log("✅ Extraction success:", data);
         } catch (err: any) {
             console.error("❌ Upload error:", err);
@@ -149,7 +157,12 @@ export default function PortfolioXRay() {
             <DashboardSidebar />
 
             <div className="flex-1 flex flex-col min-w-0">
-                <TopNav userName={userName} />
+                <TopNav 
+                    userName={userName} 
+                    customLinks={[
+                        { label: 'PORTFOLIO', href: '/dashboard/portfolio', icon: <Activity size={12} /> },
+                    ]}
+                />
 
                 <main className="flex-1 overflow-y-auto overflow-x-hidden bg-background/50 relative">
                     {/* Cinematic Background Detail */}
@@ -162,10 +175,10 @@ export default function PortfolioXRay() {
                         <div className="relative z-10 max-w-7xl mx-auto w-full">
                             <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
                                 <div className="text-center lg:text-left">
-                                    <h1 className="text-4xl sm:text-6xl md:text-8xl font-black text-foreground font-barlow-condensed tracking-tighter mb-2 sm:mb-3 uppercase leading-[0.9]">
+                                    <h1 className="text-4xl sm:text-6xl md:text-8xl font-black text-foreground font-barlow-condensed tracking-normal mb-2 sm:mb-3 uppercase leading-[0.9]">
                                         PORTFOLIO <span className="text-accent underline decoration-accent/30 underline-offset-4 md:underline-offset-8">X-RAY</span>
                                     </h1>
-                                    <p className="text-muted-foreground font-black tracking-[0.2em] md:tracking-[0.3em] uppercase text-[9px] sm:text-xs opacity-70">
+                                    <p className="text-muted-foreground font-black tracking-[0.4em] md:tracking-[0.6em] uppercase text-[9px] sm:text-xs opacity-70">
                                         DEEP-SCAN PROTOCOL <span className="hidden sm:inline">//</span><br className="sm:hidden" /> MF HOLDING ANALYSIS
                                     </p>
                                 </div>
@@ -191,8 +204,8 @@ export default function PortfolioXRay() {
                                     <div className="w-20 h-20 bg-accent/10 rounded-3xl flex items-center justify-center mb-8 border border-accent/20">
                                         <Activity className="w-10 h-10 text-accent animate-pulse" />
                                     </div>
-                                    <h3 className="text-xl font-black font-barlow-condensed tracking-tight text-foreground mb-2 uppercase text-center">SYNCHRONIZING ORACLE...</h3>
-                                    <p className="text-[9px] text-muted-foreground tracking-[0.4em] font-black uppercase text-center opacity-70">RETRIVING PREVIOUSLY ENCRYPTED DATA</p>
+                                    <h3 className="text-xl font-black font-barlow-condensed tracking-normal text-foreground mb-2 uppercase text-center">SYNCHRONIZING ORACLE...</h3>
+                                    <p className="text-[9px] text-muted-foreground tracking-[0.6em] font-black uppercase text-center opacity-70">RETRIVING PREVIOUSLY ENCRYPTED DATA</p>
                                 </div>
                             ) : !hasAgreedLegal ? (
                                 <div className="max-w-3xl mx-auto animate-in fade-in slide-in-from-bottom-8 duration-700">
@@ -206,7 +219,7 @@ export default function PortfolioXRay() {
                                                 <ShieldCheck className="w-10 h-10 text-accent" />
                                             </div>
 
-                                            <h2 className="text-3xl md:text-5xl font-black font-barlow-condensed tracking-tighter uppercase mb-6 leading-none">
+                                            <h2 className="text-3xl md:text-5xl font-black font-barlow-condensed tracking-normal uppercase mb-6 leading-none">
                                                 LEGAL <span className="text-accent">ACKNOWLEDGEMENT</span>
                                             </h2>
 
@@ -305,10 +318,10 @@ export default function PortfolioXRay() {
                                                     )}
                                                 </div>
 
-                                                <h3 className="text-xl md:text-2xl font-black font-barlow-condensed tracking-tight text-foreground mb-2 md:mb-3 uppercase text-center">
+                                                <h3 className="text-xl md:text-2xl font-black font-barlow-condensed tracking-normal text-foreground mb-2 md:mb-3 uppercase text-center">
                                                     {isUploading ? 'SCANNING VAULT...' : 'DROP CAMS PDF'}
                                                 </h3>
-                                                <p className="text-[9px] md:text-[10px] text-muted-foreground tracking-[0.2em] md:tracking-[0.4em] font-black uppercase mb-8 md:mb-10 text-center opacity-70">
+                                                <p className="text-[9px] md:text-[10px] text-muted-foreground tracking-[0.4em] md:tracking-[0.6em] font-black uppercase mb-8 md:mb-10 text-center opacity-70">
                                                     MAX 10MB <span className="hidden sm:inline">·</span><br className="sm:hidden" /> QUAD-LAYER SECURITY
                                                 </p>
 
@@ -341,16 +354,20 @@ export default function PortfolioXRay() {
                                                 <div className="w-8 h-8 md:w-10 md:h-10 rounded-xl bg-accent/20 flex items-center justify-center shrink-0 border border-accent/30">
                                                     <Info className="w-4 h-4 md:w-5 md:h-5 text-accent" />
                                                 </div>
-                                                <h3 className="text-base md:text-lg font-black font-barlow-condensed tracking-tight uppercase">PROTOCOL OVERVIEW</h3>
+                                                <h3 className="text-base md:text-lg font-black font-barlow-condensed tracking-normal uppercase">PROTOCOL OVERVIEW</h3>
                                             </div>
                                             <div className="flex flex-col gap-4 md:gap-6">
                                                 {[
-                                                    { icon: <Lock />, title: 'HARDWARE ENCRYPTION', desc: 'DATA PROCESSED IN MEMORY-ONLY SANDBOX' },
-                                                    { icon: <Shield />, title: 'PAN VERIFICATION', desc: 'STRICT AUTHENTICATION AGAINST STATEMENT PAN' },
-                                                    { icon: <FileText />, title: 'ZERO-DATA STORAGE', desc: 'PDF DELETED IMMEDIATELY POST-EXTRACT' },
+                                                    { type: 'lock', title: 'HARDWARE ENCRYPTION', desc: 'DATA PROCESSED IN MEMORY-ONLY SANDBOX' },
+                                                    { type: 'shield', title: 'PAN VERIFICATION', desc: 'STRICT AUTHENTICATION AGAINST STATEMENT PAN' },
+                                                    { type: 'file', title: 'ZERO-DATA STORAGE', desc: 'PDF DELETED IMMEDIATELY POST-EXTRACT' },
                                                 ].map((item, i) => (
                                                     <div key={i} className="flex gap-3 md:gap-4 p-3 md:p-4 rounded-xl md:rounded-2xl bg-white/5 border border-white/5 group hover:border-accent/20 transition-all">
-                                                        <div className="text-accent mt-0.5 opacity-60 group-hover:opacity-100 transition-opacity [&>svg]:w-4 [&>svg]:h-4 md:[&>svg]:w-5 md:[&>svg]:h-5 shrink-0">{item.icon}</div>
+                                                        <div className="text-accent mt-0.5 opacity-60 group-hover:opacity-100 transition-opacity shrink-0">
+                                                            {item.type === 'lock' && <Lock size={16} className="md:w-5 md:h-5" />}
+                                                            {item.type === 'shield' && <Shield size={16} className="md:w-5 md:h-5" />}
+                                                            {item.type === 'file' && <FileText size={16} className="md:w-5 md:h-5" />}
+                                                        </div>
                                                         <div>
                                                             <h4 className="text-[9px] md:text-[10px] font-black tracking-widest uppercase mb-1">{item.title}</h4>
                                                             <p className="text-[8px] md:text-[9px] text-muted-foreground uppercase leading-relaxed font-bold tracking-wider">{item.desc}</p>
@@ -373,7 +390,7 @@ export default function PortfolioXRay() {
                                             <div className="relative z-10 h-full flex flex-col justify-between">
                                                 <div>
                                                     <p className="text-[9px] md:text-[10px] font-black tracking-[0.2em] md:tracking-[0.3em] text-accent uppercase mb-3 md:mb-4">TOTAL ASSETS SCANNED</p>
-                                                    <h2 className="text-4xl sm:text-5xl md:text-6xl font-black font-barlow-condensed tracking-tighter mb-4 flex items-baseline">
+                                                    <h2 className="text-4xl sm:text-5xl md:text-6xl font-black font-barlow-condensed tracking-normal mb-4 flex items-baseline">
                                                         <span>₹</span>
                                                         <CountUp
                                                             to={result.insights.metrics.totalValue || 0}
@@ -439,7 +456,7 @@ export default function PortfolioXRay() {
                                                             <span className="text-muted-foreground/40 ml-0.5">%</span>
                                                         </div>
                                                     ),
-                                                    icon: <TrendingUp />,
+                                                    type: 'xirr',
                                                     sub: 'ANNUALIZED PERFORMANCE'
                                                 },
                                                 {
@@ -450,32 +467,32 @@ export default function PortfolioXRay() {
                                                             <CountUp to={result.insights.metrics.expenseRatioDrag || 0} separator="," duration={1} />
                                                         </div>
                                                     ),
-                                                    icon: <Shield />,
+                                                    type: 'drag',
                                                     sub: 'ANNUAL SAVING POTENTIAL'
                                                 },
                                                 {
                                                     label: 'FUND OVERLAP',
                                                     value: <CountUp to={result.insights.metrics.overlapCount || 0} duration={1} />,
-                                                    icon: <PieChartIcon />,
+                                                    type: 'overlap',
                                                     sub: 'HIDDEN DUPLICATES FOUND'
                                                 },
                                                 {
                                                     label: 'BENCHMARK',
                                                     value: `BEATING ${result.insights.benchmark?.label || "NIFTY 50"}`,
-                                                    icon: <CheckCircle2 />,
+                                                    type: 'benchmark',
                                                     sub: `${result.insights.benchmark?.status || "TRACKING"} STATS`
                                                 },
                                             ].map((stat, i) => (
                                                 <div key={i} className="glass-panel border border-border/20 rounded-xl md:rounded-2xl p-4 md:p-6 flex items-center gap-4 md:gap-6 group hover:border-accent/40 transition-all">
                                                     <div className="w-12 h-12 md:w-14 md:h-14 bg-background/50 border border-border/30 rounded-xl flex items-center justify-center text-accent group-hover:scale-110 group-hover:bg-accent/10 transition-all shadow-[0_0_20px_rgba(212,175,55,0.05)] shrink-0">
-                                                        {React.isValidElement(stat.icon) 
-                                                            ? React.cloneElement(stat.icon as React.ReactElement<{ className: string }>, { className: 'w-5 h-5 md:w-6 md:h-6' })
-                                                            : null
-                                                        }
+                                                        {stat.type === 'xirr' && <TrendingUp className="w-5 h-5 md:w-6 md:h-6" />}
+                                                        {stat.type === 'drag' && <Shield className="w-5 h-5 md:w-6 md:h-6" />}
+                                                        {stat.type === 'overlap' && <PieChartIcon className="w-5 h-5 md:w-6 md:h-6" />}
+                                                        {stat.type === 'benchmark' && <CheckCircle2 className="w-5 h-5 md:w-6 md:h-6" />}
                                                     </div>
                                                     <div>
                                                         <p className="text-[8px] md:text-[9px] font-black tracking-widest text-muted-foreground uppercase mb-0.5 md:mb-1">{stat.label}</p>
-                                                        <div className="text-lg md:text-xl font-black font-barlow-condensed tracking-tight uppercase">{stat.value}</div>
+                                                        <div className="text-lg md:text-xl font-black font-barlow-condensed tracking-normal uppercase">{stat.value}</div>
                                                         <p className="text-[7px] md:text-[8px] text-accent/50 font-black tracking-[0.05em] md:tracking-[0.1em] uppercase">{stat.sub}</p>
                                                     </div>
                                                 </div>
@@ -491,7 +508,7 @@ export default function PortfolioXRay() {
                                                     <BarChart3 size={16} className="md:w-[18px] md:h-[18px]" />
                                                 </div>
                                                 <div>
-                                                    <h3 className="text-lg md:text-xl font-black font-barlow-condensed tracking-tight uppercase">DETAILED HOLDINGS VAULT</h3>
+                                                    <h3 className="text-lg md:text-xl font-black font-barlow-condensed tracking-normal uppercase">DETAILED HOLDINGS VAULT</h3>
                                                     <p className="text-[8px] md:text-[9px] font-black tracking-widest text-muted-foreground uppercase mt-0.5">FULL DATA ARCHIVE EXTRACTED FROM DOCUMENT</p>
                                                 </div>
                                             </div>
@@ -538,7 +555,7 @@ export default function PortfolioXRay() {
                                                             </td>
                                                             <td className="px-4 sm:px-6 md:px-10 py-4 md:py-6 text-right whitespace-nowrap">
                                                                 <div className="flex flex-col items-end">
-                                                                    <p className="text-sm md:text-base font-black font-barlow-condensed tracking-tight">
+                                                                    <p className="text-sm md:text-base font-black font-barlow-condensed tracking-normal">
                                                                         ₹{(holding.realTimeValue || holding.currentValue || 0).toLocaleString('en-IN')}
                                                                     </p>
 
@@ -567,7 +584,7 @@ export default function PortfolioXRay() {
                     {/* Footer */}
                     <footer className="px-4 sm:px-6 md:px-10 py-8 md:py-12 border-t border-border/10 text-center relative overflow-hidden mt-auto">
                         <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-[1px] bg-gradient-to-r from-transparent via-accent/30 to-transparent" />
-                        <p className="text-[8px] md:text-[10px] font-black tracking-[0.2em] md:tracking-[0.4em] text-muted-foreground/30 uppercase leading-relaxed">
+                        <p className="text-[8px] md:text-[10px] font-black tracking-[0.4em] md:tracking-[0.6em] text-muted-foreground/30 uppercase leading-relaxed">
                             NIVESHIQ INTELLIGENCE LAYER <br className="sm:hidden" />
                             <span className="hidden sm:inline">//</span> PORTFOLIO ANALYSIS MODULE
                         </p>
