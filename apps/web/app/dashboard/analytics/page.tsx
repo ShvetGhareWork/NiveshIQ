@@ -140,10 +140,10 @@ export default function Analytics() {
     if (loading || authLoading || !isMounted) {
         if (!isMounted) return <div className="min-h-screen bg-[#0A0F1E]" />;
 
-    return (
+        return (
             <div className="min-h-screen bg-background flex items-center justify-center p-4 text-center">
-                <div className="flex flex-col items-center gap-6">
-                    <div className="w-12 h-12 md:w-16 md:h-16 border-4 border-t-accent border-white/5 rounded-full animate-spin" />
+                <div className="flex flex-col items-center gap-4 md:gap-6">
+                    <div className="w-10 h-10 md:w-16 md:h-16 border-4 border-t-accent border-white/5 rounded-full animate-spin" />
                     <p className="text-[9px] md:text-[10px] font-black tracking-[0.3em] md:tracking-[0.5em] text-muted-foreground uppercase animate-pulse">
                         Initializing Quantum Analytics Layer...
                     </p>
@@ -160,19 +160,19 @@ export default function Analytics() {
                 <main className="flex-1 overflow-y-auto bg-background/50 relative scrollbar-thin scrollbar-thumb-accent/10">
 
                     {/* Header */}
-                    <header className="px-5 md:px-10 py-10 md:py-20 border-b border-white/5 relative bg-[radial-gradient(circle_at_10%_20%,rgba(212,175,55,0.03)_0%,transparent_50%)]">
+                    <header className="px-5 md:px-10 py-10 md:py-16 border-b border-white/5 relative bg-[radial-gradient(circle_at_10%_20%,rgba(212,175,55,0.03)_0%,transparent_50%)]">
                         <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:items-end justify-between gap-6 md:gap-8">
                             <div>
-                                <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black font-barlow-condensed tracking-tighter leading-[0.85] uppercase">
+                                <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-black font-barlow-condensed tracking-tighter leading-[0.85] uppercase">
                                     QUANTUM <span className="text-accent italic">ANALYTICS</span>
                                 </h1>
-                                <p className="text-muted-foreground font-black tracking-[0.2em] text-[9px] sm:text-[10px] md:text-xs mt-6 md:mt-8 max-w-xl opacity-60 uppercase leading-relaxed">
+                                <p className="text-muted-foreground font-black tracking-[0.2em] md:tracking-[0.3em] text-[9px] sm:text-[10px] md:text-xs mt-4 md:mt-8 max-w-xl opacity-60 uppercase leading-relaxed">
                                     HIGH-DENSITY INTELLIGENCE LAYER. CRITICAL METRICS FOR COMPREHENSIVE PORTFOLIO DIAGNOSTICS.
                                 </p>
                             </div>
                             <Link
                                 href="/dashboard/analytics/dossier"
-                                className="flex items-center justify-center gap-3 px-6 md:px-8 py-4 bg-accent text-accent-foreground rounded-2xl font-black font-barlow-condensed tracking-widest uppercase text-xs w-full md:w-auto hover:scale-105 transition-transform shadow-[0_0_30px_rgba(245,158,11,0.3)]"
+                                className="flex items-center justify-center gap-3 px-6 md:px-8 py-3.5 md:py-4 bg-accent text-accent-foreground rounded-xl md:rounded-2xl font-black font-barlow-condensed tracking-widest uppercase text-xs w-full md:w-auto hover:scale-105 transition-transform shadow-[0_0_30px_rgba(245,158,11,0.3)] active:scale-95"
                             >
                                 <Download className="w-4 h-4" />
                                 Download Dossier
@@ -181,11 +181,11 @@ export default function Analytics() {
                     </header>
 
                     {/* Analytics Core */}
-                    <section className="px-5 md:px-10 py-8 md:py-12">
-                        <div className="max-w-7xl mx-auto space-y-8 md:space-y-12 pb-32">
+                    <section className="px-4 sm:px-6 md:px-10 py-8 md:py-12">
+                        <div className="max-w-7xl mx-auto space-y-8 md:space-y-12 pb-20 md:pb-32">
 
                             {/* 1. Tactical Metrics Grid */}
-                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8 mb-8 md:mb-12">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
                                 <MetricCard
                                     label="Portfolio Alpha (XIRR)"
                                     value={`${portfolio?.insights?.metrics?.xirr?.toFixed(2) || '0.00'}%`}
@@ -222,11 +222,13 @@ export default function Analytics() {
                             {/* Tier 1: Overlap & Expense Drag */}
                             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 lg:gap-12">
                                 <div className="bg-card/30 backdrop-blur-2xl border border-white/5 rounded-[1.5rem] md:rounded-3xl p-5 md:p-8 relative">
-                                    <h3 className="text-[10px] md:text-xs font-black tracking-[0.2em] md:tracking-[0.3em] text-muted-foreground uppercase mb-6 md:mb-10 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                                    <h3 className="text-[10px] md:text-xs font-black tracking-[0.2em] md:tracking-[0.3em] text-muted-foreground uppercase mb-6 md:mb-10 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                                         Fund Overlap Heatmap
-                                        <span className="text-[8px] md:text-[9px] text-rose-500 font-black tracking-widest bg-rose-500/10 px-2 py-1 rounded w-fit">CRITICAL SYNERGY</span>
+                                        <span className="text-[8px] md:text-[9px] text-rose-500 font-black tracking-widest bg-rose-500/10 px-3 py-1.5 rounded-md w-fit">CRITICAL SYNERGY</span>
                                     </h3>
-                                    <OverlapHeatmap data={overlapData} />
+                                    <div className="overflow-hidden">
+                                        <OverlapHeatmap data={overlapData} />
+                                    </div>
                                     <p className="mt-6 md:mt-8 text-[8px] md:text-[9px] text-muted-foreground font-black tracking-widest uppercase opacity-40 leading-loose">
                                         Detecting high commonality between largest holdings. Evaluate fund manager concentration.
                                     </p>
@@ -268,7 +270,7 @@ export default function Analytics() {
                                     </p>
                                 </div>
 
-                                <div className="bg-card/30 backdrop-blur-xl border border-white/5 rounded-[1.5rem] md:rounded-3xl p-5 md:p-8 md:col-span-2 lg:col-span-1 flex flex-col justify-between">
+                                <div className="bg-card/30 backdrop-blur-xl border border-white/5 rounded-[1.5rem] md:rounded-3xl p-5 md:p-8 sm:col-span-2 lg:col-span-1 flex flex-col justify-between">
                                     <div>
                                         <h3 className="text-[10px] md:text-xs font-black tracking-[0.2em] md:tracking-[0.3em] text-muted-foreground uppercase mb-6 md:mb-10">
                                             Sector Treemap
@@ -285,7 +287,7 @@ export default function Analytics() {
                             <div className="space-y-6 md:space-y-10">
                                 <div className="flex items-center gap-4">
                                     <div className="h-[1px] flex-1 bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-                                    <h2 className="text-[10px] md:text-xs font-black tracking-[0.3em] md:tracking-[0.5em] text-muted-foreground uppercase opacity-40 text-center">The Oracle's Briefing</h2>
+                                    <h2 className="text-[10px] md:text-xs font-black tracking-[0.3em] md:tracking-[0.5em] text-muted-foreground uppercase opacity-40 text-center shrink-0">The Oracle's Briefing</h2>
                                     <div className="h-[1px] flex-1 bg-gradient-to-r from-transparent via-white/10 to-transparent" />
                                 </div>
 
@@ -347,17 +349,19 @@ export default function Analytics() {
                                 </div>
                             </div>
 
+                            {/* Detailed Performance */}
                             <div className="bg-card/30 backdrop-blur-xl border border-white/5 rounded-[1.5rem] md:rounded-3xl p-5 md:p-10">
-                                <h3 className="text-[10px] md:text-xs font-black tracking-[0.2em] md:tracking-[0.3em] text-muted-foreground uppercase font-barlow-condensed mb-8 md:mb-12 text-center md:text-left">
+                                <h3 className="text-[10px] md:text-xs font-black tracking-[0.2em] md:tracking-[0.3em] text-muted-foreground uppercase font-barlow-condensed mb-6 md:mb-12 text-center md:text-left">
                                     Detailed Performance Benchmarking
                                 </h3>
-                                <div className="h-[300px] md:h-auto">
+                                <div className="h-[250px] sm:h-[300px] md:h-auto">
                                     <XirrvsBenchmarkLine data={detailedPerformance} />
                                 </div>
                             </div>
 
+                            {/* Live Asset Persistence Matrix */}
                             <div className="bg-card/20 backdrop-blur-3xl border border-white/5 rounded-[1.5rem] md:rounded-[3rem] overflow-hidden shadow-2xl">
-                                <div className="px-5 py-6 md:px-12 md:py-10 border-b border-white/5 bg-white/[0.01] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                                <div className="px-5 py-6 md:px-10 md:py-8 border-b border-white/5 bg-white/[0.01] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                                     <h3 className="text-[10px] md:text-[11px] font-black tracking-[0.3em] md:tracking-[0.5em] text-muted-foreground uppercase font-barlow-condensed text-center sm:text-left">
                                         Live Asset Persistence Matrix
                                     </h3>
@@ -369,56 +373,56 @@ export default function Analytics() {
                                 </div>
 
                                 <div className="overflow-x-auto w-full scrollbar-thin scrollbar-thumb-white/10">
-                                    <table className="w-full text-left border-collapse min-w-[800px]">
+                                    <table className="w-full text-left border-collapse min-w-[700px] md:min-w-[800px]">
                                         <thead>
                                             <tr className="border-b border-white/5 bg-white/[0.02]">
-                                                <th className="px-6 py-4 md:px-12 md:py-8 text-[9px] md:text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] md:tracking-[0.3em] whitespace-nowrap">Asset Protocol</th>
-                                                <th className="px-6 py-4 md:px-12 md:py-8 text-[9px] md:text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] md:tracking-[0.3em] whitespace-nowrap">Weighted Value</th>
-                                                <th className="px-6 py-4 md:px-12 md:py-8 text-[9px] md:text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] md:tracking-[0.3em] whitespace-nowrap text-center">Protocol Allocation</th>
-                                                <th className="px-6 py-4 md:px-12 md:py-8 text-[9px] md:text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] md:tracking-[0.3em] text-right whitespace-nowrap">Status</th>
+                                                <th className="px-4 py-4 md:px-8 md:py-6 text-[8px] md:text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] md:tracking-[0.3em] whitespace-nowrap">Asset Protocol</th>
+                                                <th className="px-4 py-4 md:px-8 md:py-6 text-[8px] md:text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] md:tracking-[0.3em] whitespace-nowrap">Weighted Value</th>
+                                                <th className="px-4 py-4 md:px-8 md:py-6 text-[8px] md:text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] md:tracking-[0.3em] whitespace-nowrap text-center">Protocol Allocation</th>
+                                                <th className="px-4 py-4 md:px-8 md:py-6 text-[8px] md:text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] md:tracking-[0.3em] text-right whitespace-nowrap">Status</th>
                                             </tr>
                                         </thead>
                                         <tbody className="divide-y divide-white/5">
                                             {portfolio?.holdings?.map((fund: any, i: number) => (
                                                 <tr key={i} className="group hover:bg-white/[0.03] transition-all duration-500">
-                                                    <td className="px-6 py-5 md:px-12 md:py-8">
-                                                        <div className="flex flex-col gap-1.5">
-                                                            <span className="text-xs md:text-sm font-black tracking-widest text-white uppercase group-hover:text-accent transition-colors">
+                                                    <td className="px-4 py-4 md:px-8 md:py-6">
+                                                        <div className="flex flex-col gap-1 md:gap-1.5">
+                                                            <span className="text-[11px] md:text-sm font-black tracking-widest text-white uppercase group-hover:text-accent transition-colors">
                                                                 {fund.schemeName}
                                                             </span>
-                                                            <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-[0.2em]">{fund.folioNumber}</span>
+                                                            <span className="text-[7px] md:text-[8px] font-bold text-muted-foreground uppercase tracking-[0.2em]">{fund.folioNumber}</span>
                                                         </div>
                                                     </td>
-                                                    <td className="px-6 py-5 md:px-12 md:py-8">
-                                                        <span className="text-lg md:text-xl font-black font-barlow-condensed tracking-tight text-white/90">
+                                                    <td className="px-4 py-4 md:px-8 md:py-6">
+                                                        <span className="text-base md:text-xl font-black font-barlow-condensed tracking-tight text-white/90">
                                                             ₹ {fund.currentValue.toLocaleString('en-IN')}
                                                         </span>
                                                     </td>
-                                                    <td className="px-6 py-5 md:px-12 md:py-8">
-                                                        <div className="flex items-center gap-4 justify-center">
-                                                            <div className="h-1.5 w-24 md:w-32 bg-white/5 rounded-full overflow-hidden">
+                                                    <td className="px-4 py-4 md:px-8 md:py-6">
+                                                        <div className="flex items-center gap-3 md:gap-4 justify-center">
+                                                            <div className="h-1 md:h-1.5 w-16 sm:w-24 md:w-32 bg-white/5 rounded-full overflow-hidden">
                                                                 <div
                                                                     className="h-full bg-accent transition-all duration-1000 ease-out"
                                                                     style={{ width: `${(fund.currentValue / (portfolio?.summary?.totalValue || 1)) * 100}%` }}
                                                                 />
                                                             </div>
-                                                            <span className="text-[9px] md:text-[10px] font-black text-white/60 w-10 text-right">{((fund.currentValue / (portfolio?.summary?.totalValue || 1)) * 100).toFixed(1)}%</span>
+                                                            <span className="text-[8px] md:text-[10px] font-black text-white/60 w-8 md:w-10 text-right">{((fund.currentValue / (portfolio?.summary?.totalValue || 1)) * 100).toFixed(1)}%</span>
                                                         </div>
                                                     </td>
-                                                    <td className="px-6 py-5 md:px-12 md:py-8 text-right">
-                                                        <div className="flex items-center justify-end gap-2 text-emerald-500">
-                                                            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                                                            <span className="text-[9px] md:text-[10px] font-black tracking-widest uppercase">Verified Asset</span>
+                                                    <td className="px-4 py-4 md:px-8 md:py-6 text-right">
+                                                        <div className="flex items-center justify-end gap-1.5 md:gap-2 text-emerald-500">
+                                                            <div className="w-1 h-1 md:w-1.5 md:h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                                                            <span className="text-[8px] md:text-[10px] font-black tracking-widest uppercase">Verified Asset</span>
                                                         </div>
                                                     </td>
                                                 </tr>
                                             ))}
                                             {(!portfolio || !portfolio.holdings) && (
                                                 <tr>
-                                                    <td colSpan={4} className="px-6 py-12 md:px-12 md:py-20 text-center">
-                                                        <div className="flex flex-col items-center gap-4 opacity-30">
-                                                            <Activity className="w-10 h-10 md:w-12 md:h-12 text-muted-foreground animate-pulse" />
-                                                            <span className="text-[9px] md:text-[10px] font-black tracking-[0.3em] md:tracking-[0.4em] text-muted-foreground uppercase">No Asset Artifacts Detected</span>
+                                                    <td colSpan={4} className="px-4 py-10 md:px-12 md:py-20 text-center">
+                                                        <div className="flex flex-col items-center gap-3 md:gap-4 opacity-30">
+                                                            <Activity className="w-8 h-8 md:w-12 md:h-12 text-muted-foreground animate-pulse" />
+                                                            <span className="text-[8px] md:text-[10px] font-black tracking-[0.2em] md:tracking-[0.4em] text-muted-foreground uppercase">No Asset Artifacts Detected</span>
                                                         </div>
                                                     </td>
                                                 </tr>
