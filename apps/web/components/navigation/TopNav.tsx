@@ -17,7 +17,8 @@ import {
     BarChart3,
     Users,
     LogOut,
-    Shield
+    Shield,
+    Import
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
@@ -48,8 +49,10 @@ export function TopNav({ userName: propsUserName, customLinks }: TopNavProps) {
 
     const menuItems = [
         { icon: Home, label: 'Overview', href: '/dashboard' },
+        { icon: Import, label: 'Portfolio X-Ray', href: '/dashboard/portfolio' },
         { icon: Shield, label: 'Money Health', href: '/dashboard/health' },
         { icon: TrendingUp, label: 'Analytics', href: '/dashboard/analytics' },
+        { icon: BarChart3, label: 'Market Trends', href: '/dashboard/market' },
         { icon: Target, label: 'Life Planner', href: '/dashboard/life-planner' },
         { icon: Calculator, label: 'Tax Wizard', href: '/dashboard/tax-wizard' },
         { icon: Calendar, label: 'Reports', href: '/dashboard/reports' },
