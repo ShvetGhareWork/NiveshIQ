@@ -7,6 +7,7 @@ import { Flame, Target, TrendingUp, ShieldCheck, Zap, Info, ArrowRight, Wallet, 
 import { useAuth } from '@/hooks/useAuth';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine } from 'recharts';
 import { useRouter } from 'next/navigation';
+import { API_BASE_URL } from '@/lib/api';
 
 export default function FIREProtocol() {
     const { user, token } = useAuth();
@@ -106,7 +107,7 @@ export default function FIREProtocol() {
 
         setIsSaving(true);
         try {
-            const response = await fetch('/api/fire', {
+            const response = await fetch(`${API_BASE_URL}/api/fire`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

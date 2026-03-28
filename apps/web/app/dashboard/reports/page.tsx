@@ -8,6 +8,7 @@ import Link from 'next/link';
 import CountUp from '@/components/reactbits/CountUp';
 import { ConfirmationModal } from '@/components/shared/ConfirmationModal';
 import { useAuth } from '@/hooks/useAuth';
+import { API_BASE_URL } from '@/lib/api';
 
 interface Report {
     id: string;
@@ -52,10 +53,10 @@ export default function Reports() {
                 }
 
                 const [portfolioRes, healthRes, taxRes, fireRes] = await Promise.all([
-                    fetch('/api/portfolio/all', { headers: { 'Authorization': `Bearer ${token}` } }),
-                    fetch('/api/health/all', { headers: { 'Authorization': `Bearer ${token}` } }),
-                    fetch('/api/tax/history', { headers: { 'Authorization': `Bearer ${token}` } }),
-                    fetch('/api/fire/all', { headers: { 'Authorization': `Bearer ${token}` } })
+                    fetch(`${API_BASE_URL}/api/portfolio/all`, { headers: { 'Authorization': `Bearer ${token}` } }),
+                    fetch(`${API_BASE_URL}/api/health/all`, { headers: { 'Authorization': `Bearer ${token}` } }),
+                    fetch(`${API_BASE_URL}/api/tax/history`, { headers: { 'Authorization': `Bearer ${token}` } }),
+                    fetch(`${API_BASE_URL}/api/fire/all`, { headers: { 'Authorization': `Bearer ${token}` } })
                 ]);
 
                 const portfolioData = await portfolioRes.json();
@@ -113,7 +114,7 @@ export default function Reports() {
     const handleDownload = async (id: string, date: string) => {
         try {
             const token = localStorage.getItem('oracle_token');
-            const res = await fetch(`/api/portfolio/${id}`, {
+            const res = await fetch(`${API_BASE_URL}/api/portfolio/${id}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             const data = await res.json();
@@ -140,12 +141,12 @@ export default function Reports() {
         try {
             const token = localStorage.getItem('oracle_token');
             const endpoint = type === 'PORTFOLIO'
-                ? `/api/portfolio/${id}`
+                ? `${API_BASE_URL}/api/portfolio/${id}`
                 : type === 'HEALTH'
-                    ? `/api/health/${id}`
+                    ? `${API_BASE_URL}/api/health/${id}`
                     : type === 'FIRE'
-                        ? `/api/fire/${id}`
-                        : `/api/tax/${id}`;
+                        ? `${API_BASE_URL}/api/fire/${id}`
+                        : `${API_BASE_URL}/api/tax/${id}`;
 
             const res = await fetch(endpoint, {
                 method: 'DELETE',

@@ -9,6 +9,7 @@ import { DeductionUtilisationBars } from '@/components/charts/DeductionUtilisati
 import { PortfolioTreemap } from '@/components/charts/PortfolioTreemap';
 import { OverlapHeatmap } from '@/components/charts/OverlapHeatmap';
 import Link from 'next/link';
+import { API_BASE_URL } from '@/lib/api';
 
 export default function AnalyticalDossier() {
     return (
@@ -48,14 +49,14 @@ function DossierContent() {
             if (!token) return;
 
             try {
-                const portfolioUrl = portfolioId ? `/api/portfolio/${portfolioId}` : '/api/portfolio';
-                const taxUrl = taxId ? `/api/tax/history?id=${taxId}` : '/api/tax/history';
+                const portfolioUrl = portfolioId ? `${API_BASE_URL}/api/portfolio/${portfolioId}` : `${API_BASE_URL}/api/portfolio`;
+                const taxUrl = taxId ? `${API_BASE_URL}/api/tax/history?id=${taxId}` : `${API_BASE_URL}/api/tax/history`;
 
                 const [pRes, tRes, hRes, fRes] = await Promise.all([
                     fetch(portfolioUrl, { headers: { 'Authorization': `Bearer ${token}` } }),
                     fetch(taxUrl, { headers: { 'Authorization': `Bearer ${token}` } }),
-                    fetch('/api/health/all', { headers: { 'Authorization': `Bearer ${token}` } }),
-                    fetch('/api/fire/all', { headers: { 'Authorization': `Bearer ${token}` } })
+                    fetch(`${API_BASE_URL}/api/health/all`, { headers: { 'Authorization': `Bearer ${token}` } }),
+                    fetch(`${API_BASE_URL}/api/fire/all`, { headers: { 'Authorization': `Bearer ${token}` } })
                 ]);
 
                 const pData = await pRes.json();

@@ -14,6 +14,7 @@ import { PortfolioTreemap } from '@/components/charts/PortfolioTreemap';
 import { XirrvsBenchmarkLine } from '@/components/charts/XirrvsBenchmarkLine';
 import { useDashboardTour } from '@/hooks/useDashboardTour';
 import { useAuth } from '@/hooks/useAuth';
+import { API_BASE_URL } from '@/lib/api';
 
 export default function Dashboard() {
     useDashboardTour();
@@ -77,13 +78,13 @@ export default function Dashboard() {
 
             try {
                 const [latestRes, allRes, healthRes] = await Promise.all([
-                    fetch('/api/portfolio', {
+                    fetch(`${API_BASE_URL}/api/portfolio`, {
                         headers: { 'Authorization': `Bearer ${token}` }
                     }),
-                    fetch('/api/portfolio/all', {
+                    fetch(`${API_BASE_URL}/api/portfolio/all`, {
                         headers: { 'Authorization': `Bearer ${token}` }
                     }),
-                    fetch('/api/health/all', {
+                    fetch(`${API_BASE_URL}/api/health/all`, {
                         headers: { 'Authorization': `Bearer ${token}` }
                     })
                 ]);

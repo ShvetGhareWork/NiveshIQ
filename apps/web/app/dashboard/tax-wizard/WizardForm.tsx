@@ -8,6 +8,7 @@ import {
     FileUp, CheckCircle2, AlertTriangle
 } from 'lucide-react';
 import type { TaxInput } from '@niveshiq/types';
+import { API_BASE_URL } from '@/lib/api';
 
 interface WizardFormProps {
     onCalculate: (input: TaxInput) => void;
@@ -50,7 +51,7 @@ export const WizardForm = ({ onCalculate, loading }: WizardFormProps) => {
         formDataPayload.append('file', file);
 
         try {
-            const res = await fetch('/api/tax/upload-form16', {
+            const res = await fetch(`${API_BASE_URL}/api/tax/upload-form16`, {
                 method: 'POST',
                 headers: { 'Authorization': `Bearer ${token}` },
                 body: formDataPayload

@@ -2,6 +2,7 @@
 
 import { useState, useEffect, createContext, useContext } from 'react';
 import { useRouter } from 'next/navigation';
+import { API_BASE_URL } from '@/lib/api';
 
 interface User {
   id: string;
@@ -40,7 +41,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const login = async (email: string, password: string) => {
     setLoading(true);
     try {
-      const res = await fetch('/api/auth/login', {
+      const res = await fetch(`${API_BASE_URL}/api/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
@@ -61,7 +62,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const register = async (name: string, email: string, phoneNumber: string, password: string) => {
     setLoading(true);
     try {
-      const res = await fetch('/api/auth/register', {
+      const res = await fetch(`${API_BASE_URL}/api/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email, phoneNumber, password }),
@@ -84,7 +85,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     localStorage.removeItem('oracle_user');
     setToken(null);
     setUser(null);
-    router.push('/login');
+    router.push('/auth/login');
   };
 
   return (
@@ -100,4 +101,4 @@ export const useAuth = () => {
     throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
-}
+};

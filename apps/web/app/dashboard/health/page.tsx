@@ -15,6 +15,7 @@ import Link from 'next/link';
 import { TopNav } from '@/components/navigation/TopNav';
 import { DashboardSidebar } from '@/components/navigation/DashboardSidebar';
 import { useAuth } from '@/hooks/useAuth';
+import { API_BASE_URL } from '@/lib/api';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 interface QuizAnswer { questionId: string; value: number; label: string }
@@ -269,7 +270,7 @@ export default function MoneyHealthDashboard() {
 
             // SAVE TO BACKEND USER DB
             const token = localStorage.getItem('oracle_token');
-            fetch('/api/health', {
+            fetch(`${API_BASE_URL}/api/health`, {
                 method: 'POST',
                 headers: { 
                     'Content-Type': 'application/json',

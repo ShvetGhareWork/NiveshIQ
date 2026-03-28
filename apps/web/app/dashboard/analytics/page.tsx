@@ -13,6 +13,7 @@ import { PortfolioTreemap } from '@/components/charts/PortfolioTreemap';
 import { XirrvsBenchmarkLine } from '@/components/charts/XirrvsBenchmarkLine';
 import { useAuth } from '@/hooks/useAuth';
 import Link from 'next/link';
+import { API_BASE_URL } from '@/lib/api';
 
 export default function Analytics() {
     const [portfolio, setPortfolio] = useState<any>(null);
@@ -32,8 +33,8 @@ export default function Analytics() {
 
             try {
                 const [pRes, tRes] = await Promise.all([
-                    fetch('/api/portfolio', { headers: { 'Authorization': `Bearer ${token}` } }),
-                    fetch('/api/tax/history', { headers: { 'Authorization': `Bearer ${token}` } })
+                    fetch(`${API_BASE_URL}/api/portfolio`, { headers: { 'Authorization': `Bearer ${token}` } }),
+                    fetch(`${API_BASE_URL}/api/tax/history`, { headers: { 'Authorization': `Bearer ${token}` } })
                 ]);
 
                 const pData = await pRes.json();

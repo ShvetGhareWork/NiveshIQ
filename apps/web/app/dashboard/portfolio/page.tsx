@@ -8,6 +8,7 @@ import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recha
 import ChatWidget from '@/components/ChatWidget';
 import CountUp from '@/components/reactbits/CountUp';
 import { useAuth } from '@/hooks/useAuth';
+import { API_BASE_URL } from '@/lib/api';
 
 interface Holding {
     schemeName: string;
@@ -83,7 +84,7 @@ export default function PortfolioXRay() {
         const fetchLatest = async () => {
             if (!token) return;
             try {
-                const res = await fetch('/api/portfolio', {
+                const res = await fetch(`${API_BASE_URL}/api/portfolio`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 const data = await res.json();
@@ -113,7 +114,7 @@ export default function PortfolioXRay() {
         formData.append('file', file);
 
         try {
-            const response = await fetch('/api/portfolio/upload', {
+            const response = await fetch(`${API_BASE_URL}/api/portfolio/upload`, {
                 method: 'POST',
                 headers: { 'Authorization': `Bearer ${token}` },
                 body: formData,

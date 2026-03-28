@@ -9,6 +9,7 @@ import { SIPWaterfall } from '@/components/charts/SIPWaterfall';
 import { ExpenseRatioDragChart } from '@/components/charts/ExpenseRatioDragChart';
 import { Plus, Target, Calendar, ArrowUpRight, Baby, Gem, Gift, Briefcase, Zap } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
+import { API_BASE_URL } from '@/lib/api';
 
 export default function LifePlanner() {
     const { user } = useAuth();
@@ -58,7 +59,7 @@ export default function LifePlanner() {
             if (!token) return;
 
             try {
-                const res = await fetch('/api/life-planner/latest', {
+                const res = await fetch(`${API_BASE_URL}/api/life-planner/latest`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 const result = await res.json();
@@ -86,7 +87,7 @@ export default function LifePlanner() {
         const token = localStorage.getItem('oracle_token');
         
         try {
-            const res = await fetch('/api/life-planner', {
+            const res = await fetch(`${API_BASE_URL}/api/life-planner`, {
                 method: 'POST',
                 headers: { 
                     'Content-Type': 'application/json',
