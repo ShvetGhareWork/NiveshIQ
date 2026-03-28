@@ -222,7 +222,7 @@ function DossierContent() {
                             <div>
                                 <h4 className="font-black uppercase tracking-tight text-base md:text-lg mb-1 md:mb-2 print:text-black print:text-sm print:mb-0.5">Fiscal Shield Assessment</h4>
                                 <p className="text-[9px] md:text-[10px] text-muted-foreground font-bold tracking-[0.1em] md:tracking-wide uppercase leading-relaxed print:text-gray-700 print:tracking-normal print:text-[9px]">
-                                    Verdict: {taxData?.result?.verdict?.toUpperCase()} REGIME. Optimize 80C deployment by ₹{((150000 - (taxData?.input?.sec80C || 0)) / 1000).toFixed(1)}k to finalize fiscal security.
+                                    Verdict: {(taxData?.result?.verdict || "Standard")?.toUpperCase()} REGIME. Optimize 80C deployment by ₹{(((150000 - (taxData?.input?.sec80C || 0)) / 1000) || 0).toFixed(1)}k to finalize fiscal security.
                                 </p>
                             </div>
                         </div>

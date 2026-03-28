@@ -467,7 +467,10 @@ export default function PortfolioXRay() {
                                             ].map((stat, i) => (
                                                 <div key={i} className="glass-panel border border-border/20 rounded-xl md:rounded-2xl p-4 md:p-6 flex items-center gap-4 md:gap-6 group hover:border-accent/40 transition-all">
                                                     <div className="w-12 h-12 md:w-14 md:h-14 bg-background/50 border border-border/30 rounded-xl flex items-center justify-center text-accent group-hover:scale-110 group-hover:bg-accent/10 transition-all shadow-[0_0_20px_rgba(212,175,55,0.05)] shrink-0">
-                                                        {React.cloneElement(stat.icon as React.ReactElement<{ className: string }>, { className: 'w-5 h-5 md:w-6 md:h-6' })}
+                                                        {React.isValidElement(stat.icon) 
+                                                            ? React.cloneElement(stat.icon as React.ReactElement<{ className: string }>, { className: 'w-5 h-5 md:w-6 md:h-6' })
+                                                            : null
+                                                        }
                                                     </div>
                                                     <div>
                                                         <p className="text-[8px] md:text-[9px] font-black tracking-widest text-muted-foreground uppercase mb-0.5 md:mb-1">{stat.label}</p>
