@@ -1,0 +1,143 @@
+'use client';
+
+import { ArrowRight, ShieldCheck, Gavel, BookOpen, UserCheck, Lock } from 'lucide-react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+
+export default function LegalDisclaimer() {
+    const router = useRouter();
+
+    return (
+        <div className="flex min-h-screen bg-background text-foreground overflow-hidden selection:bg-accent/30 selection:text-white">
+            {/* Cinematic Background Elements */}
+            <div className="fixed top-0 right-0 w-[500px] h-[500px] bg-accent/5 blur-[120px] rounded-full -translate-y-1/2 translate-x-1/2 pointer-events-none" />
+            <div className="fixed bottom-0 left-0 w-[600px] h-[600px] bg-accent/2 blur-[140px] rounded-full translate-y-1/2 -translate-x-1/2 pointer-events-none opacity-50" />
+            
+            {/* Grid Pattern Overlay */}
+            <div className="fixed inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))] opacity-10 pointer-events-none" />
+
+            <div className="relative z-10 flex flex-col w-full h-full">
+                {/* Header with minimal nav */}
+                <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-border/30 px-6 py-5">
+                    <div className="max-w-7xl mx-auto flex items-center justify-between">
+                        <Link href="/" className="flex items-center gap-3 group">
+                            <div className="w-8 h-8 rounded-lg bg-accent/20 border border-accent/30 flex items-center justify-center text-accent group-hover:bg-accent group-hover:text-background transition-all duration-300">
+                                <ShieldCheck size={18} />
+                            </div>
+                            <span className="text-2xl font-black text-foreground font-barlow-condensed tracking-tighter uppercase">
+                                NIVESH<span className="text-accent">IQ</span>
+                            </span>
+                        </Link>
+                        
+                        <div className="flex items-center gap-4">
+                            <span className="text-[10px] font-black tracking-[0.3em] text-muted-foreground/50 uppercase hidden sm:block">
+                                SECURE PROTOCOL // VER_4.0
+                            </span>
+                            <div className="h-4 w-[1px] bg-border/50 mx-2 hidden sm:block" />
+                            <Link href="/auth/signup" className="text-[10px] font-black tracking-widest text-accent uppercase hover:underline underline-offset-4">
+                                BACK TO ORIGIN
+                            </Link>
+                        </div>
+                    </div>
+                </header>
+
+                <main className="flex-1 overflow-y-auto pt-16 pb-24">
+                    <div className="max-w-4xl mx-auto px-6 md:px-10">
+                        {/* Page Title */}
+                        <div className="mb-16">
+                            <div className="flex items-center gap-3 mb-6">
+                                <div className="h-[1px] w-12 bg-accent/30" />
+                                <span className="text-[10px] font-black tracking-[0.4em] text-accent uppercase">SYSTEM GOVERNANCE</span>
+                            </div>
+                            <h1 className="text-5xl md:text-7xl font-black text-foreground font-barlow-condensed tracking-tighter mb-6 uppercase leading-[0.9]">
+                                DIGNITY IN <span className="text-accent italic underline decoration-accent/20 underline-offset-8">INTELLIGENCE.</span>
+                            </h1>
+                            <p className="text-muted-foreground font-medium text-lg md:text-xl max-w-2xl leading-relaxed">
+                                Before proceeding with NiveshIQ&apos;s proprietary financial insights, 
+                                please review our operational framework and legal boundaries.
+                            </p>
+                        </div>
+
+                        {/* Disclaimer Sections */}
+                        <div className="grid grid-cols-1 gap-6">
+                            {[
+                                {
+                                    icon: <Gavel className="text-accent" size={20} />,
+                                    title: 'NOT SEBI-REGISTERED',
+                                    content: `NiveshIQ functions as an advanced computational analysis tool. We are not a SEBI-registered investment advisor or research analyst. Our algorithms process public market data to provide structured insights, but these do not constitute official financial advisory services.`,
+                                },
+                                {
+                                    icon: <BookOpen className="text-accent" size={20} />,
+                                    title: 'EDUCATIONAL PROTOCOLS',
+                                    content: `The content, charts, and intelligence generated by this platform are designed to facilitate informed financial literacy. All outputs should be viewed as educational material intended to help users understand market dynamics.`,
+                                },
+                                {
+                                    icon: <UserCheck className="text-accent" size={20} />,
+                                    title: 'NON-PERSONALIZED ADVICE',
+                                    content: `Financial recommendations provided herein are generalized based on mathematical modeling. They do not account for your specific financial situation, risk appetite, or personal objectives. Consult with a professional.`,
+                                },
+                                {
+                                    icon: <ArrowRight className="text-accent" size={20} />,
+                                    title: 'PERFORMANCE DISCLAIMER',
+                                    content: `Historical data and back-tested results are for illustrative purposes. Markets are inherently volatile and unpredictable. Success in previous cycles is not a reliable indicator of future results. Risk of loss is substantial.`,
+                                },
+                                {
+                                    icon: <Lock className="text-accent" size={20} />,
+                                    title: 'PRIVACY & SOVEREIGNTY',
+                                    content: `Your trust is our primary asset. NiveshIQ does not store your private financial data or brokerage credentials. Analysis is performed client-side or through transient sessions that are purged immediately.`,
+                                },
+                            ].map((section, i) => (
+                                <div key={i} className="glass-panel border border-border/30 rounded-2xl p-8 md:p-10 group hover:border-accent/40 transition-all duration-500">
+                                    <div className="flex flex-col md:flex-row gap-6">
+                                        <div className="w-12 h-12 rounded-xl bg-accent/5 border border-accent/20 flex items-center justify-center flex-shrink-0 group-hover:bg-accent group-hover:text-background transition-all duration-500">
+                                            {section.icon}
+                                        </div>
+                                        <div>
+                                            <h2 className="text-xl font-black font-barlow-condensed tracking-tight text-foreground uppercase mb-4 group-hover:text-accent transition-colors">
+                                                {section.title}
+                                            </h2>
+                                            <p className="text-muted-foreground leading-relaxed text-sm md:text-base font-medium opacity-80 group-hover:opacity-100 transition-opacity">
+                                                {section.content}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+
+                        {/* Action Area */}
+                        <div className="mt-16 pt-16 border-t border-border/30">
+                            <div className="flex flex-col md:flex-row items-center justify-between gap-10">
+                                <div className="space-y-4 text-center md:text-left">
+                                    <p className="text-[10px] font-black tracking-[0.3em] text-muted-foreground uppercase opacity-50">
+                                        VERSION 4.2.0 // LAST UPDATED MARCH 2024
+                                    </p>
+                                    <div className="flex flex-wrap justify-center md:justify-start gap-6 text-[10px] font-black tracking-widest uppercase">
+                                        <Link href="#" className="text-muted-foreground hover:text-accent transition-colors">Privacy Policy</Link>
+                                        <Link href="#" className="text-muted-foreground hover:text-accent transition-colors">Terms of Use</Link>
+                                        <Link href="#" className="text-muted-foreground hover:text-accent transition-colors">Cookie Protocol</Link>
+                                    </div>
+                                </div>
+
+                                <button 
+                                    onClick={() => router.push('/dashboard')}
+                                    className="w-full md:w-auto px-12 py-5 rounded-2xl bg-accent text-background font-black text-xs tracking-[0.3em] uppercase hover:scale-105 transition-all shadow-[0_20px_50px_rgba(212,175,55,0.25)] flex items-center justify-center gap-3 group"
+                                >
+                                    I UNDERSTAND, CONTINUE
+                                    <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+
+                {/* Sticky Mobile Disclaimer Footer */}
+                <footer className="py-6 px-10 border-t border-border/10 text-center bg-background/50 backdrop-blur-sm">
+                    <p className="text-[10px] font-black tracking-[0.5em] text-muted-foreground/30 uppercase">
+                        NIVESHIQ VAULT SYSTEM // SECURE CONFIGURATION MODE
+                    </p>
+                </footer>
+            </div>
+        </div>
+    );
+}
