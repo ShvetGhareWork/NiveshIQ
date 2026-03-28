@@ -58,7 +58,12 @@ export default function PortfolioXRay() {
     const [result, setResult] = useState<ExtractionResult | null>(null);
     const [password, setPassword] = useState('');
     const [hasAgreedLegal, setHasAgreedLegal] = useState(false);
+    const [isMounted, setIsMounted] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
+
+    useEffect(() => {
+        setIsMounted(true);
+    }, []);
 
     const userName = user?.name || 'Operator';
 
@@ -247,7 +252,7 @@ export default function PortfolioXRay() {
                                         </div>
                                     </div>
                                 </div>
-                            ) : !result ? (
+                            ) : (!result || !isMounted) ? (
                                 <div className="flex flex-col lg:flex-row gap-12 lg:gap-16 items-center lg:items-start">
                                     {/* Left Column (Upload Area) */}
                                     <div className="flex-1 w-full flex flex-col items-center max-w-[600px] mx-auto lg:max-w-none">
@@ -460,7 +465,7 @@ export default function PortfolioXRay() {
                                             ].map((stat, i) => (
                                                 <div key={i} className="glass-panel border border-border/20 rounded-xl md:rounded-2xl p-4 md:p-6 flex items-center gap-4 md:gap-6 group hover:border-accent/40 transition-all">
                                                     <div className="w-12 h-12 md:w-14 md:h-14 bg-background/50 border border-border/30 rounded-xl flex items-center justify-center text-accent group-hover:scale-110 group-hover:bg-accent/10 transition-all shadow-[0_0_20px_rgba(212,175,55,0.05)] shrink-0">
-                                                        {React.cloneElement(stat.icon as React.ReactElement, { className: 'w-5 h-5 md:w-6 md:h-6' })}
+                                                        {React.cloneElement(stat.icon as React.ReactElement<{ className: string }>, { className: 'w-5 h-5 md:w-6 md:h-6' })}
                                                     </div>
                                                     <div>
                                                         <p className="text-[8px] md:text-[9px] font-black tracking-widest text-muted-foreground uppercase mb-0.5 md:mb-1">{stat.label}</p>

@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
     AreaChart, Area, XAxis, YAxis, CartesianGrid, 
     Tooltip, ResponsiveContainer
@@ -11,6 +11,11 @@ interface XirrvsBenchmarkLineProps {
 }
 
 export const XirrvsBenchmarkLine = ({ data }: XirrvsBenchmarkLineProps) => {
+    const [mounted, setMounted] = useState(false);
+    useEffect(() => setMounted(true), []);
+
+    if (!mounted) return <div className="w-full h-[400px]" />;
+
     return (
         <div className="w-full h-[400px] font-barlow-condensed group">
             <ResponsiveContainer width="100%" height="100%">

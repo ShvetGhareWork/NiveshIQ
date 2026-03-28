@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useAuth } from '@/hooks/useAuth';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { Activity, TrendingUp, Shield, Filter, Download, ChevronLeft, Printer } from 'lucide-react';
 import { TaxRegimeComparisonBar } from '@/components/charts/TaxRegimeComparisonBar';
 import { DeductionUtilisationBars } from '@/components/charts/DeductionUtilisationBars';
@@ -11,6 +11,22 @@ import { OverlapHeatmap } from '@/components/charts/OverlapHeatmap';
 import Link from 'next/link';
 
 export default function AnalyticalDossier() {
+    return (
+        <Suspense fallback={
+            <div className="flex flex-col items-center justify-center h-screen bg-background">
+                <div className="w-20 h-20 bg-accent/10 rounded-3xl flex items-center justify-center mb-8 border border-accent/20 animate-pulse">
+                    <Activity className="w-10 h-10 text-accent" />
+                </div>
+                <h3 className="text-xl font-black font-barlow-condensed tracking-tight text-foreground mb-2 uppercase">SYNCRONIZING ORACLE...</h3>
+                <p className="text-[9px] text-muted-foreground tracking-[0.4em] font-black uppercase">RETRIVING PREVIOUSLY ENCRYPTED DATA</p>
+            </div>
+        }>
+            <DossierContent />
+        </Suspense>
+    );
+}
+
+function DossierContent() {
     const { user, loading: authLoading } = useAuth();
     const searchParams = useSearchParams();
     const portfolioId = searchParams.get('portfolioId');
@@ -170,7 +186,7 @@ export default function AnalyticalDossier() {
                             ANALYTICAL <br className="hidden sm:block print:hidden" /><span className="text-accent italic">DOSSIER</span>
                         </h1>
                         <p className="text-[8px] md:text-[9px] font-black tracking-[0.2em] md:tracking-[0.4em] text-muted-foreground uppercase opacity-40 break-all print:text-gray-500 print:opacity-100 print:text-[8px] print:tracking-[0.1em]">
-                            Secure Portfolio Audit // UID: {Math.random().toString(36).substr(2, 9).toUpperCase()}
+                            Secure Portfolio Audit // UID: {mounted ? Math.random().toString(36).substr(2, 9).toUpperCase() : 'ORACLE-SESSION-ID'}
                         </p>
                     </div>
                     <div className="text-left md:text-right w-full md:w-auto bg-white/5 md:bg-transparent p-4 md:p-0 rounded-xl md:rounded-none print:bg-transparent print:p-0 print:text-right">
@@ -206,7 +222,7 @@ export default function AnalyticalDossier() {
                             <div>
                                 <h4 className="font-black uppercase tracking-tight text-base md:text-lg mb-1 md:mb-2 print:text-black print:text-sm print:mb-0.5">Fiscal Shield Assessment</h4>
                                 <p className="text-[9px] md:text-[10px] text-muted-foreground font-bold tracking-[0.1em] md:tracking-wide uppercase leading-relaxed print:text-gray-700 print:tracking-normal print:text-[9px]">
-                                    Verdict: {taxData?.result?.verdict?.toUpperCase()} REGIME. Optimize 80C deployment by ₹{((150000 - (input?.sec80C || 0)) / 1000).toFixed(1)}k to finalize fiscal security.
+                                    Verdict: {taxData?.result?.verdict?.toUpperCase()} REGIME. Optimize 80C deployment by ₹{((150000 - (taxData?.input?.sec80C || 0)) / 1000).toFixed(1)}k to finalize fiscal security.
                                 </p>
                             </div>
                         </div>

@@ -18,7 +18,12 @@ export default function Analytics() {
     const [portfolio, setPortfolio] = useState<any>(null);
     const [taxData, setTaxData] = useState<any>(null);
     const [loading, setLoading] = useState(true);
+    const [isMounted, setIsMounted] = useState(false);
     const { user, loading: authLoading } = useAuth();
+
+    useEffect(() => {
+        setIsMounted(true);
+    }, []);
 
     useEffect(() => {
         const fetchDeepAnalytics = async () => {
@@ -131,7 +136,7 @@ export default function Analytics() {
         },
     ];
 
-    if (loading || authLoading) {
+    if (loading || authLoading || !isMounted) {
         return (
             <div className="min-h-screen bg-background flex items-center justify-center p-4 text-center">
                 <div className="flex flex-col items-center gap-6">

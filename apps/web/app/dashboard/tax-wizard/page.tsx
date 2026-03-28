@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { TopNav } from '@/components/navigation/TopNav';
 import { DashboardSidebar } from '@/components/navigation/DashboardSidebar';
 import { WizardForm } from './WizardForm';
@@ -16,6 +16,13 @@ export default function TaxWizard() {
     const [initialInput, setInitialInput] = useState<TaxInput | null>(null);
     const { calculate, result, loading, error } = useTaxCalculator();
     const { user } = useAuth();
+    const [isMounted, setIsMounted] = useState(false);
+
+    useEffect(() => {
+        setIsMounted(true);
+    }, []);
+
+    if (!isMounted) return null;
 
 
     const handleCalculate = async (input: TaxInput) => {

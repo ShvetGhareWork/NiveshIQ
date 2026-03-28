@@ -1,5 +1,6 @@
 'use client';
 
+import React, { useState, useEffect } from 'react';
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer } from 'recharts';
 
 interface HexagonalRadarProps {
@@ -7,6 +8,11 @@ interface HexagonalRadarProps {
 }
 
 export const HexagonalRadar = ({ data }: HexagonalRadarProps) => {
+    const [mounted, setMounted] = useState(false);
+    useEffect(() => setMounted(true), []);
+
+    if (!mounted) return <div className="w-full h-[300px]" />;
+
     return (
         <div className="w-full h-[300px]">
             <ResponsiveContainer width="100%" height="100%">

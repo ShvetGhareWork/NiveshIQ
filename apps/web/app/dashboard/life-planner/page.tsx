@@ -15,6 +15,13 @@ export default function LifePlanner() {
     const [selectedEvent, setSelectedEvent] = useState<string | null>(null);
     const [loading, setLoading] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
+    const [isMounted, setIsMounted] = useState(false);
+
+    useEffect(() => {
+        setIsMounted(true);
+    }, []);
+
+    if (!isMounted) return null;
     
     // -- Real Data States --
     const [goals, setGoals] = useState<any[]>([

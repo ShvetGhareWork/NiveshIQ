@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
 
 interface MoneyHealthGaugeProps {
@@ -7,6 +8,11 @@ interface MoneyHealthGaugeProps {
 }
 
 export const MoneyHealthGauge = ({ score }: MoneyHealthGaugeProps) => {
+    const [mounted, setMounted] = useState(false);
+    useEffect(() => setMounted(true), []);
+
+    if (!mounted) return <div className="h-[250px]" />;
+
     const data = [
         { value: score },
         { value: 100 - score }

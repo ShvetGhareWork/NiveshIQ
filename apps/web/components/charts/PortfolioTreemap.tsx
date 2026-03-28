@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Treemap, ResponsiveContainer, Tooltip } from 'recharts';
 
 interface PortfolioTreemapProps {
@@ -8,6 +8,11 @@ interface PortfolioTreemapProps {
 }
 
 export const PortfolioTreemap = ({ data }: PortfolioTreemapProps) => {
+    const [mounted, setMounted] = useState(false);
+    useEffect(() => setMounted(true), []);
+
+    if (!mounted) return <div className="w-full h-[300px] sm:h-[400px] md:h-[500px]" />;
+
     return (
         // 1. Adaptive Height: Scales from 300px on mobile to 500px on desktop
         <div className="w-full h-[300px] sm:h-[400px] md:h-[500px] font-barlow-condensed group relative">

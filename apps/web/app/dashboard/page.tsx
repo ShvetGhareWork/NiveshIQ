@@ -22,6 +22,13 @@ export default function Dashboard() {
     const [vaultHistory, setVaultHistory] = useState<any[]>([]);
     const [healthResult, setHealthResult] = useState<any>(null);
     const [loading, setLoading] = useState(true);
+    const [isMounted, setIsMounted] = useState(false);
+
+    useEffect(() => {
+        setIsMounted(true);
+    }, []);
+
+
 
     // --- TRANSFORMATION ENGINE: DATA TO VISUALS ---
     const radarData = latestData ? [
@@ -105,6 +112,8 @@ export default function Dashboard() {
 
     // PRIORITY 1: REAL HEALTH SCORE | PRIORITY 2: CALC FROM PORTFOLIO | DEFAULT: 85
     const healthScore = healthResult?.totalScore || (latestData ? Math.round(100 - (latestData.insights?.metrics?.riskScore * 5) + (latestData.insights?.metrics?.taxEfficiency / 10)) : 85);
+
+    if (!isMounted) return <div className="min-h-screen bg-[#0A0F1E]" />;
 
     return (
         <div className="flex h-screen bg-background text-foreground overflow-hidden">

@@ -12,7 +12,14 @@ export default function FIREProtocol() {
     const { user, token } = useAuth();
     const [isSaving, setIsSaving] = useState(false);
     const [saveSuccess, setSaveSuccess] = useState(false);
+    const [isMounted, setIsMounted] = useState(false);
     const router = useRouter();
+
+    useEffect(() => {
+        setIsMounted(true);
+    }, []);
+
+    if (!isMounted) return null;
     
     // -- FIRE Inputs --
     const [currentAge, setCurrentAge] = useState(30);
