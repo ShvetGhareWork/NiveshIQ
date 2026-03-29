@@ -131,7 +131,7 @@ export default function Dashboard() {
     if (!isMounted) return <div className="min-h-screen bg-[#0A0F1E]" />;
 
     return (
-        <div className="flex h-screen bg-background text-foreground overflow-hidden">
+        <div className="flex min-h-screen bg-background text-foreground">
             <DashboardSidebar />
             <div className="flex-1 flex flex-col min-w-0">
                 <TopNav
@@ -140,7 +140,7 @@ export default function Dashboard() {
                         { label: 'PORTFOLIO', href: '/dashboard/portfolio', icon: <Activity size={12} /> },
                     ]}
                 />
-                <main id="dashboard-main-content" className="flex-1 overflow-y-auto overflow-x-hidden bg-background/50 relative scrollbar-thin scrollbar-thumb-accent/10">
+                <main id="dashboard-main-content" className="flex-1 bg-background/50 relative scrollbar-thin scrollbar-thumb-accent/10">
 
                     {/* Hero Section */}
                     <section id="hero-section" className="px-4 sm:px-6 md:px-10 py-8 md:py-16 border-b border-border/30 relative overflow-hidden">

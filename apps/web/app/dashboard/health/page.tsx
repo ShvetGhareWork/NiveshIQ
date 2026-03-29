@@ -290,7 +290,7 @@ export default function MoneyHealthDashboard() {
     }
 
     return (
-        <div className="flex flex-col md:flex-row h-screen bg-background text-foreground overflow-hidden">
+        <div className="flex flex-col md:flex-row min-h-screen bg-background text-foreground">
             <DashboardSidebar />
             <div className="flex-1 flex flex-col min-w-0">
                 <TopNav 
@@ -299,7 +299,7 @@ export default function MoneyHealthDashboard() {
                         { label: 'HEALTH VITALITY', href: '/dashboard/health', icon: <Shield size={12} /> },
                     ]}
                 />
-                <main className="flex-1 overflow-y-auto overflow-x-hidden bg-background/50 relative scrollbar-thin scrollbar-thumb-accent/10">
+                <main className="flex-1 bg-background/50 relative scrollbar-thin scrollbar-thumb-accent/10">
 
                     {/* Header Flare */}
                     <div className="absolute top-0 right-0 w-full md:w-1/3 h-[40%] md:h-1/3 bg-accent/5 blur-[80px] md:blur-[120px] rounded-full -translate-y-1/2 md:translate-x-1/2 pointer-events-none" />

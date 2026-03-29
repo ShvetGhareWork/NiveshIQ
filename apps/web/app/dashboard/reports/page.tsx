@@ -213,7 +213,7 @@ export default function Reports() {
     if (!isMounted) return <div className="min-h-screen bg-[#0A0F1E]" />;
 
     return (
-        <div className="flex h-screen bg-background text-foreground overflow-hidden">
+        <div className="flex min-h-screen bg-background text-foreground">
             <DashboardSidebar />
 
             <div className="flex-1 flex flex-col min-w-0">
@@ -224,7 +224,7 @@ export default function Reports() {
                     ]}
                 />
 
-                <main className="flex-1 overflow-y-auto overflow-x-hidden bg-background relative scrollbar-thin scrollbar-thumb-accent/20">
+                <main className="flex-1 bg-background relative scrollbar-thin scrollbar-thumb-accent/20">
                     <div className="absolute top-0 right-0 w-full md:w-1/3 h-1/2 md:h-1/3 bg-accent/5 blur-[80px] md:blur-[120px] rounded-full -translate-y-1/2 translate-x-1/4 md:translate-x-1/2 pointer-events-none overflow-hidden" />
 
                     {/* Header Section */}

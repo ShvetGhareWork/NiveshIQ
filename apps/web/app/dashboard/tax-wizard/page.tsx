@@ -39,7 +39,7 @@ export default function TaxWizard() {
     };
 
     return (
-        <div className="flex h-screen bg-background text-foreground overflow-hidden">
+        <div className="flex min-h-screen bg-background text-foreground">
             <DashboardSidebar />
             <div className="flex-1 flex flex-col min-w-0">
                 <TopNav
@@ -48,7 +48,7 @@ export default function TaxWizard() {
                         { label: 'TAX ORACLE', href: '/dashboard/tax-wizard', icon: <Activity size={12} /> },
                     ]}
                 />
-                <main className="flex-1 overflow-y-auto bg-background/50 relative scrollbar-thin scrollbar-thumb-accent/10">
+                <main className="flex-1 bg-background/50 relative scrollbar-thin scrollbar-thumb-accent/10">
 
                     {/* Header */}
                     <header className="px-4 sm:px-6 md:px-10 py-8 md:py-16 lg:py-20 border-b border-white/5 relative bg-[radial-gradient(circle_at_10%_20%,rgba(212,175,55,0.03)_0%,transparent_50%)]">
