@@ -716,12 +716,12 @@ export default function Reports() {
                                                         <tr key={lp._id} className="group hover:bg-white/[0.01] transition-colors border-l-2 border-l-transparent hover:border-l-accent">
                                                             <td className="px-4 py-3 md:px-6 md:py-4 whitespace-nowrap">
                                                                 <span className="text-[10px] md:text-xs font-black tracking-tight text-foreground uppercase">
-                                                                    {new Date(lp.createdAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }).toUpperCase()}
+                                                                    {new Date(String(lp.createdAt)).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }).toUpperCase()}
                                                                 </span>
                                                             </td>
                                                             <td className="px-4 py-3 md:px-6 md:py-4 whitespace-nowrap">
                                                                 <div className="text-[10px] md:text-xs font-black font-barlow text-accent uppercase tracking-widest">
-                                                                    {lp.eventType || 'GENERAL'}
+                                                                    {String(lp.eventType || 'GENERAL')}
                                                                 </div>
                                                             </td>
                                                             <td className="px-4 py-3 md:px-6 md:py-4 whitespace-nowrap">

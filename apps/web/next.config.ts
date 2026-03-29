@@ -1,12 +1,13 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
   async rewrites() {
+    const backendUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+    
     return [
       {
         source: "/api/:path*",
-        destination: "http://localhost:8000/api/:path*", // Backend URL
+        destination: `${backendUrl}/api/:path*`,
       },
       {
         source: "/login",
