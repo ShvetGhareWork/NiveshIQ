@@ -23,7 +23,6 @@
 
 > *"Your money deserves an X-Ray."*
 
-[🔴 Live Platform](https://niveshiq-tau.vercel.app) · [📖 API Docs](#api-reference) · [🏗️ Architecture](#system-architecture) · [🖥️ All Modules](#dashboard-modules)
 
 </div>
 
