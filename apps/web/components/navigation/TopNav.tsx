@@ -93,12 +93,6 @@ export function TopNav({ userName: propsUserName, customLinks }: TopNavProps) {
                             <Menu size={20} />
                         </button>
 
-                        <Link href="/dashboard" id="dashboard-logo" className="hidden sm:flex items-center gap-3 mr-4 group shrink-0">
-                            <div className="w-8 h-8 rounded-lg bg-white/[0.04] flex items-center justify-center border border-white/10 group-hover:border-accent/40 transition-all p-1">
-                                <img src="/logo.png" alt="NiveshIQ" className="w-full h-full object-contain" />
-                            </div>
-                                            <span className="text-sm font-black font-barlow-condensed tracking-tight text-accent uppercase group-hover:text-white transition-colors">NIVESHIQ</span>
-                        </Link>
 
                         {/* Custom Links */}
                         <div className="flex-1 overflow-x-auto no-scrollbar min-w-0 pb-1">

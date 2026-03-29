@@ -33,6 +33,16 @@ router.get("/all", async (req: any, res) => {
     }
 });
 
+// Get a specific diagnostic by ID
+router.get("/:id", async (req: any, res) => {
+    try {
+        const result = await HealthScore.findById(req.params.id);
+        res.json({ success: true, data: result });
+    } catch (err: any) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
 // Delete a specific diagnostic
 router.delete("/:id", async (req, res) => {
     try {

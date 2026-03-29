@@ -48,4 +48,24 @@ router.get("/all", async (req: any, res) => {
     }
 });
 
+// Get a specific plan by ID
+router.get("/:id", async (req: any, res) => {
+    try {
+        const plan = await LifeEventPlan.findById(req.params.id);
+        res.json({ success: true, data: plan });
+    } catch (err: any) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
+// Delete a specific plan
+router.delete("/:id", async (req: any, res) => {
+    try {
+        const result = await LifeEventPlan.deleteOne({ _id: req.params.id, userId: req.user?.id });
+        res.json({ success: result.deletedCount > 0 });
+    } catch (err: any) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
 export default router;

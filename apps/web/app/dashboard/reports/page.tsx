@@ -25,6 +25,7 @@ export default function Reports() {
     const [healthReports, setHealthReports] = useState<any[]>([]);
     const [taxReports, setTaxReports] = useState<any[]>([]);
     const [fireReports, setFireReports] = useState<any[]>([]);
+    const [lifePlannerReports, setLifePlannerReports] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [searchQuery, setSearchQuery] = useState('');
     const [timeFilter, setTimeFilter] = useState('ALL');
@@ -39,7 +40,7 @@ export default function Reports() {
 
     // Custom Modal State
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-    const [reportToDelete, setReportToDelete] = useState<{ id: string, type: 'PORTFOLIO' | 'HEALTH' | 'TAX' | 'FIRE' } | null>(null);
+    const [reportToDelete, setReportToDelete] = useState<{ id: string, type: 'PORTFOLIO' | 'HEALTH' | 'TAX' | 'FIRE' | 'LIFE_PLANNER' } | null>(null);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -52,22 +53,25 @@ export default function Reports() {
                     return;
                 }
 
-                const [portfolioRes, healthRes, taxRes, fireRes] = await Promise.all([
+                const [portfolioRes, healthRes, taxRes, fireRes, lifePlannerRes] = await Promise.all([
                     fetch(`${API_BASE_URL}/api/portfolio/all`, { headers: { 'Authorization': `Bearer ${token}` } }),
                     fetch(`${API_BASE_URL}/api/health/all`, { headers: { 'Authorization': `Bearer ${token}` } }),
                     fetch(`${API_BASE_URL}/api/tax/history`, { headers: { 'Authorization': `Bearer ${token}` } }),
-                    fetch(`${API_BASE_URL}/api/fire/all`, { headers: { 'Authorization': `Bearer ${token}` } })
+                    fetch(`${API_BASE_URL}/api/fire/all`, { headers: { 'Authorization': `Bearer ${token}` } }),
+                    fetch(`${API_BASE_URL}/api/life-planner/all`, { headers: { 'Authorization': `Bearer ${token}` } })
                 ]);
 
                 const portfolioData = await portfolioRes.json();
                 const healthData = await healthRes.json();
                 const taxData = await taxRes.json();
                 const fireData = await fireRes.json();
+                const lifePlannerData = await lifePlannerRes.json();
 
                 if (portfolioData.success) setReports(portfolioData.data);
                 if (healthData.success) setHealthReports(healthData.data);
                 if (Array.isArray(taxData)) setTaxReports(taxData);
                 if (fireData.success) setFireReports(fireData.data);
+                if (lifePlannerData.success) setLifePlannerReports(lifePlannerData.data);
             } catch (err) {
                 console.error("Failed to fetch reports:", err);
             } finally {
@@ -111,19 +115,44 @@ export default function Reports() {
         return sortOrder === 'DESC' ? valB - valA : valA - valB;
     });
 
-    const handleDownload = async (id: string, date: string) => {
+    const handlePDF = (id: string, type: 'PORTFOLIO' | 'HEALTH' | 'TAX' | 'FIRE' | 'LIFE_PLANNER') => {
+        const params = new URLSearchParams();
+        if (type === 'PORTFOLIO') params.set('portfolioId', id);
+        else if (type === 'HEALTH') params.set('healthId', id);
+        else if (type === 'TAX') params.set('taxId', id);
+        else if (type === 'FIRE') params.set('fireId', id);
+        else if (type === 'LIFE_PLANNER') params.set('lifeId', id);
+        
+        params.set('autoPrint', 'true');
+        window.open(`/dashboard/analytics/dossier?${params.toString()}`, '_blank');
+    };
+
+    const handleDownload = async (id: string, date: string, type: 'PORTFOLIO' | 'HEALTH' | 'TAX' | 'FIRE' | 'LIFE_PLANNER' = 'PORTFOLIO') => {
         try {
             const token = localStorage.getItem('oracle_token');
-            const res = await fetch(`${API_BASE_URL}/api/portfolio/${id}`, {
+            const endpoint = type === 'PORTFOLIO'
+                ? `${API_BASE_URL}/api/portfolio/${id}`
+                : type === 'HEALTH'
+                    ? `${API_BASE_URL}/api/health/${id}`
+                    : type === 'FIRE'
+                        ? `${API_BASE_URL}/api/fire/${id}`
+                        : type === 'LIFE_PLANNER'
+                            ? `${API_BASE_URL}/api/life-planner/${id}`
+                            : `${API_BASE_URL}/api/tax/${id}`;
+
+            const res = await fetch(endpoint, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             const data = await res.json();
-            if (data.success) {
-                const blob = new Blob([JSON.stringify(data.data, null, 2)], { type: 'application/json' });
+            if (data.success || (type === 'TAX' && data)) {
+                // Tax might return direct object or success wrapped
+                const payload = data.data || data;
+                const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
-                a.download = `NiveshIQ-Analysis-${new Date(date).toISOString().split('T')[0]}.json`;
+                const typeLabel = type.replace('_', '-');
+                a.download = `NiveshIQ-${typeLabel}-${new Date(date).toISOString().split('T')[0]}.json`;
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a);
@@ -146,7 +175,9 @@ export default function Reports() {
                     ? `${API_BASE_URL}/api/health/${id}`
                     : type === 'FIRE'
                         ? `${API_BASE_URL}/api/fire/${id}`
-                        : `${API_BASE_URL}/api/tax/${id}`;
+                        : type === 'LIFE_PLANNER'
+                            ? `${API_BASE_URL}/api/life-planner/${id}`
+                            : `${API_BASE_URL}/api/tax/${id}`;
 
             const res = await fetch(endpoint, {
                 method: 'DELETE',
@@ -161,6 +192,8 @@ export default function Reports() {
                     setHealthReports(prev => prev.filter(h => h._id !== id));
                 } else if (type === 'FIRE') {
                     setFireReports(prev => prev.filter(f => f._id !== id));
+                } else if (type === 'LIFE_PLANNER') {
+                    setLifePlannerReports(prev => prev.filter(lp => lp._id !== id));
                 } else {
                     setTaxReports(prev => prev.filter(t => t._id !== id));
                 }
@@ -173,7 +206,7 @@ export default function Reports() {
         }
     };
 
-    const openDeleteModal = (id: string, type: 'PORTFOLIO' | 'HEALTH' | 'TAX' | 'FIRE') => {
+    const openDeleteModal = (id: string, type: 'PORTFOLIO' | 'HEALTH' | 'TAX' | 'FIRE' | 'LIFE_PLANNER') => {
         setReportToDelete({ id, type: type as any });
         setIsDeleteModalOpen(true);
     };
@@ -351,13 +384,13 @@ export default function Reports() {
                                                             </td>
                                                             <td className="px-4 py-3 md:px-6 md:py-4 whitespace-nowrap text-right">
                                                                 <div className="flex items-center justify-end gap-1 opacity-100 lg:opacity-0 group-hover:opacity-100 transition-opacity">
-                                                                    <Link
-                                                                        href={`/dashboard/analytics/dossier?portfolioId=${report.id}`}
+                                                                    <button
+                                                                        onClick={() => handlePDF(report.id, 'PORTFOLIO')}
                                                                         className="p-2 md:p-2.5 rounded-lg text-muted-foreground hover:text-accent hover:bg-accent/10 transition-all active:scale-90"
-                                                                        title="Generate IQ Dossier"
+                                                                        title="Generate Intelligence PDF"
                                                                     >
                                                                         <Printer size={14} className="md:w-4 md:h-4" />
-                                                                    </Link>
+                                                                    </button>
                                                                     <button
                                                                         onClick={() => handleDownload(report.id, report.date)}
                                                                         className="p-2 md:p-2.5 rounded-lg text-muted-foreground hover:text-accent hover:bg-accent/10 transition-all active:scale-90"
@@ -447,12 +480,20 @@ export default function Reports() {
                                                             </td>
                                                             <td className="px-4 py-3 md:px-6 md:py-4 text-right whitespace-nowrap">
                                                                 <div className="flex justify-end items-center gap-1 md:gap-2 opacity-100 lg:opacity-0 group-hover:opacity-100 transition-all">
-                                                                    <Link
-                                                                        href={`/dashboard/analytics/dossier?healthId=${h._id}`}
+                                                                    <button
+                                                                        onClick={() => handlePDF(h._id, 'HEALTH')}
                                                                         className="p-2 md:p-2.5 rounded-xl text-muted-foreground/30 hover:text-accent hover:bg-accent/10 transition-all active:scale-95"
+                                                                        title="Generate Diagnostic PDF"
                                                                     >
                                                                         <Printer size={14} className="md:w-4 md:h-4" />
-                                                                    </Link>
+                                                                    </button>
+                                                                    <button
+                                                                        onClick={() => handleDownload(h._id, h.generatedAt || h.createdAt, 'HEALTH')}
+                                                                        className="p-2 md:p-2.5 rounded-xl text-muted-foreground/30 hover:text-accent hover:bg-accent/10 transition-all active:scale-95"
+                                                                        title="Download Intelligence Artifact"
+                                                                    >
+                                                                        <Download size={14} className="md:w-4 md:h-4" />
+                                                                    </button>
                                                                     <button
                                                                         onClick={() => openDeleteModal(h._id, 'HEALTH')}
                                                                         className="p-2 md:p-2.5 rounded-xl text-muted-foreground/30 hover:text-red-400 hover:bg-red-400/10 transition-all active:scale-95"
@@ -527,12 +568,13 @@ export default function Reports() {
                                                             </td>
                                                             <td className="px-4 py-3 md:px-6 md:py-4 text-right whitespace-nowrap">
                                                                 <div className="flex justify-end items-center gap-1 md:gap-2 opacity-100 lg:opacity-0 group-hover:opacity-100 transition-all">
-                                                                    <Link
-                                                                        href={`/dashboard/analytics/dossier?taxId=${t._id}`}
+                                                                    <button
+                                                                        onClick={() => handlePDF(t._id, 'TAX')}
                                                                         className="p-2 md:p-2.5 rounded-xl text-muted-foreground/30 hover:text-accent hover:bg-accent/10 transition-all active:scale-95"
+                                                                        title="Generate Fiscal PDF"
                                                                     >
                                                                         <Printer size={14} className="md:w-4 md:h-4" />
-                                                                    </Link>
+                                                                    </button>
                                                                     <Link
                                                                         href="/dashboard/tax-wizard"
                                                                         className="p-2 md:p-2.5 rounded-xl text-muted-foreground/30 hover:text-accent hover:bg-accent/10 transition-all active:scale-95"
@@ -610,12 +652,13 @@ export default function Reports() {
                                                             </td>
                                                             <td className="px-4 py-3 md:px-6 md:py-4 text-right whitespace-nowrap">
                                                                 <div className="flex justify-end items-center gap-1 md:gap-2 opacity-100 lg:opacity-0 group-hover:opacity-100 transition-all">
-                                                                    <Link
-                                                                        href={`/dashboard/analytics/dossier?fireId=${f._id}`}
+                                                                    <button
+                                                                        onClick={() => handlePDF(f._id, 'FIRE')}
                                                                         className="p-2 md:p-2.5 rounded-xl text-muted-foreground/30 hover:text-accent hover:bg-accent/10 transition-all active:scale-95"
+                                                                        title="Generate Freedom PDF"
                                                                     >
                                                                         <Printer size={14} className="md:w-4 md:h-4" />
-                                                                    </Link>
+                                                                    </button>
                                                                     <Link
                                                                         href="/dashboard/fire"
                                                                         className="p-2 md:p-2.5 rounded-xl text-muted-foreground/30 hover:text-accent hover:bg-accent/10 transition-all active:scale-95"
@@ -624,6 +667,91 @@ export default function Reports() {
                                                                     </Link>
                                                                     <button
                                                                         onClick={() => openDeleteModal(f._id, 'FIRE')}
+                                                                        className="p-2 md:p-2.5 rounded-xl text-muted-foreground/30 hover:text-red-400 hover:bg-red-400/10 transition-all active:scale-95"
+                                                                    >
+                                                                        <Trash2 size={14} className="md:w-4 md:h-4" />
+                                                                    </button>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    ))}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* LIFE STRATEGIC ROADMAP ARCHIVE */}
+                            <div className="mt-20 md:mt-32">
+                                <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 mb-6 md:mb-8">
+                                    <div className="w-8 h-8 md:w-10 md:h-10 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center text-accent shrink-0">
+                                        <Plus size={18} className="md:w-5 md:h-5" />
+                                    </div>
+                                    <div>
+                                        <h2 className="text-xl md:text-2xl font-black font-barlow-condensed tracking-normal uppercase">Strategic Roadmap Archive</h2>
+                                        <p className="text-[8px] md:text-[9px] text-muted-foreground font-black tracking-widest uppercase opacity-60 mt-0.5 md:mt-1">HISTORICAL LIFE EVENT PLANNING & GOAL SYNERGY</p>
+                                    </div>
+                                </div>
+
+                                {!loading && lifePlannerReports.length === 0 ? (
+                                    <div className="py-12 md:py-16 px-4 text-center border border-dashed border-border/20 rounded-[1.25rem] md:rounded-3xl bg-secondary/5">
+                                        <p className="text-[8px] md:text-[9px] text-muted-foreground tracking-widest uppercase">NO STRATEGIC PLANS ARCHIVED</p>
+                                    </div>
+                                ) : (
+                                    <div className="glass-panel border border-white/5 rounded-[1.25rem] md:rounded-2xl overflow-hidden shadow-2xl">
+                                        <div className="overflow-x-auto w-full scrollbar-thin scrollbar-thumb-white/10">
+                                            <table className="w-full text-left border-collapse min-w-[600px]">
+                                                <thead>
+                                                    <tr className="border-b border-border/10 bg-white/[0.02]">
+                                                        <th className="px-4 py-3 md:px-6 md:py-4 text-[8px] md:text-[9px] font-black text-muted-foreground uppercase tracking-[0.2em] w-28 md:w-32">ARCHIVE DATE</th>
+                                                        <th className="px-4 py-3 md:px-6 md:py-4 text-[8px] md:text-[9px] font-black text-muted-foreground uppercase tracking-[0.2em]">EVENT TYPE</th>
+                                                        <th className="px-4 py-3 md:px-6 md:py-4 text-[8px] md:text-[9px] font-black text-muted-foreground uppercase tracking-[0.2em]">CAPITAL NODE</th>
+                                                        <th className="px-4 py-3 md:px-6 md:py-4 text-[8px] md:text-[9px] font-black text-muted-foreground uppercase tracking-[0.2em]">GOAL SYNC</th>
+                                                        <th className="px-4 py-3 md:px-6 md:py-4 text-[8px] md:text-[9px] font-black text-muted-foreground uppercase tracking-[0.2em] text-right">ACTIONS</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody className="divide-y divide-border/10">
+                                                    {lifePlannerReports.map((lp, i) => (
+                                                        <tr key={lp._id} className="group hover:bg-white/[0.01] transition-colors border-l-2 border-l-transparent hover:border-l-accent">
+                                                            <td className="px-4 py-3 md:px-6 md:py-4 whitespace-nowrap">
+                                                                <span className="text-[10px] md:text-xs font-black tracking-tight text-foreground uppercase">
+                                                                    {new Date(lp.createdAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }).toUpperCase()}
+                                                                </span>
+                                                            </td>
+                                                            <td className="px-4 py-3 md:px-6 md:py-4 whitespace-nowrap">
+                                                                <div className="text-[10px] md:text-xs font-black font-barlow text-accent uppercase tracking-widest">
+                                                                    {lp.eventType || 'GENERAL'}
+                                                                </div>
+                                                            </td>
+                                                            <td className="px-4 py-3 md:px-6 md:py-4 whitespace-nowrap">
+                                                                <div className="text-sm md:text-base font-black font-barlow-condensed tracking-normal text-foreground uppercase">
+                                                                    ₹ {(Number(lp.inputData?.amount || 0)).toLocaleString('en-IN')}
+                                                                </div>
+                                                            </td>
+                                                            <td className="px-4 py-3 md:px-6 md:py-4 whitespace-nowrap">
+                                                                <span className="text-[9px] md:text-[10px] font-black text-muted-foreground tracking-[0.2em] uppercase">
+                                                                    {lp.goals?.length || 0} GOALS ACTIVE
+                                                                </span>
+                                                            </td>
+                                                            <td className="px-4 py-3 md:px-6 md:py-4 text-right whitespace-nowrap">
+                                                                <div className="flex justify-end items-center gap-1 md:gap-2 opacity-100 lg:opacity-0 group-hover:opacity-100 transition-all">
+                                                                    <button
+                                                                        onClick={() => handlePDF(lp._id, 'LIFE_PLANNER')}
+                                                                        className="p-2 md:p-2.5 rounded-xl text-muted-foreground/30 hover:text-accent hover:bg-accent/10 transition-all active:scale-95"
+                                                                        title="Generate Strategic PDF"
+                                                                    >
+                                                                        <Printer size={14} className="md:w-4 md:h-4" />
+                                                                    </button>
+                                                                    <button
+                                                                        onClick={() => handleDownload(lp._id, lp.createdAt, 'LIFE_PLANNER')}
+                                                                        className="p-2 md:p-2.5 rounded-xl text-muted-foreground/30 hover:text-accent hover:bg-accent/10 transition-all active:scale-95"
+                                                                        title="Download Strategic Artifact"
+                                                                    >
+                                                                        <Download size={14} className="md:w-4 md:h-4" />
+                                                                    </button>
+                                                                    <button
+                                                                        onClick={() => openDeleteModal(lp._id, 'LIFE_PLANNER' as any)}
                                                                         className="p-2 md:p-2.5 rounded-xl text-muted-foreground/30 hover:text-red-400 hover:bg-red-400/10 transition-all active:scale-95"
                                                                     >
                                                                         <Trash2 size={14} className="md:w-4 md:h-4" />

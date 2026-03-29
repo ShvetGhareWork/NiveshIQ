@@ -222,7 +222,10 @@ export default function LifeEventPlanner() {
                         >
                             <div className="flex items-center gap-4 mb-10">
                                 <div className="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center text-accent">
-                                    {selectedEvent && LIFE_EVENTS.find(e => e.id === selectedEvent)?.icon({ size: 24 })}
+                                    {selectedEvent && (() => {
+                                        const Icon = LIFE_EVENTS.find(e => e.id === selectedEvent)?.icon;
+                                        return Icon ? <Icon size={24} /> : null;
+                                    })()}
                                 </div>
                                 <h2 className="text-2xl font-black font-barlowCondensed uppercase tracking-tight">
                                     {selectedEvent?.toUpperCase()} PARAMETERS

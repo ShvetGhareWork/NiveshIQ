@@ -9,10 +9,12 @@ import { SIPWaterfall } from '@/components/charts/SIPWaterfall';
 import { ExpenseRatioDragChart } from '@/components/charts/ExpenseRatioDragChart';
 import { Plus, Target, Calendar, ArrowUpRight, Baby, Gem, Gift, Briefcase, Zap } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
+import { useNotifications } from '@/contexts/NotificationContext';
 import { API_BASE_URL } from '@/lib/api';
 
 export default function LifePlanner() {
     const { user } = useAuth();
+    const { addNotification } = useNotifications();
     const [selectedEvent, setSelectedEvent] = useState<string | null>(null);
     const [loading, setLoading] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
@@ -22,22 +24,41 @@ export default function LifePlanner() {
         setIsMounted(true);
     }, []);
 
-    if (!isMounted) return null;
-    
     // -- Real Data States --
+    const [eventAmount, setEventAmount] = useState<string>('');
     const [goals, setGoals] = useState<any[]>([
-        { label: 'NEW HOUSE', progress: 45, target: '₹2.5Cr', sip: '₹1.2L' },
-        { label: 'WEDDING', progress: 82, target: '₹40L', sip: '₹25K' },
-        { label: 'EDUCATION', progress: 12, target: '₹1.5Cr', sip: '₹50K' },
-        { label: 'LUXURY CAR', progress: 68, target: '₹80L', sip: '₹40K' },
+        { label: 'EMERGENCY FUND', progress: 100, target: '₹10L', sip: '-' },
     ]);
     const [sipAllocation, setSipAllocation] = useState<any[]>([
         { name: 'House', amount: 120000 },
         { name: 'Wedding', amount: 25000 },
         { name: 'Education', amount: 50000 },
-        { name: 'Car', amount: 40000 },
-        { name: 'Idle', amount: 15000 },
+        { name: 'Luxury Car', amount: 40000 },
+        { name: 'Emergency', amount: 15000 },
     ]);
+    
+    const [isAddingGoal, setIsAddingGoal] = useState(false);
+    const [newGoalLabel, setNewGoalLabel] = useState('');
+    const [newGoalTarget, setNewGoalTarget] = useState('');
+    const [newGoalSip, setNewGoalSip] = useState('');
+
+    const addGoal = () => {
+        if (!newGoalLabel || !newGoalTarget) return;
+        setGoals([...goals, { 
+            label: newGoalLabel.toUpperCase(), 
+            progress: 0, 
+            target: `₹${newGoalTarget}`, 
+            sip: newGoalSip ? `₹${newGoalSip}` : '-' 
+        }]);
+        setNewGoalLabel('');
+        setNewGoalTarget('');
+        setNewGoalSip('');
+        setIsAddingGoal(false);
+    };
+
+    const removeGoal = (index: number) => {
+        setGoals(goals.filter((_, i) => i !== index));
+    };
     const [growthData, setGrowthData] = useState<any[]>([
         { year: '2024', direct: 100000, regular: 100000 },
         { year: '2026', direct: 250000, regular: 230000 },
@@ -55,6 +76,7 @@ export default function LifePlanner() {
 
     useEffect(() => {
         const fetchPlannerData = async () => {
+            if (!user) return;
             const token = localStorage.getItem('oracle_token');
             if (!token) return;
 
@@ -63,23 +85,24 @@ export default function LifePlanner() {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 const result = await res.json();
+                
                 if (result.success && result.data) {
                     const data = result.data;
-                    setSelectedEvent(data.eventType);
+                    if (data.eventType) setSelectedEvent(data.eventType);
+                    if (data.inputData?.amount) setEventAmount(data.inputData.amount);
                     if (data.goals) setGoals(data.goals);
                     if (data.sipAllocation) setSipAllocation(data.sipAllocation);
                     if (data.growthData) setGrowthData(data.growthData);
                     if (data.milestones) setMilestones(data.milestones);
                 }
             } catch (err) {
-                console.error("Planner Load Error:", err);
+                console.error("LifePlanner: Sync Error:", err);
             } finally {
                 setLoading(false);
             }
         };
-
         fetchPlannerData();
-    }, []);
+    }, [user, isMounted]);
 
     const handleExecuteStrategy = async () => {
         if (!selectedEvent) return;
@@ -87,30 +110,38 @@ export default function LifePlanner() {
         const token = localStorage.getItem('oracle_token');
         
         try {
-            const res = await fetch(`${API_BASE_URL}/api/life-planner`, {
+            const response = await fetch(`${API_BASE_URL}/api/life-planner`, {
                 method: 'POST',
-                headers: { 
+                headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
+                    'Authorization': 'Bearer ' + token
                 },
                 body: JSON.stringify({
                     eventType: selectedEvent,
+                    inputData: { amount: eventAmount },
                     goals,
                     sipAllocation,
                     growthData,
                     milestones
                 })
             });
-            if (res.ok) {
-                // Success logic
-                console.log("Strategy Archival Successful");
+
+            if (response.ok) {
+                setEventAmount(''); // Clear input
+                addNotification({
+                    title: 'Strategic Alignment Successful',
+                    message: `Life event '${selectedEvent}' and updated goals have been archived to your secure financial vault.`,
+                    type: 'success',
+                });
             }
         } catch (err) {
-            console.error("Strategy Execution Error:", err);
+            console.error("Failed to save life planner strategy:", err);
         } finally {
             setIsSaving(false);
         }
     };
+
+    if (!isMounted) return null;
 
     return (
         <div className="flex h-screen bg-background text-foreground overflow-hidden">
@@ -192,25 +223,44 @@ export default function LifePlanner() {
                                                 <div className="w-12 h-12 rounded-2xl bg-accent flex items-center justify-center shadow-lg">
                                                     <Target className="text-background" size={24} />
                                                 </div>
-                                                <div>
-                                                    <h2 className="text-3xl font-black font-barlow-condensed tracking-tight uppercase">Custom Action Plan</h2>
-                                                    <p className="text-[10px] text-accent font-black tracking-[0.3em] uppercase opacity-80">Scenario: {selectedEvent}</p>
-                                                </div>
+                                                <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 mb-10">
+                                                     <div className="space-y-4">
+                                                         <p className="text-[10px] text-accent font-black tracking-[0.3em] uppercase opacity-80">Scenario: {selectedEvent}</p>
+                                                         <h2 className="text-3xl md:text-5xl font-black font-barlow-condensed tracking-tighter uppercase leading-[0.85]">
+                                                             ACTION PLAN <span className="text-accent">ANALYSIS</span>
+                                                         </h2>
+                                                     </div>
+                                                     <div className="bg-white/5 border border-white/5 rounded-2xl p-4 md:p-6 lg:p-8 flex flex-col gap-4 min-w-[300px]">
+                                                         <p className="text-[10px] font-black tracking-[0.2em] text-white/40 uppercase">ENTER AMOUNT (₹)</p>
+                                                         <div className="relative">
+                                                             <span className="absolute left-4 top-1/2 -translate-y-1/2 text-accent text-lg font-black">₹</span>
+                                                             <input 
+                                                                 type="number"
+                                                                 value={eventAmount}
+                                                                 onChange={(e) => setEventAmount(e.target.value)}
+                                                                 placeholder="0.00"
+                                                                 className="w-full bg-background border border-white/10 rounded-xl pl-10 pr-6 py-4 text-2xl font-black focus:border-accent/50 outline-none transition-all"
+                                                             />
+                                                         </div>
+                                                     </div>
+                                                 </div>
                                             </div>
 
                                             <div className="space-y-6">
                                                 {[
                                                     { 
-                                                        title: selectedEvent === 'bonus' ? 'Bonus Deployment Strategy' : 'Marriage Liquidity Lock', 
-                                                        desc: 'Optimal allocation based on current tax bracket and risk nodes.' 
+                                                        title: selectedEvent === 'bonus' ? 'LUMPSUM DEPLOYMENT' : 'EVENT CAPITALIZATION', 
+                                                        desc: eventAmount 
+                                                            ? `Strategic injection of ₹${Number(eventAmount).toLocaleString('en-IN')} into high-velocity growth nodes.` 
+                                                            : 'Awaiting capital input for optimal node allocation.'
                                                     },
                                                     { 
-                                                        title: 'Life Insurance Multiplier', 
-                                                        desc: 'Adjusting term cover to account for new liability/dependency nodes.' 
+                                                        title: 'TAX SHIELDING', 
+                                                        desc: `Optimizing ${selectedEvent} gains through Section 54/54EC protocols.` 
                                                     },
                                                     { 
-                                                        title: 'SIP Velocity Calibration', 
-                                                        desc: 'Maintaining original goal trajectory while accommodating new cashflows.' 
+                                                        title: 'LIQUIDITY LOCK', 
+                                                        desc: 'Ensuring 20% of inflow remains in debt-safe architecture for contingencies.' 
                                                     }
                                                 ].map((item, i) => (
                                                     <div key={i} className="flex gap-6 p-6 bg-white/5 border border-white/5 rounded-2xl hover:border-accent/20 transition-all cursor-default">
@@ -279,7 +329,14 @@ export default function LifePlanner() {
                             {/* Tier 1: Goal Rings */}
                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                                 {goals.map((goal, i) => (
-                                    <div key={i} className="bg-card/30 backdrop-blur-xl border border-white/5 rounded-3xl p-6 group hover:border-accent/30 transition-all">
+                                    <div key={i} className="bg-card/30 backdrop-blur-xl border border-white/5 rounded-3xl p-6 group hover:border-accent/30 transition-all relative">
+                                        <button 
+                                            onClick={() => removeGoal(i)}
+                                            className="absolute top-4 right-4 text-white/10 hover:text-red-400 transition-colors opacity-0 group-hover:opacity-100"
+                                            title="Remove Goal"
+                                        >
+                                            <Zap size={14} />
+                                        </button>
                                         <div className="flex items-center justify-between mb-4">
                                             <Target size={16} className="text-accent group-hover:rotate-45 transition-transform" />
                                             <span className="text-[10px] font-black tracking-widest text-muted-foreground uppercase">{goal.target}</span>
@@ -291,6 +348,62 @@ export default function LifePlanner() {
                                         </div>
                                     </div>
                                 ))}
+
+                                {/* Add Goal Card */}
+                                {!isAddingGoal ? (
+                                    <button 
+                                        onClick={() => setIsAddingGoal(true)}
+                                        className="bg-white/5 border border-dashed border-white/10 rounded-3xl p-6 group hover:border-accent/50 hover:bg-accent/5 transition-all flex flex-col items-center justify-center gap-4 min-h-[220px]"
+                                    >
+                                        <div className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center text-white/20 group-hover:text-accent group-hover:border-accent/30 transition-all">
+                                            <Plus size={24} />
+                                        </div>
+                                        <span className="text-[10px] font-black tracking-[0.2em] text-white/30 group-hover:text-accent transition-all uppercase">Initialize New Goal</span>
+                                    </button>
+                                ) : (
+                                    <div className="bg-card/50 backdrop-blur-xl border border-accent/20 rounded-3xl p-6 space-y-4 animate-in fade-in zoom-in duration-300">
+                                        <div className="space-y-3">
+                                            <input 
+                                                autoFocus
+                                                type="text" 
+                                                placeholder="GOAL NAME (e.g. TAX SAVINGS)" 
+                                                value={newGoalLabel}
+                                                onChange={e => setNewGoalLabel(e.target.value)}
+                                                className="w-full bg-background/50 border border-white/5 rounded-xl px-4 py-3 text-[10px] font-black uppercase tracking-widest outline-none focus:border-accent/40"
+                                            />
+                                            <div className="grid grid-cols-2 gap-3">
+                                                <input 
+                                                    type="text" 
+                                                    placeholder="TARGET (e.g. 50L)" 
+                                                    value={newGoalTarget}
+                                                    onChange={e => setNewGoalTarget(e.target.value)}
+                                                    className="w-full bg-background/50 border border-white/5 rounded-xl px-4 py-3 text-[10px] font-black uppercase tracking-widest outline-none focus:border-accent/40"
+                                                />
+                                                <input 
+                                                    type="text" 
+                                                    placeholder="SIP (e.g. 25K)" 
+                                                    value={newGoalSip}
+                                                    onChange={e => setNewGoalSip(e.target.value)}
+                                                    className="w-full bg-background/50 border border-white/5 rounded-xl px-4 py-3 text-[10px] font-black uppercase tracking-widest outline-none focus:border-accent/40"
+                                                />
+                                            </div>
+                                        </div>
+                                        <div className="flex gap-2">
+                                            <button 
+                                                onClick={addGoal}
+                                                className="flex-1 bg-accent text-background py-3 rounded-xl text-[10px] font-black uppercase tracking-widest hover:brightness-110"
+                                            >
+                                                SYNERGIZE
+                                            </button>
+                                            <button 
+                                                onClick={() => setIsAddingGoal(false)}
+                                                className="px-4 py-3 border border-white/5 rounded-xl text-[10px] font-black uppercase tracking-widest text-white/40 hover:text-white"
+                                            >
+                                                X
+                                            </button>
+                                        </div>
+                                    </div>
+                                )}
                             </div>
 
                             {/* Tier 2: Waterfall & Growth */}

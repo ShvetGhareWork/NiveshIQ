@@ -98,6 +98,15 @@ router.get("/history", async (req: any, res) => {
   res.json(docs);
 });
 
+router.get("/:id", async (req, res) => {
+  try {
+    const doc = await TaxAssessment.findById(req.params.id);
+    res.json({ success: true, data: doc });
+  } catch (e: any) {
+    res.status(400).json({ success: false, error: e.message });
+  }
+});
+
 router.delete("/:id", async (req, res) => {
   await TaxAssessment.findByIdAndDelete(req.params.id);
   res.json({ success: true });

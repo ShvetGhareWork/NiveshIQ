@@ -34,11 +34,14 @@ function DossierContent() {
     const taxId = searchParams.get('taxId');
     const healthId = searchParams.get('healthId');
     const fireId = searchParams.get('fireId');
+    const lifeId = searchParams.get('lifeId');
+    const autoPrint = searchParams.get('autoPrint') === 'true';
     
     const [portfolio, setPortfolio] = useState<any>(null);
     const [taxData, setTaxData] = useState<any>(null);
     const [healthData, setHealthData] = useState<any>(null);
     const [fireData, setFireData] = useState<any>(null);
+    const [lifeData, setLifeData] = useState<any>(null);
     const [loading, setLoading] = useState(true);
     const [mounted, setMounted] = useState(false);
 
@@ -51,18 +54,21 @@ function DossierContent() {
             try {
                 const portfolioUrl = portfolioId ? `${API_BASE_URL}/api/portfolio/${portfolioId}` : `${API_BASE_URL}/api/portfolio`;
                 const taxUrl = taxId ? `${API_BASE_URL}/api/tax/history?id=${taxId}` : `${API_BASE_URL}/api/tax/history`;
+                const lifeUrl = lifeId ? `${API_BASE_URL}/api/life-planner/${lifeId}` : `${API_BASE_URL}/api/life-planner/latest`;
 
-                const [pRes, tRes, hRes, fRes] = await Promise.all([
+                const [pRes, tRes, hRes, fRes, lRes] = await Promise.all([
                     fetch(portfolioUrl, { headers: { 'Authorization': `Bearer ${token}` } }),
                     fetch(taxUrl, { headers: { 'Authorization': `Bearer ${token}` } }),
                     fetch(`${API_BASE_URL}/api/health/all`, { headers: { 'Authorization': `Bearer ${token}` } }),
-                    fetch(`${API_BASE_URL}/api/fire/all`, { headers: { 'Authorization': `Bearer ${token}` } })
+                    fetch(`${API_BASE_URL}/api/fire/all`, { headers: { 'Authorization': `Bearer ${token}` } }),
+                    fetch(lifeUrl, { headers: { 'Authorization': `Bearer ${token}` } })
                 ]);
 
                 const pData = await pRes.json();
                 const tData = await tRes.json();
                 const hData = await hRes.json();
                 const fData = await fRes.json();
+                const lData = await lRes.json();
 
                 if (pData.success && pData.data) setPortfolio(pData.data);
                 
@@ -81,6 +87,18 @@ function DossierContent() {
                 if (fData.success && fData.data) {
                     setFireData(fData.data.find((f: any) => f._id === fireId) || (fireId ? null : fData.data[0]));
                 }
+
+                if (lData.success && lData.data) {
+                    setLifeData(lData.data);
+                }
+
+                // Auto Print Protocol
+                if (autoPrint) {
+                    setTimeout(() => {
+                        window.print();
+                    }, 1500); // Wait for animations
+                }
+
             } catch (err) {
                 console.error("Deep Analytics Load Error:", err);
             } finally {
@@ -93,7 +111,7 @@ function DossierContent() {
         } else if (!authLoading) {
             setLoading(false);
         }
-    }, [user, authLoading, portfolioId, taxId, healthId, fireId]);
+    }, [user, authLoading, portfolioId, taxId, healthId, fireId, lifeId, autoPrint]);
 
     if (!mounted || authLoading || loading) {
         return (
@@ -295,6 +313,38 @@ function DossierContent() {
                                 <div className="text-[9px] font-black tracking-widest text-muted-foreground uppercase mb-2">Freedom Age</div>
                                 <div className="text-xl font-black text-accent">{fireData.inputs?.retireAge}</div>
                             </div>
+                        </div>
+                    </section>
+                )}
+
+                {lifeData && (
+                    <section className="print:break-inside-avoid">
+                        <h2 className="text-[10px] md:text-xs font-black tracking-[0.3em] md:tracking-[0.5em] text-accent uppercase mb-6 md:mb-8 print:mb-4">Life Strategic Alignment</h2>
+                        <div className="bg-white/[0.02] border border-white/5 rounded-3xl p-8 print:p-5 print:border-gray-200">
+                           <div className="flex flex-col md:flex-row justify-between mb-8 pb-8 border-b border-white/5 print:border-gray-100">
+                                <div className="text-left">
+                                    <div className="text-[9px] font-black tracking-widest text-muted-foreground uppercase mb-1">Target Scenario</div>
+                                    <div className="text-2xl font-black text-white print:text-black uppercase">{lifeData.eventType}</div>
+                                </div>
+                                <div className="mt-4 md:mt-0 md:text-right">
+                                    <div className="text-[9px] font-black tracking-widest text-muted-foreground uppercase mb-1">Capital Synergy</div>
+                                    <div className="text-2xl font-black text-accent uppercase">₹ {(Number(lifeData.inputData?.amount || 0)).toLocaleString('en-IN')}</div>
+                                </div>
+                           </div>
+                           
+                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-4">
+                                {lifeData.goals?.map((g: any, i: number) => (
+                                    <div key={i} className="flex items-center justify-between py-2.5 border-b border-white/5 print:border-gray-100">
+                                        <div className="flex flex-col text-left">
+                                            <span className="text-[10px] font-black uppercase text-foreground print:text-black">{g.label}</span>
+                                            <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-widest mt-1">Timeline: {g.timeline} Yrs</span>
+                                        </div>
+                                        <div className="px-3 py-1 bg-white/5 rounded-lg border border-white/10 text-[8px] font-black tracking-[0.2em] text-accent uppercase print:text-black print:border-gray-200">
+                                            {((g.amount / Number(lifeData.inputData?.amount || 1)) * 100).toFixed(0)}% WT
+                                        </div>
+                                    </div>
+                                ))}
+                           </div>
                         </div>
                     </section>
                 )}
