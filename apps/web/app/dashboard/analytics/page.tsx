@@ -221,35 +221,46 @@ export default function Analytics() {
 
                             {/* Tier 1: Overlap & Expense Drag */}
                             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 lg:gap-12">
-                                <div className="bg-card/30 backdrop-blur-2xl border border-white/5 rounded-[1.5rem] md:rounded-3xl p-5 md:p-8 relative">
-                                    <h3 className="text-[10px] md:text-xs font-black tracking-[0.2em] md:tracking-[0.3em] text-muted-foreground uppercase mb-6 md:mb-10 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                                {/* ADDED overflow-hidden here */}
+                                <div className="bg-card/30 backdrop-blur-2xl border border-white/5 rounded-[1.5rem] md:rounded-3xl p-5 md:p-8 relative flex flex-col h-full">
+                                    <h3 className="text-[10px] md:text-xs font-black tracking-[0.2em] md:tracking-[0.3em] text-muted-foreground uppercase mb-6 flex flex-col sm:flex-row sm:items-start sm:items-center justify-between gap-3 shrink-0">
                                         Fund Overlap Heatmap
-                                        <span className="text-[8px] md:text-[9px] text-rose-500 font-black tracking-widest bg-rose-500/10 px-3 py-1.5 rounded-md w-fit">CRITICAL SYNERGY</span>
+                                        <span className="text-[8px] md:text-[9px] text-rose-500 font-black tracking-widest bg-rose-500/10 px-3 py-1.5 rounded-md w-fit shrink-0">CRITICAL SYNERGY</span>
                                     </h3>
-                                    <div className="overflow-hidden">
+
+                                    {/* flex-1 ensures it fills available space, and min-h-[600px] gives the custom chart elements the vertical runway they need */}
+                                    <div className="relative w-full flex-1 min-h-[500px] md:min-h-[600px]">
                                         <OverlapHeatmap data={overlapData} />
                                     </div>
-                                    <p className="mt-6 md:mt-8 text-[8px] md:text-[9px] text-muted-foreground font-black tracking-widest uppercase opacity-40 leading-loose">
+
+                                    {/* mt-auto pushes this to the very bottom, shrink-0 prevents it from being squashed, and pt-5/mt-5 adds safe distance */}
+                                    <p className="mt-auto shrink-0 pt-5 mt-5 border-t border-white/5 text-[8px] md:text-[9px] text-muted-foreground font-black tracking-widest uppercase opacity-40 leading-loose">
                                         Detecting high commonality between largest holdings. Evaluate fund manager concentration.
                                     </p>
                                 </div>
 
-                                <div className="bg-card/30 backdrop-blur-2xl border border-white/5 rounded-[1.5rem] md:rounded-3xl p-5 md:p-8">
+                                <div className="bg-card/30 backdrop-blur-2xl border border-white/5 rounded-[1.5rem] md:rounded-3xl p-5 md:p-8 overflow-hidden">
                                     <h3 className="text-[10px] md:text-xs font-black tracking-[0.2em] md:tracking-[0.3em] text-muted-foreground uppercase mb-6 md:mb-10">
                                         Expense Ratio Drag Projection
                                     </h3>
-                                    <ExpenseRatioDragChart data={expenseDragData} />
+                                    {/* FIXED HEIGHT CONTAINER */}
+                                    <div className="relative w-full h-[300px] md:h-[400px]">
+                                        <ExpenseRatioDragChart data={expenseDragData} />
+                                    </div>
                                 </div>
                             </div>
 
                             {/* Tier 2: Tax Analysis */}
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 lg:gap-12">
-                                <div className="bg-card/30 backdrop-blur-xl border border-white/5 rounded-[1.5rem] md:rounded-3xl p-5 md:p-8 flex flex-col justify-between">
+                                <div className="bg-card/30 backdrop-blur-xl border border-white/5 rounded-[1.5rem] md:rounded-3xl p-5 md:p-8 flex flex-col justify-between overflow-hidden">
                                     <div>
                                         <h3 className="text-[10px] md:text-xs font-black tracking-[0.2em] md:tracking-[0.3em] text-muted-foreground uppercase mb-6 md:mb-10">
                                             Old vs New Regime
                                         </h3>
-                                        <TaxRegimeComparisonBar data={taxComparisonData} />
+                                        {/* FIXED HEIGHT CONTAINER */}
+                                        <div className="relative w-full h-[250px] sm:h-[300px]">
+                                            <TaxRegimeComparisonBar data={taxComparisonData} />
+                                        </div>
                                     </div>
                                     <div className="mt-6 md:mt-8 p-3 md:p-4 bg-emerald-400/5 border border-emerald-400/20 rounded-xl text-center">
                                         <p className="text-[9px] md:text-[10px] font-black text-emerald-400 tracking-[0.2em] uppercase">
@@ -258,24 +269,30 @@ export default function Analytics() {
                                     </div>
                                 </div>
 
-                                <div className="bg-card/30 backdrop-blur-xl border border-white/5 rounded-[1.5rem] md:rounded-3xl p-5 md:p-8 flex flex-col justify-between">
+                                <div className="bg-card/30 backdrop-blur-xl border border-white/5 rounded-[1.5rem] md:rounded-3xl p-5 md:p-8 flex flex-col justify-between overflow-hidden">
                                     <div>
                                         <h3 className="text-[10px] md:text-xs font-black tracking-[0.2em] md:tracking-[0.3em] text-muted-foreground uppercase mb-6 md:mb-10">
                                             Deduction Utilization
                                         </h3>
-                                        <DeductionUtilisationBars data={deductionData} />
+                                        {/* FIXED HEIGHT CONTAINER */}
+                                        <div className="relative w-full h-[250px] sm:h-[300px]">
+                                            <DeductionUtilisationBars data={deductionData} />
+                                        </div>
                                     </div>
                                     <p className="mt-6 md:mt-8 text-[8px] md:text-[9px] text-muted-foreground font-black tracking-widest uppercase opacity-40 leading-loose">
                                         Monitor 80C and 80D shields for maximum tax efficiency protocol.
                                     </p>
                                 </div>
 
-                                <div className="bg-card/30 backdrop-blur-xl border border-white/5 rounded-[1.5rem] md:rounded-3xl p-5 md:p-8 sm:col-span-2 lg:col-span-1 flex flex-col justify-between">
+                                <div className="bg-card/30 backdrop-blur-xl border border-white/5 rounded-[1.5rem] md:rounded-3xl p-5 md:p-8 sm:col-span-2 lg:col-span-1 flex flex-col justify-between overflow-hidden">
                                     <div>
                                         <h3 className="text-[10px] md:text-xs font-black tracking-[0.2em] md:tracking-[0.3em] text-muted-foreground uppercase mb-6 md:mb-10">
                                             Sector Treemap
                                         </h3>
-                                        <PortfolioTreemap data={treemapData} />
+                                        {/* FIXED HEIGHT CONTAINER */}
+                                        <div className="relative w-full h-[250px] sm:h-[300px]">
+                                            <PortfolioTreemap data={treemapData} />
+                                        </div>
                                     </div>
                                     <div className="mt-6 md:mt-8 p-3 md:p-4 bg-accent/5 border border-accent/20 rounded-xl text-center">
                                         <p className="text-[9px] md:text-[10px] font-black text-accent tracking-[0.2em] uppercase">DYNAMIC ASSET DISTRIBUTION</p>
@@ -350,11 +367,12 @@ export default function Analytics() {
                             </div>
 
                             {/* Detailed Performance */}
-                            <div className="bg-card/30 backdrop-blur-xl border border-white/5 rounded-[1.5rem] md:rounded-3xl p-5 md:p-10">
+                            <div className="bg-card/30 backdrop-blur-xl border border-white/5 rounded-[1.5rem] md:rounded-3xl p-5 md:p-10 overflow-hidden">
                                 <h3 className="text-[10px] md:text-xs font-black tracking-[0.2em] md:tracking-[0.3em] text-muted-foreground uppercase font-barlow-condensed mb-6 md:mb-12 text-center md:text-left">
                                     Detailed Performance Benchmarking
                                 </h3>
-                                <div className="h-[250px] sm:h-[300px] md:h-auto">
+                                {/* FIXED HEIGHT CONTAINER - Replaced the md:h-auto class */}
+                                <div className="relative w-full h-[250px] sm:h-[300px] md:h-[400px]">
                                     <XirrvsBenchmarkLine data={detailedPerformance} />
                                 </div>
                             </div>

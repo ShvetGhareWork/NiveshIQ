@@ -45,8 +45,6 @@ export default function Dashboard() {
         setIsMounted(true);
     }, []);
 
-
-
     // --- TRANSFORMATION ENGINE: DATA TO VISUALS ---
     const radarData = latestData ? [
         { subject: 'Risk', A: (latestData.insights?.metrics?.riskScore || 0) * 10, fullMark: 100 },
@@ -147,16 +145,16 @@ export default function Dashboard() {
                     {/* Hero Section */}
                     <section id="hero-section" className="px-4 sm:px-6 md:px-10 py-8 md:py-16 border-b border-border/30 relative overflow-hidden">
                         <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_20%_30%,rgba(212,175,55,0.05)_0%,transparent_50%)] pointer-events-none" />
-                        <div className="max-w-7xl mx-auto relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
-                            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-5">
-                                <div className="w-12 h-12 md:w-14 md:h-14 shrink-0 rounded-2xl bg-accent flex items-center justify-center shadow-[0_0_30px_rgba(212,175,55,0.2)]">
-                                    <Home className="text-background w-6 h-6 md:w-7 md:h-7" />
+                        <div className="max-w-7xl mx-auto relative z-10 flex flex-col md:flex-row items-center md:items-center justify-between gap-6 md:gap-8 text-center md:text-left">
+                            <div className="flex flex-col sm:flex-row items-center sm:items-start md:items-center gap-4 sm:gap-5">
+                                <div className="w-16 h-16 sm:w-12 sm:h-12 md:w-14 md:h-14 shrink-0 rounded-2xl bg-accent flex items-center justify-center shadow-[0_0_30px_rgba(212,175,55,0.2)]">
+                                    <Home className="text-background w-8 h-8 sm:w-6 sm:h-6 md:w-7 md:h-7" />
                                 </div>
                                 <div>
                                     <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-foreground font-barlow-condensed tracking-normal">
                                         NAMASKAR, <span className="text-accent uppercase">{user?.name || 'OPERATOR'}</span>.
                                     </h1>
-                                    <p className="text-sm md:text-base text-muted-foreground font-black tracking-[0.15em] uppercase opacity-60 mt-1">
+                                    <p className="text-xs sm:text-sm md:text-base text-muted-foreground font-black tracking-[0.15em] uppercase opacity-60 mt-1 sm:mt-2">
                                         {latestData ? "YOUR FINANCIAL ORACLE IS READY." : "UPLOAD YOUR FIRST STATEMENT TO INITIALIZE ORACLE."}
                                     </p>
                                 </div>
@@ -165,15 +163,15 @@ export default function Dashboard() {
                             <Link
                                 id="diagnostic-cta"
                                 href="/dashboard/health"
-                                className="group relative flex items-center gap-4 px-8 py-5 bg-card/40 backdrop-blur-xl border border-accent/20 rounded-2xl overflow-hidden hover:border-accent/40 transition-all hover:scale-[1.02] active:scale-[0.98]"
+                                className="group relative flex w-full sm:w-auto items-center justify-center md:justify-start gap-3 sm:gap-4 px-5 py-4 sm:px-8 sm:py-5 bg-card/40 backdrop-blur-xl border border-accent/20 rounded-2xl overflow-hidden hover:border-accent/40 transition-all hover:scale-[1.02] active:scale-[0.98] mt-2 md:mt-0"
                             >
                                 <div className="absolute inset-0 bg-gradient-to-r from-accent/0 via-accent/5 to-accent/0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
-                                <div className="w-10 h-10 rounded-xl bg-accent/10 border border-accent/30 flex items-center justify-center text-accent">
-                                    <Shield size={20} className="group-hover:scale-110 transition-transform" />
+                                <div className="w-8 h-8 sm:w-10 sm:h-10 shrink-0 rounded-xl bg-accent/10 border border-accent/30 flex items-center justify-center text-accent">
+                                    <Shield size={18} className="group-hover:scale-110 transition-transform sm:w-[20px] sm:h-[20px]" />
                                 </div>
                                 <div className="text-left">
-                                    <p className="text-[10px] font-black tracking-[0.2em] text-accent uppercase mb-0.5">SERVICE 02 ACTIVE</p>
-                                    <p className="text-sm font-black text-foreground uppercase tracking-normal font-barlow-condensed">START HEALTH DIAGNOSTIC →</p>
+                                    <p className="text-[9px] sm:text-[10px] font-black tracking-[0.2em] text-accent uppercase mb-0.5">SERVICE 02 ACTIVE</p>
+                                    <p className="text-xs sm:text-sm font-black text-foreground uppercase tracking-normal font-barlow-condensed">START HEALTH DIAGNOSTIC →</p>
                                 </div>
                             </Link>
                         </div>
@@ -185,24 +183,26 @@ export default function Dashboard() {
 
                             {/* Top Tier: Health & Risk */}
                             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
-                                <div id="health-gauge-card" className="lg:col-span-1 bg-card/30 backdrop-blur-xl border border-white/5 rounded-3xl p-8 relative overflow-hidden group">
-                                    <div className="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-20 transition-opacity">
-                                        <Activity size={40} className="text-accent" />
+                                <div id="health-gauge-card" className="lg:col-span-1 bg-card/30 backdrop-blur-xl border border-white/5 rounded-3xl p-5 sm:p-6 md:p-8 relative overflow-hidden group">
+                                    <div className="absolute top-0 right-0 p-4 sm:p-6 opacity-10 group-hover:opacity-20 transition-opacity">
+                                        <Activity size={32} className="text-accent sm:w-[40px] sm:h-[40px]" />
                                     </div>
-                                    <h3 className="text-xs font-black tracking-[0.3em] text-muted-foreground uppercase mb-8">FINANCIAL VITALITY</h3>
+                                    <h3 className="text-[10px] sm:text-xs font-black tracking-[0.3em] text-muted-foreground uppercase mb-6 sm:mb-8">FINANCIAL VITALITY</h3>
                                     <MoneyHealthGauge score={healthScore} />
-                                    <div className="mt-6 flex items-center justify-between text-[10px] font-black tracking-widest text-muted-foreground uppercase">
+                                    <div className="mt-6 flex items-center justify-between text-[9px] sm:text-[10px] font-black tracking-widest text-muted-foreground uppercase">
                                         <span>Risk Profile: Aggressive</span>
                                         <span className="text-accent">Optimizing...</span>
                                     </div>
                                 </div>
 
-                                <div id="performance-chart-card" className="lg:col-span-2 bg-card/30 backdrop-blur-xl border border-white/5 rounded-3xl p-8 flex flex-col justify-between">
-                                    <div className="flex items-center justify-between mb-8">
-                                        <h3 className="text-xs font-black tracking-[0.3em] text-muted-foreground uppercase">Performance vs Benchmark</h3>
+                                <div id="performance-chart-card" className="lg:col-span-2 bg-card/30 backdrop-blur-xl border border-white/5 rounded-3xl p-5 sm:p-6 md:p-8 flex flex-col justify-between">
+                                    <div className="flex items-center justify-between mb-6 sm:mb-8">
+                                        <h3 className="text-[10px] sm:text-xs font-black tracking-[0.3em] text-muted-foreground uppercase">Performance vs Benchmark</h3>
                                         <Link href="/dashboard/analytics" className="text-accent text-[8px] font-black tracking-widest border-b border-accent/20 pb-0.5">FULL ANALYTICS →</Link>
                                     </div>
-                                    <XirrvsBenchmarkLine data={performanceData} />
+                                    <div className="min-h-[200px] sm:min-h-[250px] w-full flex-1">
+                                        <XirrvsBenchmarkLine data={performanceData} />
+                                    </div>
                                 </div>
                             </div>
 
@@ -250,10 +250,9 @@ export default function Dashboard() {
                                     </div>
 
                                     {/* Treemap Card Container */}
-                                    {/* Removed fixed h-[400px] here. We let the inner component dictate height or use flex-1 */}
-                                    <div id="treemap-card" className="flex-1 min-h-[400px] md:min-h-[500px] flex flex-col bg-card/30 backdrop-blur-xl border border-white/5 rounded-[1.5rem] md:rounded-3xl p-5 md:p-6 lg:p-8">
+                                    <div id="treemap-card" className="bg-card/30 backdrop-blur-xl border border-white/5 rounded-3xl p-5 md:p-6 lg:p-8 overflow-hidden">
                                         {/* Header for Treemap */}
-                                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
+                                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 sm:mb-6">
                                             <h3 className="text-[10px] md:text-xs font-black tracking-[0.2em] md:tracking-[0.3em] text-muted-foreground uppercase">
                                                 Asset Allocation Treemap
                                             </h3>
@@ -262,10 +261,8 @@ export default function Dashboard() {
                                             </span>
                                         </div>
 
-                                        {/* The actual Treemap component from the previous step.
-                Because we made it responsive, it will fill this flex container.
-            */}
-                                        <div className="flex-1 w-full relative">
+                                        {/* Using an explicit height instead of flex-1 prevents the chart from bleeding out */}
+                                        <div className="w-full relative h-[300px] md:h-[400px]">
                                             <PortfolioTreemap data={treemapData} />
                                         </div>
                                     </div>
@@ -275,13 +272,10 @@ export default function Dashboard() {
                                 <div id="radar-analysis-card" className="lg:col-span-1 space-y-6 md:space-y-8 flex flex-col">
 
                                     {/* Radar Chart Card */}
-                                    <div className="bg-card/30 backdrop-blur-xl border border-white/5 rounded-[1.5rem] md:rounded-3xl p-5 md:p-8 flex-1 min-h-[350px] lg:min-h-[auto]">
+                                    <div className="bg-card/30 backdrop-blur-xl border border-white/5 rounded-3xl p-5 sm:p-6 md:p-8 flex-1 min-h-[350px] lg:min-h-[auto]">
                                         <h3 className="text-[10px] md:text-xs font-black tracking-[0.2em] md:tracking-[0.3em] text-muted-foreground uppercase mb-4 md:mb-6 text-center lg:text-left">
                                             6D Health Analysis
                                         </h3>
-                                        {/* Ensure HexagonalRadar component is also wrapped in ResponsiveContainer internally. 
-                Using a relative wrapper to constraint it.
-            */}
                                         <div className="relative w-full h-[250px] sm:h-[300px] lg:h-full lg:min-h-[250px] flex items-center justify-center">
                                             <HexagonalRadar data={radarData} />
                                         </div>
@@ -314,41 +308,41 @@ export default function Dashboard() {
 
                             {/* Bottom Tier: History */}
                             <div className="bg-card/30 backdrop-blur-xl border border-white/5 rounded-3xl overflow-hidden shadow-2xl">
-                                <div className="px-8 py-6 border-b border-white/5 flex items-center justify-between">
-                                    <h3 className="text-xs font-black tracking-[0.3em] text-muted-foreground uppercase font-barlow-condensed">Vault Analysis History</h3>
-                                    <Link href="/dashboard/reports" className="text-accent text-[9px] font-black tracking-[0.2em] border-b border-accent/20 pb-0.5">VIEW ALL NODES →</Link>
+                                <div className="px-5 sm:px-6 md:px-8 py-5 md:py-6 border-b border-white/5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                                    <h3 className="text-[10px] sm:text-xs font-black tracking-[0.3em] text-muted-foreground uppercase font-barlow-condensed">Vault Analysis History</h3>
+                                    <Link href="/dashboard/reports" className="text-accent w-fit text-[8px] sm:text-[9px] font-black tracking-[0.2em] border-b border-accent/20 pb-0.5">VIEW ALL NODES →</Link>
                                 </div>
-                                <div className="overflow-x-auto w-full">
+                                <div className="overflow-x-auto w-full scrollbar-thin scrollbar-thumb-accent/20 scrollbar-track-transparent">
                                     <table className="w-full text-left border-collapse min-w-[500px]">
                                         <thead>
                                             <tr className="border-b border-white/5 bg-white/[0.02]">
-                                                <th className="px-8 py-5 text-[9px] font-black text-muted-foreground uppercase tracking-[0.2em] whitespace-nowrap">Analysis Date</th>
-                                                <th className="px-8 py-5 text-[9px] font-black text-muted-foreground uppercase tracking-[0.2em] whitespace-nowrap">Total Value</th>
-                                                <th className="px-8 py-5 text-[9px] font-black text-muted-foreground uppercase tracking-[0.2em] text-right whitespace-nowrap">Status</th>
+                                                <th className="px-5 sm:px-6 md:px-8 py-4 sm:py-5 text-[8px] sm:text-[9px] font-black text-muted-foreground uppercase tracking-[0.2em] whitespace-nowrap">Analysis Date</th>
+                                                <th className="px-5 sm:px-6 md:px-8 py-4 sm:py-5 text-[8px] sm:text-[9px] font-black text-muted-foreground uppercase tracking-[0.2em] whitespace-nowrap">Total Value</th>
+                                                <th className="px-5 sm:px-6 md:px-8 py-4 sm:py-5 text-[8px] sm:text-[9px] font-black text-muted-foreground uppercase tracking-[0.2em] text-right whitespace-nowrap">Status</th>
                                             </tr>
                                         </thead>
                                         <tbody className="divide-y divide-white/5">
                                             {vaultHistory.length > 0 ? vaultHistory.slice(0, 5).map((report, i) => (
                                                 <tr key={i} className="group hover:bg-white/[0.02] transition-colors cursor-pointer">
-                                                    <td className="px-8 py-6 whitespace-nowrap">
-                                                        <span className="text-xs font-black tracking-widest text-foreground uppercase group-hover:text-accent transition-colors">
+                                                    <td className="px-5 sm:px-6 md:px-8 py-4 sm:py-6 whitespace-nowrap">
+                                                        <span className="text-[10px] sm:text-xs font-black tracking-widest text-foreground uppercase group-hover:text-accent transition-colors">
                                                             {new Date(report.date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }).toUpperCase()}
                                                         </span>
                                                     </td>
-                                                    <td className="px-8 py-6 whitespace-nowrap">
+                                                    <td className="px-5 sm:px-6 md:px-8 py-4 sm:py-6 whitespace-nowrap">
                                                         <div className="text-sm md:text-base font-black font-barlow-condensed tracking-normal text-foreground">
                                                             ₹{(report.totalValue || 0).toLocaleString('en-IN')}
                                                         </div>
                                                     </td>
-                                                    <td className="px-8 py-6 text-right whitespace-nowrap">
-                                                        <span className="px-3 py-1 rounded-full bg-emerald-400/10 text-emerald-400 text-[9px] font-black tracking-widest">
+                                                    <td className="px-5 sm:px-6 md:px-8 py-4 sm:py-6 text-right whitespace-nowrap">
+                                                        <span className="px-2 sm:px-3 py-1 rounded-full bg-emerald-400/10 text-emerald-400 text-[8px] sm:text-[9px] font-black tracking-widest">
                                                             ARCHIVED
                                                         </span>
                                                     </td>
                                                 </tr>
                                             )) : (
                                                 <tr>
-                                                    <td colSpan={3} className="px-8 py-10 text-center text-muted-foreground text-[10px] font-black tracking-widest uppercase">
+                                                    <td colSpan={3} className="px-5 sm:px-6 md:px-8 py-8 sm:py-10 text-center text-muted-foreground text-[9px] sm:text-[10px] font-black tracking-widest uppercase">
                                                         No Vault Entries Detected
                                                     </td>
                                                 </tr>
@@ -361,9 +355,9 @@ export default function Dashboard() {
                     </section>
 
                     {/* Footer */}
-                    <footer className="px-4 md:px-10 py-12 border-t border-border/10 text-center relative overflow-hidden">
+                    <footer className="px-4 md:px-10 py-8 md:py-12 border-t border-border/10 text-center relative overflow-hidden">
                         <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-[1px] bg-gradient-to-r from-transparent via-accent/30 to-transparent" />
-                        <p className="text-[9px] md:text-[10px] font-black tracking-[0.4em] text-muted-foreground/30 uppercase leading-relaxed">
+                        <p className="text-[8px] sm:text-[9px] md:text-[10px] font-black tracking-[0.2em] sm:tracking-[0.4em] text-muted-foreground/30 uppercase leading-relaxed">
                             © 2026 NIVESHIQ INTELLIGENCE LAYER <span className="hidden sm:inline">//</span> SEC REGULATED SYSTEMS
                         </p>
                     </footer>

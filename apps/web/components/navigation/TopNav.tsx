@@ -44,10 +44,23 @@ export function TopNav({ userName: propsUserName, customLinks }: TopNavProps) {
     const unreadCount = notifications.filter(n => !n.read).length;
 
     useEffect(() => {
-        const handleHash = () => setCurrentHash(window.location.hash);
-        handleHash();
-        window.addEventListener('hashchange', handleHash);
-        return () => window.removeEventListener('hashchange', handleHash);
+        const handleHashChange = () => {
+            const hash = typeof window !== 'undefined' ? window.location.hash : '';
+            setCurrentHash(hash);
+        };
+
+        handleHashChange(); // Initial check
+        window.addEventListener('hashchange', handleHashChange, { passive: true });
+        window.addEventListener('popstate', handleHashChange, { passive: true });
+        
+        // Final fallback: also check hash periodically if navigation is soft
+        const interval = setInterval(handleHashChange, 500);
+
+        return () => {
+            window.removeEventListener('hashchange', handleHashChange);
+            window.removeEventListener('popstate', handleHashChange);
+            clearInterval(interval);
+        };
     }, []);
 
     // Close menu on navigation
@@ -95,15 +108,14 @@ export function TopNav({ userName: propsUserName, customLinks }: TopNavProps) {
 
 
                         {/* Custom Links */}
-                        <div className="flex-1 overflow-x-auto no-scrollbar min-w-0 pb-1">
+                        <div className="flex-1 overflow-x-auto scrollbar-thin scrollbar-thumb-accent/20 min-w-0 pb-1">
                             <div className="flex items-center gap-8 min-w-max pr-4">
                                 {customLinks?.map((item) => {
-                                    const isHashLink = item.href.includes('#');
-                                    const [basePath, hashPart] = item.href.split('#');
-
-                                    const isActive = isHashLink
-                                        ? (currentHash === `#${hashPart}` || (!currentHash && hashPart === 'account'))
-                                        : (pathname === item.href && !currentHash);
+                                    const normalizeLink = (href: string) => href.includes('#') ? href.substring(href.indexOf('#')) : href;
+                                    const isActive = 
+                                        currentHash === item.href || 
+                                        (currentHash && normalizeLink(item.href) === currentHash) ||
+                                        (!currentHash && item.href.includes('#account'));
 
                                     return (
                                         <Link

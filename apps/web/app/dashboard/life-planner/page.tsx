@@ -36,7 +36,7 @@ export default function LifePlanner() {
         { name: 'Luxury Car', amount: 40000 },
         { name: 'Emergency', amount: 15000 },
     ]);
-    
+
     const [isAddingGoal, setIsAddingGoal] = useState(false);
     const [newGoalLabel, setNewGoalLabel] = useState('');
     const [newGoalTarget, setNewGoalTarget] = useState('');
@@ -44,11 +44,11 @@ export default function LifePlanner() {
 
     const addGoal = () => {
         if (!newGoalLabel || !newGoalTarget) return;
-        setGoals([...goals, { 
-            label: newGoalLabel.toUpperCase(), 
-            progress: 0, 
-            target: `₹${newGoalTarget}`, 
-            sip: newGoalSip ? `₹${newGoalSip}` : '-' 
+        setGoals([...goals, {
+            label: newGoalLabel.toUpperCase(),
+            progress: 0,
+            target: `₹${newGoalTarget}`,
+            sip: newGoalSip ? `₹${newGoalSip}` : '-'
         }]);
         setNewGoalLabel('');
         setNewGoalTarget('');
@@ -85,7 +85,7 @@ export default function LifePlanner() {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 const result = await res.json();
-                
+
                 if (result.success && result.data) {
                     const data = result.data;
                     if (data.eventType) setSelectedEvent(data.eventType);
@@ -108,7 +108,7 @@ export default function LifePlanner() {
         if (!selectedEvent) return;
         setIsSaving(true);
         const token = localStorage.getItem('oracle_token');
-        
+
         try {
             const response = await fetch(`${API_BASE_URL}/api/life-planner`, {
                 method: 'POST',
@@ -147,27 +147,27 @@ export default function LifePlanner() {
         <div className="flex h-screen bg-background text-foreground overflow-hidden">
             <DashboardSidebar />
             <div className="flex-1 flex flex-col min-w-0">
-                <TopNav 
-                    userName={userName} 
+                <TopNav
+                    userName={userName}
                     customLinks={[
                         { label: 'LIFE PLANNER', href: '/dashboard/life-planner', icon: <Target size={12} /> },
                     ]}
                 />
                 <main className="flex-1 overflow-y-auto bg-background/50 relative scrollbar-thin scrollbar-thumb-accent/10">
-                    
+
                     {/* Header */}
-                    <header className="px-6 md:px-10 py-12 md:py-20 border-b border-white/5 relative bg-[radial-gradient(circle_at_10%_20%,rgba(212,175,55,0.03)_0%,transparent_50%)]">
-                        <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:items-end justify-between gap-8">
+                    <header className="px-4 sm:px-6 md:px-10 py-8 md:py-16 lg:py-20 border-b border-white/5 relative bg-[radial-gradient(circle_at_10%_20%,rgba(212,175,55,0.03)_0%,transparent_50%)]">
+                        <div className="max-w-7xl mx-auto flex flex-col lg:flex-row lg:items-end justify-between gap-6 md:gap-8">
                             <div>
-                                <h1 className="text-5xl md:text-8xl font-black font-barlow-condensed tracking-tighter leading-[0.85] uppercase">
+                                <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-black font-barlow-condensed tracking-tighter leading-[0.85] uppercase">
                                     LIFE EVENT <span className="text-accent italic">PLANNER</span>
                                 </h1>
-                                <p className="text-muted-foreground font-black tracking-[0.2em] text-[10px] md:text-xs mt-8 max-w-xl opacity-60 uppercase leading-relaxed">
+                                <p className="text-muted-foreground font-black tracking-[0.15em] sm:tracking-[0.2em] text-[9px] sm:text-[10px] md:text-xs mt-4 sm:mt-6 md:mt-8 max-w-xl opacity-60 uppercase leading-relaxed">
                                     BONUS? MARRIAGE? NEW BABY? INITIALIZE A STRATEGIC ACTION PLAN BASED ON YOUR REAL NUMBERS.
                                 </p>
                             </div>
                             <div className="flex gap-4">
-                                <div className="flex items-center gap-3 px-6 py-3 bg-secondary/30 rounded-xl border border-white/5 font-black text-[10px] uppercase tracking-widest text-muted-foreground">
+                                <div className="flex items-center gap-2 sm:gap-3 px-4 sm:px-6 py-2.5 sm:py-3 bg-secondary/30 rounded-xl border border-white/5 font-black text-[9px] sm:text-[10px] uppercase tracking-widest text-muted-foreground w-fit">
                                     <Zap size={14} className="text-accent animate-pulse" /> ORACLE READY
                                 </div>
                             </div>
@@ -175,10 +175,10 @@ export default function LifePlanner() {
                     </header>
 
                     {/* Event Selection Matrix */}
-                    <section className="px-6 md:px-10 pt-12">
+                    <section className="px-4 sm:px-6 md:px-10 pt-8 md:pt-12">
                         <div className="max-w-7xl mx-auto">
-                            <h3 className="text-xs font-black tracking-[0.3em] text-muted-foreground uppercase mb-8">Select Active Life Event</h3>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                            <h3 className="text-[10px] sm:text-xs font-black tracking-[0.2em] sm:tracking-[0.3em] text-muted-foreground uppercase mb-6 sm:mb-8 text-center sm:text-left">Select Active Life Event</h3>
+                            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
                                 {[
                                     { id: 'bonus', label: 'GOT A BONUS', icon: Gift, color: 'text-accent' },
                                     { id: 'marriage', label: 'GETTING MARRIED', icon: Gem, color: 'text-emerald-400' },
@@ -188,16 +188,15 @@ export default function LifePlanner() {
                                     <button
                                         key={event.id}
                                         onClick={() => setSelectedEvent(event.id)}
-                                        className={`p-6 rounded-3xl border transition-all flex flex-col items-center text-center gap-4 group ${
-                                            selectedEvent === event.id 
-                                            ? 'bg-accent/10 border-accent/40 shadow-[0_0_30px_rgba(212,175,55,0.1)]' 
-                                            : 'bg-card/30 border-white/5 hover:border-white/20'
-                                        }`}
+                                        className={`p-4 sm:p-6 rounded-[1.25rem] sm:rounded-3xl border transition-all flex flex-col items-center text-center gap-3 sm:gap-4 group ${selectedEvent === event.id
+                                                ? 'bg-accent/10 border-accent/40 shadow-[0_0_30px_rgba(212,175,55,0.1)]'
+                                                : 'bg-card/30 border-white/5 hover:border-white/20'
+                                            }`}
                                     >
-                                        <div className={`p-4 rounded-2xl bg-white/5 ${event.color} group-hover:scale-110 transition-transform`}>
-                                            <event.icon size={24} />
+                                        <div className={`p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-white/5 ${event.color} group-hover:scale-110 transition-transform`}>
+                                            <event.icon size={20} className="sm:w-[24px] sm:h-[24px]" />
                                         </div>
-                                        <span className="text-[10px] font-black tracking-widest uppercase text-foreground">{event.label}</span>
+                                        <span className="text-[9px] sm:text-[10px] font-black tracking-widest uppercase text-foreground">{event.label}</span>
                                     </button>
                                 ))}
                             </div>
@@ -206,116 +205,114 @@ export default function LifePlanner() {
 
                     {/* Action Plan Analysis */}
                     {selectedEvent && (
-                        <motion.section 
+                        <motion.section
                             initial={{ opacity: 0, y: 30 }}
                             animate={{ opacity: 1, y: 0 }}
-                            className="px-6 md:px-10 py-12"
+                            className="px-4 sm:px-6 md:px-10 py-8 md:py-12"
                         >
                             <div className="max-w-7xl mx-auto">
-                                <div className="bg-card/40 backdrop-blur-3xl border border-accent/20 rounded-[3rem] p-8 md:p-12 relative overflow-hidden group">
-                                    <div className="absolute top-0 right-0 p-12 opacity-[0.03] group-hover:opacity-[0.05] transition-opacity">
-                                        <Zap size={200} className="text-accent" />
+                                <div className="bg-card/40 backdrop-blur-3xl border border-accent/20 rounded-[1.5rem] md:rounded-[3rem] p-5 sm:p-8 md:p-12 relative overflow-hidden group">
+                                    <div className="absolute top-0 right-0 p-8 md:p-12 opacity-[0.03] group-hover:opacity-[0.05] transition-opacity pointer-events-none">
+                                        <Zap size={120} className="sm:w-[150px] sm:h-[150px] md:w-[200px] md:h-[200px] text-accent" />
                                     </div>
 
-                                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 relative z-10">
+                                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 relative z-10">
                                         <div>
-                                            <div className="flex items-center gap-4 mb-8">
-                                                <div className="w-12 h-12 rounded-2xl bg-accent flex items-center justify-center shadow-lg">
-                                                    <Target className="text-background" size={24} />
+                                            <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-6 md:mb-8">
+                                                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-accent flex items-center justify-center shadow-lg shrink-0">
+                                                    <Target className="text-background w-5 h-5 sm:w-6 sm:h-6" />
                                                 </div>
-                                                <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 mb-10">
-                                                     <div className="space-y-4">
-                                                         <p className="text-[10px] text-accent font-black tracking-[0.3em] uppercase opacity-80">Scenario: {selectedEvent}</p>
-                                                         <h2 className="text-3xl md:text-5xl font-black font-barlow-condensed tracking-tighter uppercase leading-[0.85]">
-                                                             ACTION PLAN <span className="text-accent">ANALYSIS</span>
-                                                         </h2>
-                                                     </div>
-                                                     <div className="bg-white/5 border border-white/5 rounded-2xl p-4 md:p-6 lg:p-8 flex flex-col gap-4 min-w-[300px]">
-                                                         <p className="text-[10px] font-black tracking-[0.2em] text-white/40 uppercase">ENTER AMOUNT (₹)</p>
-                                                         <div className="relative">
-                                                             <span className="absolute left-4 top-1/2 -translate-y-1/2 text-accent text-lg font-black">₹</span>
-                                                             <input 
-                                                                 type="number"
-                                                                 value={eventAmount}
-                                                                 onChange={(e) => setEventAmount(e.target.value)}
-                                                                 placeholder="0.00"
-                                                                 className="w-full bg-background border border-white/10 rounded-xl pl-10 pr-6 py-4 text-2xl font-black focus:border-accent/50 outline-none transition-all"
-                                                             />
-                                                         </div>
-                                                     </div>
-                                                 </div>
+                                                <div className="space-y-1.5 sm:space-y-3">
+                                                    <p className="text-[9px] sm:text-[10px] text-accent font-black tracking-[0.2em] sm:tracking-[0.3em] uppercase opacity-80">Scenario: {selectedEvent}</p>
+                                                    <h2 className="text-3xl sm:text-4xl md:text-5xl font-black font-barlow-condensed tracking-tighter uppercase leading-[0.85]">
+                                                        ACTION PLAN <span className="text-accent">ANALYSIS</span>
+                                                    </h2>
+                                                </div>
                                             </div>
-
-                                            <div className="space-y-6">
-                                                {[
-                                                    { 
-                                                        title: selectedEvent === 'bonus' ? 'LUMPSUM DEPLOYMENT' : 'EVENT CAPITALIZATION', 
-                                                        desc: eventAmount 
-                                                            ? `Strategic injection of ₹${Number(eventAmount).toLocaleString('en-IN')} into high-velocity growth nodes.` 
-                                                            : 'Awaiting capital input for optimal node allocation.'
-                                                    },
-                                                    { 
-                                                        title: 'TAX SHIELDING', 
-                                                        desc: `Optimizing ${selectedEvent} gains through Section 54/54EC protocols.` 
-                                                    },
-                                                    { 
-                                                        title: 'LIQUIDITY LOCK', 
-                                                        desc: 'Ensuring 20% of inflow remains in debt-safe architecture for contingencies.' 
-                                                    }
-                                                ].map((item, i) => (
-                                                    <div key={i} className="flex gap-6 p-6 bg-white/5 border border-white/5 rounded-2xl hover:border-accent/20 transition-all cursor-default">
-                                                        <div className="text-accent text-[10px] font-black pt-1">0{i+1}</div>
-                                                        <div>
-                                                            <h4 className="text-sm font-black text-foreground uppercase tracking-tight mb-2">{item.title}</h4>
-                                                            <p className="text-[10px] text-muted-foreground font-black tracking-widest uppercase opacity-60 leading-relaxed">{item.desc}</p>
-                                                        </div>
-                                                    </div>
-                                                ))}
+                                            <div className="bg-white/5 border border-white/5 rounded-[1.25rem] sm:rounded-2xl p-5 sm:p-6 lg:p-8 flex flex-col gap-3 sm:gap-4 mb-6 lg:mb-0">
+                                                <p className="text-[9px] sm:text-[10px] font-black tracking-[0.2em] text-white/40 uppercase">ENTER AMOUNT (₹)</p>
+                                                <div className="relative">
+                                                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-accent text-base sm:text-lg font-black">₹</span>
+                                                    <input
+                                                        type="number"
+                                                        value={eventAmount}
+                                                        onChange={(e) => setEventAmount(e.target.value)}
+                                                        placeholder="0.00"
+                                                        className="w-full bg-background border border-white/10 rounded-xl pl-10 sm:pl-12 pr-4 sm:pr-6 py-3 sm:py-4 text-xl sm:text-2xl font-black focus:border-accent/50 outline-none transition-all"
+                                                    />
+                                                </div>
                                             </div>
                                         </div>
 
-                                        <div className="bg-background/40 backdrop-blur-md border border-white/5 rounded-[2rem] p-8 flex flex-col justify-between">
-                                            <div>
-                                                <h3 className="text-xs font-black tracking-[0.3em] text-muted-foreground uppercase mb-8">Strategic Breakdown</h3>
-                                                <div className="space-y-8">
+                                        <div className="space-y-4 sm:space-y-6">
+                                            {[
+                                                {
+                                                    title: selectedEvent === 'bonus' ? 'LUMPSUM DEPLOYMENT' : 'EVENT CAPITALIZATION',
+                                                    desc: eventAmount
+                                                        ? `Strategic injection of ₹${Number(eventAmount).toLocaleString('en-IN')} into high-velocity growth nodes.`
+                                                        : 'Awaiting capital input for optimal node allocation.'
+                                                },
+                                                {
+                                                    title: 'TAX SHIELDING',
+                                                    desc: `Optimizing ${selectedEvent} gains through Section 54/54EC protocols.`
+                                                },
+                                                {
+                                                    title: 'LIQUIDITY LOCK',
+                                                    desc: 'Ensuring 20% of inflow remains in debt-safe architecture for contingencies.'
+                                                }
+                                            ].map((item, i) => (
+                                                <div key={i} className="flex flex-row gap-4 sm:gap-6 p-4 sm:p-6 bg-white/5 border border-white/5 rounded-xl sm:rounded-2xl hover:border-accent/20 transition-all cursor-default">
+                                                    <div className="text-accent text-[9px] sm:text-[10px] font-black pt-1 shrink-0">0{i + 1}</div>
                                                     <div>
-                                                        <div className="flex justify-between text-[10px] font-black tracking-widest uppercase mb-4">
-                                                            <span>Invest (Long Term)</span>
-                                                            <span className="text-accent">60%</span>
-                                                        </div>
-                                                        <div className="h-2 bg-white/5 rounded-full overflow-hidden">
-                                                            <div className="h-full bg-accent w-[60%] shadow-[0_0_20px_rgba(212,175,55,0.4)]" />
-                                                        </div>
+                                                        <h4 className="text-xs sm:text-sm font-black text-foreground uppercase tracking-tight mb-1.5 sm:mb-2">{item.title}</h4>
+                                                        <p className="text-[9px] sm:text-[10px] text-muted-foreground font-black tracking-widest uppercase opacity-60 leading-relaxed">{item.desc}</p>
                                                     </div>
-                                                    <div>
-                                                        <div className="flex justify-between text-[10px] font-black tracking-widest uppercase mb-4">
-                                                            <span>Debt Repayment</span>
-                                                            <span className="text-emerald-400">30%</span>
-                                                        </div>
-                                                        <div className="h-2 bg-white/5 rounded-full overflow-hidden">
-                                                            <div className="h-full bg-emerald-400 w-[30%]" />
-                                                        </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+
+                                    <div className="mt-8 md:mt-12 bg-background/40 backdrop-blur-md border border-white/5 rounded-[1.5rem] md:rounded-[2rem] p-5 sm:p-6 md:p-8 flex flex-col justify-between">
+                                        <div>
+                                            <h3 className="text-[10px] sm:text-xs font-black tracking-[0.2em] sm:tracking-[0.3em] text-muted-foreground uppercase mb-6 sm:mb-8 text-center sm:text-left">Strategic Breakdown</h3>
+                                            <div className="space-y-6 sm:space-y-8">
+                                                <div>
+                                                    <div className="flex justify-between text-[9px] sm:text-[10px] font-black tracking-widest uppercase mb-3 sm:mb-4">
+                                                        <span>Invest (Long Term)</span>
+                                                        <span className="text-accent">60%</span>
                                                     </div>
-                                                    <div>
-                                                        <div className="flex justify-between text-[10px] font-black tracking-widest uppercase mb-4">
-                                                            <span>Life Celebration</span>
-                                                            <span className="text-blue-400">10%</span>
-                                                        </div>
-                                                        <div className="h-2 bg-white/5 rounded-full overflow-hidden">
-                                                            <div className="h-full bg-blue-400 w-[10%]" />
-                                                        </div>
+                                                    <div className="h-1.5 sm:h-2 bg-white/5 rounded-full overflow-hidden">
+                                                        <div className="h-full bg-accent w-[60%] shadow-[0_0_20px_rgba(212,175,55,0.4)]" />
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <div className="flex justify-between text-[9px] sm:text-[10px] font-black tracking-widest uppercase mb-3 sm:mb-4">
+                                                        <span>Debt Repayment</span>
+                                                        <span className="text-emerald-400">30%</span>
+                                                    </div>
+                                                    <div className="h-1.5 sm:h-2 bg-white/5 rounded-full overflow-hidden">
+                                                        <div className="h-full bg-emerald-400 w-[30%]" />
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <div className="flex justify-between text-[9px] sm:text-[10px] font-black tracking-widest uppercase mb-3 sm:mb-4">
+                                                        <span>Life Celebration</span>
+                                                        <span className="text-blue-400">10%</span>
+                                                    </div>
+                                                    <div className="h-1.5 sm:h-2 bg-white/5 rounded-full overflow-hidden">
+                                                        <div className="h-full bg-blue-400 w-[10%]" />
                                                     </div>
                                                 </div>
                                             </div>
-
-                                            <button 
-                                                onClick={handleExecuteStrategy}
-                                                disabled={isSaving}
-                                                className="w-full py-5 bg-white text-background rounded-2xl font-black text-xs uppercase tracking-[0.2em] hover:scale-[1.02] active:scale-95 transition-all mt-12 disabled:opacity-50"
-                                            >
-                                                {isSaving ? 'ARCHIVING...' : 'EXECUTE STRATEGY'}
-                                            </button>
                                         </div>
+
+                                        <button
+                                            onClick={handleExecuteStrategy}
+                                            disabled={isSaving}
+                                            className="w-full py-4 sm:py-5 bg-white text-background rounded-xl sm:rounded-2xl font-black text-[10px] sm:text-xs uppercase tracking-[0.2em] hover:scale-[1.02] active:scale-95 transition-all mt-8 sm:mt-12 disabled:opacity-50"
+                                        >
+                                            {isSaving ? 'ARCHIVING...' : 'EXECUTE STRATEGY'}
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -323,23 +320,23 @@ export default function LifePlanner() {
                     )}
 
                     {/* Goal Performance Grid */}
-                    <section className="px-6 md:px-10 py-12">
-                        <div className="max-w-7xl mx-auto space-y-12 pb-32">
-                            
+                    <section className="px-4 sm:px-6 md:px-10 py-8 md:py-12">
+                        <div className="max-w-7xl mx-auto space-y-8 md:space-y-12 pb-20 md:pb-32">
+
                             {/* Tier 1: Goal Rings */}
-                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
                                 {goals.map((goal, i) => (
-                                    <div key={i} className="bg-card/30 backdrop-blur-xl border border-white/5 rounded-3xl p-6 group hover:border-accent/30 transition-all relative">
-                                        <button 
+                                    <div key={i} className="bg-card/30 backdrop-blur-xl border border-white/5 rounded-[1.5rem] sm:rounded-3xl p-5 sm:p-6 group hover:border-accent/30 transition-all relative">
+                                        <button
                                             onClick={() => removeGoal(i)}
-                                            className="absolute top-4 right-4 text-white/10 hover:text-red-400 transition-colors opacity-0 group-hover:opacity-100"
+                                            className="absolute top-4 right-4 text-white/10 hover:text-red-400 transition-colors sm:opacity-0 group-hover:opacity-100"
                                             title="Remove Goal"
                                         >
                                             <Zap size={14} />
                                         </button>
                                         <div className="flex items-center justify-between mb-4">
                                             <Target size={16} className="text-accent group-hover:rotate-45 transition-transform" />
-                                            <span className="text-[10px] font-black tracking-widest text-muted-foreground uppercase">{goal.target}</span>
+                                            <span className="text-[9px] sm:text-[10px] font-black tracking-widest text-muted-foreground uppercase">{goal.target}</span>
                                         </div>
                                         <GoalProgressRing progress={goal.progress} label={goal.label} />
                                         <div className="mt-4 flex items-center justify-between text-[8px] font-black tracking-widest text-muted-foreground uppercase">
@@ -351,53 +348,53 @@ export default function LifePlanner() {
 
                                 {/* Add Goal Card */}
                                 {!isAddingGoal ? (
-                                    <button 
+                                    <button
                                         onClick={() => setIsAddingGoal(true)}
-                                        className="bg-white/5 border border-dashed border-white/10 rounded-3xl p-6 group hover:border-accent/50 hover:bg-accent/5 transition-all flex flex-col items-center justify-center gap-4 min-h-[220px]"
+                                        className="bg-white/5 border border-dashed border-white/10 rounded-[1.5rem] sm:rounded-3xl p-5 sm:p-6 group hover:border-accent/50 hover:bg-accent/5 transition-all flex flex-col items-center justify-center gap-3 sm:gap-4 min-h-[200px] sm:min-h-[220px]"
                                     >
-                                        <div className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center text-white/20 group-hover:text-accent group-hover:border-accent/30 transition-all">
-                                            <Plus size={24} />
+                                        <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border border-white/10 flex items-center justify-center text-white/20 group-hover:text-accent group-hover:border-accent/30 transition-all">
+                                            <Plus size={20} className="sm:w-[24px] sm:h-[24px]" />
                                         </div>
-                                        <span className="text-[10px] font-black tracking-[0.2em] text-white/30 group-hover:text-accent transition-all uppercase">Initialize New Goal</span>
+                                        <span className="text-[9px] sm:text-[10px] font-black tracking-[0.2em] text-white/30 group-hover:text-accent transition-all uppercase">Initialize New Goal</span>
                                     </button>
                                 ) : (
-                                    <div className="bg-card/50 backdrop-blur-xl border border-accent/20 rounded-3xl p-6 space-y-4 animate-in fade-in zoom-in duration-300">
+                                    <div className="bg-card/50 backdrop-blur-xl border border-accent/20 rounded-[1.5rem] sm:rounded-3xl p-5 sm:p-6 space-y-4 animate-in fade-in zoom-in duration-300">
                                         <div className="space-y-3">
-                                            <input 
+                                            <input
                                                 autoFocus
-                                                type="text" 
-                                                placeholder="GOAL NAME (e.g. TAX SAVINGS)" 
+                                                type="text"
+                                                placeholder="GOAL NAME (e.g. TAX SAVINGS)"
                                                 value={newGoalLabel}
                                                 onChange={e => setNewGoalLabel(e.target.value)}
-                                                className="w-full bg-background/50 border border-white/5 rounded-xl px-4 py-3 text-[10px] font-black uppercase tracking-widest outline-none focus:border-accent/40"
+                                                className="w-full bg-background/50 border border-white/5 rounded-xl px-3 sm:px-4 py-2.5 sm:py-3 text-[9px] sm:text-[10px] font-black uppercase tracking-widest outline-none focus:border-accent/40"
                                             />
-                                            <div className="grid grid-cols-2 gap-3">
-                                                <input 
-                                                    type="text" 
-                                                    placeholder="TARGET (e.g. 50L)" 
+                                            <div className="grid grid-cols-2 gap-2 sm:gap-3">
+                                                <input
+                                                    type="text"
+                                                    placeholder="TARGET (e.g. 50L)"
                                                     value={newGoalTarget}
                                                     onChange={e => setNewGoalTarget(e.target.value)}
-                                                    className="w-full bg-background/50 border border-white/5 rounded-xl px-4 py-3 text-[10px] font-black uppercase tracking-widest outline-none focus:border-accent/40"
+                                                    className="w-full bg-background/50 border border-white/5 rounded-xl px-3 sm:px-4 py-2.5 sm:py-3 text-[9px] sm:text-[10px] font-black uppercase tracking-widest outline-none focus:border-accent/40"
                                                 />
-                                                <input 
-                                                    type="text" 
-                                                    placeholder="SIP (e.g. 25K)" 
+                                                <input
+                                                    type="text"
+                                                    placeholder="SIP (e.g. 25K)"
                                                     value={newGoalSip}
                                                     onChange={e => setNewGoalSip(e.target.value)}
-                                                    className="w-full bg-background/50 border border-white/5 rounded-xl px-4 py-3 text-[10px] font-black uppercase tracking-widest outline-none focus:border-accent/40"
+                                                    className="w-full bg-background/50 border border-white/5 rounded-xl px-3 sm:px-4 py-2.5 sm:py-3 text-[9px] sm:text-[10px] font-black uppercase tracking-widest outline-none focus:border-accent/40"
                                                 />
                                             </div>
                                         </div>
                                         <div className="flex gap-2">
-                                            <button 
+                                            <button
                                                 onClick={addGoal}
-                                                className="flex-1 bg-accent text-background py-3 rounded-xl text-[10px] font-black uppercase tracking-widest hover:brightness-110"
+                                                className="flex-1 bg-accent text-background py-2.5 sm:py-3 rounded-xl text-[9px] sm:text-[10px] font-black uppercase tracking-widest hover:brightness-110"
                                             >
                                                 SYNERGIZE
                                             </button>
-                                            <button 
+                                            <button
                                                 onClick={() => setIsAddingGoal(false)}
-                                                className="px-4 py-3 border border-white/5 rounded-xl text-[10px] font-black uppercase tracking-widest text-white/40 hover:text-white"
+                                                className="px-3 sm:px-4 py-2.5 sm:py-3 border border-white/5 rounded-xl text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-white/40 hover:text-white"
                                             >
                                                 X
                                             </button>
@@ -407,48 +404,54 @@ export default function LifePlanner() {
                             </div>
 
                             {/* Tier 2: Waterfall & Growth */}
-                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12">
-                                <div className="bg-card/30 backdrop-blur-2xl border border-white/5 rounded-3xl p-8">
-                                    <h3 className="text-xs font-black tracking-[0.3em] text-muted-foreground uppercase mb-10">
+                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 lg:gap-12">
+                                <div className="bg-card/30 backdrop-blur-2xl border border-white/5 rounded-[1.5rem] md:rounded-3xl p-5 sm:p-6 md:p-8 overflow-hidden">
+                                    <h3 className="text-[10px] sm:text-xs font-black tracking-[0.2em] sm:tracking-[0.3em] text-muted-foreground uppercase mb-6 sm:mb-8 text-center sm:text-left">
                                         SIP Allocation Waterfall
                                     </h3>
-                                    <SIPWaterfall data={sipAllocation} />
-                                    <div className="mt-8 flex justify-between items-center bg-secondary/20 p-4 rounded-xl border border-white/5">
-                                        <div className="text-[9px] font-black tracking-widest text-muted-foreground uppercase">Total Committed SIP</div>
-                                        <div className="text-lg font-black font-barlow-condensed text-foreground">₹2,50,000</div>
+                                    {/* Fixed height wrapper for the chart */}
+                                    <div className="relative w-full h-[250px] sm:h-[300px]">
+                                        <SIPWaterfall data={sipAllocation} />
+                                    </div>
+                                    <div className="mt-6 sm:mt-8 flex flex-col sm:flex-row sm:justify-between sm:items-center bg-secondary/20 p-4 rounded-xl border border-white/5 gap-2 sm:gap-0">
+                                        <div className="text-[8px] sm:text-[9px] font-black tracking-widest text-muted-foreground uppercase text-center sm:text-left">Total Committed SIP</div>
+                                        <div className="text-base sm:text-lg font-black font-barlow-condensed text-foreground text-center sm:text-right">₹2,50,000</div>
                                     </div>
                                 </div>
 
-                                <div className="bg-card/30 backdrop-blur-2xl border border-white/5 rounded-3xl p-8">
-                                    <h3 className="text-xs font-black tracking-[0.3em] text-muted-foreground uppercase mb-10 flex items-center justify-between">
+                                <div className="bg-card/30 backdrop-blur-2xl border border-white/5 rounded-[1.5rem] md:rounded-3xl p-5 sm:p-6 md:p-8 overflow-hidden">
+                                    <h3 className="text-[10px] sm:text-xs font-black tracking-[0.2em] sm:tracking-[0.3em] text-muted-foreground uppercase mb-6 sm:mb-8 flex flex-col sm:flex-row items-center sm:justify-between gap-2 sm:gap-0">
                                         Corpus Growth Matrix
-                                        <span className="text-[9px] text-accent font-black tracking-widest bg-accent/10 px-3 py-1 rounded-full">ESTIMATED</span>
+                                        <span className="text-[8px] sm:text-[9px] text-accent font-black tracking-widest bg-accent/10 px-3 py-1 rounded-full">ESTIMATED</span>
                                     </h3>
-                                    <ExpenseRatioDragChart data={growthData} />
-                                    <p className="mt-8 text-[9px] text-muted-foreground font-black tracking-widest uppercase opacity-40 leading-loose">
+                                    {/* Fixed height wrapper for the chart */}
+                                    <div className="relative w-full h-[250px] sm:h-[300px]">
+                                        <ExpenseRatioDragChart data={growthData} />
+                                    </div>
+                                    <p className="mt-6 sm:mt-8 text-[8px] sm:text-[9px] text-muted-foreground font-black tracking-widest uppercase opacity-40 leading-loose text-center sm:text-left">
                                         Compounding acceleration at Year 5 detected. Maintain SIP velocity for peak alignment.
                                     </p>
                                 </div>
                             </div>
 
                             {/* Goal Calendar / Timeline */}
-                            <div className="bg-card/30 backdrop-blur-xl border border-white/5 rounded-3xl p-8 relative overflow-hidden group">
-                                <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity">
-                                    <Calendar size={120} className="text-accent" />
+                            <div className="bg-card/30 backdrop-blur-xl border border-white/5 rounded-[1.5rem] md:rounded-3xl p-5 sm:p-6 md:p-8 relative overflow-hidden group">
+                                <div className="absolute top-0 right-0 p-6 sm:p-8 opacity-5 group-hover:opacity-10 transition-opacity">
+                                    <Calendar size={100} className="sm:w-[120px] sm:h-[120px] text-accent" />
                                 </div>
-                                <h3 className="text-xs font-black tracking-[0.3em] text-muted-foreground uppercase mb-12">Target Milestones</h3>
-                                <div className="space-y-8 relative z-10">
+                                <h3 className="text-[10px] sm:text-xs font-black tracking-[0.2em] sm:tracking-[0.3em] text-muted-foreground uppercase mb-8 sm:mb-12 text-center sm:text-left">Target Milestones</h3>
+                                <div className="space-y-6 sm:space-y-8 relative z-10">
                                     {milestones.map((item, i) => (
-                                        <div key={i} className="flex items-center gap-8 group/item cursor-default">
-                                            <div className="text-2xl font-black font-barlow-condensed text-muted-foreground group-hover/item:text-accent transition-colors">'{item.year}</div>
+                                        <div key={i} className="flex items-center gap-4 sm:gap-6 md:gap-8 group/item cursor-default">
+                                            <div className="text-xl sm:text-2xl font-black font-barlow-condensed text-muted-foreground group-hover/item:text-accent transition-colors w-8 sm:w-auto shrink-0">'{item.year}</div>
                                             <div className="flex-1">
                                                 <div className="h-[1px] bg-white/5 w-full relative">
-                                                    <div className={`absolute left-0 top-1/2 -translate-y-1/2 w-3 h-3 rounded-full ${item.color} shadow-[0_0_15px_rgba(255,255,255,0.1)] group-hover/item:shadow-accent/40`} />
+                                                    <div className={`absolute left-0 top-1/2 -translate-y-1/2 w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full ${item.color} shadow-[0_0_15px_rgba(255,255,255,0.1)] group-hover/item:shadow-accent/40`} />
                                                 </div>
                                             </div>
-                                            <div className="text-right">
-                                                <p className="text-[10px] font-black tracking-widest uppercase text-foreground mb-1">{item.goal}</p>
-                                                <p className="text-[8px] font-black tracking-widest uppercase text-muted-foreground opacity-60">{item.status}</p>
+                                            <div className="text-right shrink-0 max-w-[120px] sm:max-w-none">
+                                                <p className="text-[8px] sm:text-[10px] font-black tracking-[0.15em] sm:tracking-widest uppercase text-foreground mb-1 line-clamp-2 sm:line-clamp-none">{item.goal}</p>
+                                                <p className="text-[7px] sm:text-[8px] font-black tracking-widest uppercase text-muted-foreground opacity-60">{item.status}</p>
                                             </div>
                                         </div>
                                     ))}

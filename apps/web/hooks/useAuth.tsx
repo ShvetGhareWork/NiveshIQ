@@ -25,6 +25,7 @@ interface AuthContextType {
   loading: boolean;
   login: (email: string, password: string) => Promise<void>;
   register: (name: string, email: string, phoneNumber: string, password: string) => Promise<void>;
+  loginWithGoogle: (credential?: string, accessToken?: string) => Promise<void>;
   updateUser: (name?: string, phoneNumber?: string, settings?: any) => Promise<void>;
   refreshUser: () => Promise<void>;
 
@@ -57,6 +58,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
+      });
+      const data = await res.json();
+      if (!data.success) throw new Error(data.message);
+
+      localStorage.setItem('oracle_token', data.token);
+      localStorage.setItem('oracle_user', JSON.stringify(data.user));
+      setToken(data.token);
+      setUser(data.user);
+      router.push('/dashboard');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const loginWithGoogle = async (credential?: string, accessToken?: string) => {
+    setLoading(true);
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/auth/google`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ credential, accessToken }),
       });
       const data = await res.json();
       if (!data.success) throw new Error(data.message);
@@ -139,7 +161,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, loading, login, register, updateUser, refreshUser, logout }}>
+    <AuthContext.Provider value={{ user, token, loading, login, register, loginWithGoogle, updateUser, refreshUser, logout }}>
       {children}
     </AuthContext.Provider>
   );

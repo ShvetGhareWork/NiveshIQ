@@ -3,8 +3,9 @@ import mongoose from "mongoose";
 const userSchema = new mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
-  phoneNumber: { type: String, required: true },
-  password: { type: String, required: true },
+  phoneNumber: { type: String },
+  password: { type: String },
+  googleId: { type: String },
   settings: {
     market: { type: Boolean, default: true },
     rebalance: { type: Boolean, default: true },

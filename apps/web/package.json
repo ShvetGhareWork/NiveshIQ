@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@niveshiq/types": "*",
+    "@react-oauth/google": "^0.13.4",
     "autoprefixer": "10.4.20",
     "driver.js": "^1.4.0",
     "html2canvas": "^1.4.1",
