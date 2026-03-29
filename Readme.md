@@ -13,8 +13,8 @@
 ```
 
 [![Next.js](https://img.shields.io/badge/Next.js-14_App_Router-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
-[![FastAPI](https://img.shields.io/badge/FastAPI-Python_3.11-009688?style=for-the-badge&logo=fastapi)](https://fastapi.tiangolo.com/)
-[![Claude AI](https://img.shields.io/badge/Anthropic-Claude_3.5_Sonnet-D4AF37?style=for-the-badge)](https://anthropic.com)
+[![Express](https://img.shields.io/badge/Express-TypeScript-000000?style=for-the-badge&logo=express)](https://expressjs.com/)
+[![Node.js](https://img.shields.io/badge/Node.js-20.x-339933?style=for-the-badge&logo=node.js)](https://nodejs.org/)
 [![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-47A248?style=for-the-badge&logo=mongodb)](https://mongodb.com)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-CSS_v3-06B6D4?style=for-the-badge&logo=tailwindcss)](https://tailwindcss.com)
 [![Vercel](https://img.shields.io/badge/Deployed_on-Vercel-000000?style=for-the-badge&logo=vercel)](https://vercel.com)
@@ -468,17 +468,14 @@ Toggle switches (custom animated pill UI) for:
 ### Backend
 | Technology | Version | Purpose |
 |---|---|---|
-| **FastAPI** | 0.110 | REST API framework, async endpoints |
-| **Python** | 3.11 | Core language |
-| **Pydantic** | v2 | Request/response validation |
-| **pdfplumber** | Latest | CAMS PDF parsing (password-protected) |
-| **pandas** | Latest | Transaction data manipulation |
-| **pyxirr** | Latest | Mathematically exact XIRR computation |
-| **pymongo** | Latest | MongoDB driver |
-| **python-jose** | Latest | JWT token generation/validation |
-| **passlib** | Latest | Password hashing (bcrypt) |
-| **google-auth-library** | Latest | Google OAuth 2.0 token verification |
-| **httpx** | Latest | Async HTTP client for NSE API calls |
+| **Express** | 4.x | REST API framework, middleware, routing |
+| **Node.js** | 20.x | Core runtime environment |
+| **TypeScript** | 5.x | Type-safe backend logic |
+| **Mongoose** | 8.x | MongoDB object modeling |
+| **Zod** | Latest | Runtime schema validation |
+| **JWT (jsonwebtoken)** | Latest | Stateless authentication |
+| **Multer** | Latest | Multipart form-data handling (uploads) |
+| **Axios** | Latest | External API integration (NSE/Yahoo Finance) |
 
 ### AI Layer
 | Technology | Purpose |
@@ -565,26 +562,25 @@ NiveshIQ/
 │   │       ├── oracle-sphere.png       # Login page visual
 │   │       └── login-oracle.png        # Auth background
 │   │
-│   └── api/                            # FastAPI Backend
-│       ├── main.py                     # App entry, CORS config, router mounting
-│       ├── routes/
-│       │   ├── portfolio.py            # /api/portfolio, /api/portfolio/all
-│       │   ├── extractor.py            # /api/extractor (PDF parsing)
-│       │   ├── health.py               # /api/health, /api/health/all
-│       │   ├── tax.py                  # /api/tax, /api/tax/history
-│       │   ├── fire.py                 # /api/fire
-│       │   ├── life_planner.py         # /api/life-planner
-│       │   ├── market.py               # /api/market/*
-│       │   ├── auth.py                 # /api/auth/google, /api/auth/me
-│       │   └── chat.py                 # /api/chat (AI streaming)
-│       ├── models/
-│       │   ├── user.py                 # User schema
-│       │   ├── portfolio.py            # Portfolio/Holdings schemas
-│       │   └── tax.py                  # TaxInput/TaxResult schemas
-│       └── services/
-│           ├── ai_service.py           # Anthropic Claude calls
-│           ├── pdf_parser.py           # CAMS PDF extraction
-│           └── tax_calculator.py       # Server-side tax computation
+    ├── api/                            # Express/TypeScript Backend
+    │   ├── src/
+    │   │   ├── index.ts                 # App entry, CORS, router mounting
+    │   │   ├── routes/
+    │   │   │   ├── portfolio.ts         # Portfolio endpoints
+    │   │   │   ├── health.ts            # Health scan endpoints
+    │   │   │   ├── tax.ts               # Tax calculation endpoints
+    │   │   │   ├── fire.ts              # FIRE analysis endpoints
+    │   │   │   ├── market.ts            # NSE/Market data endpoints
+    │   │   │   ├── auth.ts              # Google/Local auth routes
+    │   │   │   └── chat.ts              # AI streaming endpoints
+    │   │   ├── models/
+    │   │   │   ├── user.ts              # Mongoose user model
+    │   │   │   ├── portfolio.ts         # Portfolio storage model
+    │   │   │   └── tax.ts               # Tax history model
+    │   │   └── middleware/
+    │   │       └── auth.ts              # JWT protection middleware
+    │   ├── package.json                 # Backend dependencies
+    │   └── tsconfig.json                # TypeScript configuration
 │
 └── packages/
     └── types/                          # Shared TypeScript types (TaxInput, etc.)
