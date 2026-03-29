@@ -279,7 +279,7 @@ export default function Reports() {
                                         placeholder="SEARCH NODES..."
                                         value={searchQuery}
                                         onChange={(e) => setSearchQuery(e.target.value)}
-                                        className="w-full bg-secondary/20 border border-white/5 rounded-xl pl-10 pr-4 py-2.5 outline-none focus:border-accent/30 transition-all font-black text-[9px] tracking-widest uppercase placeholder:text-muted-foreground/30"
+                                        className="w-full bg-secondary/20 border border-white/5 rounded-xl pl-10 pr-4 py-3 outline-none focus:border-accent/30 transition-all font-black text-[10px] tracking-widest uppercase placeholder:text-muted-foreground/30"
                                     />
                                 </div>
                             </div>
@@ -288,7 +288,7 @@ export default function Reports() {
                                 <div className="text-[9px] sm:text-[10px] font-black tracking-widest text-muted-foreground uppercase shrink-0">
                                     TOTAL: <span className="text-foreground">{filteredReports.length} REPORTS</span>
                                 </div>
-                                <div className="flex items-center justify-center flex-wrap gap-1 sm:gap-2 p-1 bg-secondary/30 rounded-xl border border-white/5 w-full sm:w-auto">
+                                <div className="flex items-center justify-center flex-wrap gap-2 p-1.5 bg-secondary/30 rounded-xl border border-white/5 w-full sm:w-auto">
                                     {[
                                         { label: 'DATE', key: 'DATE' },
                                         { label: 'VALUE', key: 'VALUE' },
@@ -304,12 +304,12 @@ export default function Reports() {
                                                     setSortOrder('DESC');
                                                 }
                                             }}
-                                            className={`px-3 py-1.5 sm:py-1.5 rounded-lg text-[8px] font-black tracking-widest transition-all uppercase flex-1 sm:flex-none ${sortBy === opt.key
-                                                ? 'bg-accent/10 border border-accent/30 text-accent'
-                                                : 'text-muted-foreground hover:text-foreground'
+                                            className={`px-4 py-2.5 sm:py-2 rounded-lg text-[10px] md:text-[9px] font-black tracking-widest transition-all uppercase flex-1 sm:flex-none border border-transparent ${sortBy === opt.key
+                                                ? 'bg-accent/15 border-accent/40 text-accent shadow-[0_0_15px_rgba(212,175,55,0.1)]'
+                                                : 'text-muted-foreground hover:text-foreground hover:bg-white/5'
                                                 }`}
                                         >
-                                            {opt.label} {sortBy === opt.key ? (sortOrder === 'ASC' ? '▲' : '▼') : ''}
+                                            {opt.label} <span className="opacity-50 text-[10px]">{sortBy === opt.key ? (sortOrder === 'ASC' ? '▲' : '▼') : ''}</span>
                                         </button>
                                     ))}
                                 </div>
@@ -330,90 +330,130 @@ export default function Reports() {
                                     <Link href="/dashboard/portfolio" className="text-accent text-[9px] md:text-[10px] font-black border-b border-accent/30 pb-1">START INITIAL SCAN →</Link>
                                 </div>
                             ) : (
-                                <div className="glass-panel border border-white/5 rounded-[1.25rem] md:rounded-2xl overflow-hidden shadow-2xl">
-                                    <div className="w-full overflow-x-auto scrollbar-thin scrollbar-thumb-white/10 pb-2 sm:pb-0">
-                                        <table className="w-full text-left border-collapse min-w-[750px]">
-                                            <thead>
-                                                <tr className="border-b border-border/10 bg-white/[0.02]">
-                                                    <th className="px-4 py-3 md:px-6 md:py-4 text-[8px] md:text-[9px] font-black text-muted-foreground uppercase tracking-[0.2em] w-28 md:w-32">DATE</th>
-                                                    <th className="px-4 py-3 md:px-6 md:py-4 text-[8px] md:text-[9px] font-black text-muted-foreground uppercase tracking-[0.2em]">PORTFOLIO VALUE</th>
-                                                    <th className="px-4 py-3 md:px-6 md:py-4 text-[8px] md:text-[9px] font-black text-muted-foreground uppercase tracking-[0.2em] text-center">XIRR</th>
-                                                    <th className="px-4 py-3 md:px-6 md:py-4 text-[8px] md:text-[9px] font-black text-muted-foreground uppercase tracking-[0.2em] text-center">FUNDS</th>
-                                                    <th className="px-4 py-3 md:px-6 md:py-4 text-[8px] md:text-[9px] font-black text-muted-foreground uppercase tracking-[0.2em] text-center">OVERLAP</th>
-                                                    <th className="px-4 py-3 md:px-6 md:py-4 text-[8px] md:text-[9px] font-black text-muted-foreground uppercase tracking-[0.2em] text-right">ACTIONS</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody className="divide-y divide-border/10">
-                                                {loading ? (
-                                                    [1, 2, 3].map(i => (
-                                                        <tr key={i} className="animate-pulse">
-                                                            <td colSpan={6} className="px-4 py-6 md:px-8 md:py-8 h-16 md:h-20 bg-white/[0.01]" />
-                                                        </tr>
-                                                    ))
-                                                ) : (
-                                                    filteredReports.map((report, i) => (
-                                                        <tr key={report.id} className="group hover:bg-accent/[0.02] transition-colors border-l-2 border-l-transparent hover:border-l-accent">
-                                                            <td className="px-4 py-3 md:px-6 md:py-4 whitespace-nowrap">
-                                                                <span className="text-[10px] md:text-xs font-bold tracking-tight text-foreground uppercase">
-                                                                    {new Date(report.date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }).toUpperCase()}
-                                                                </span>
-                                                            </td>
-                                                            <td className="px-4 py-3 md:px-6 md:py-4 whitespace-nowrap">
-                                                                <div className="text-sm md:text-base font-black font-barlow-condensed tracking-tight text-foreground">
-                                                                    ₹ {(report.totalValue || 0).toLocaleString('en-IN')}
-                                                                </div>
-                                                            </td>
-                                                            <td className="px-4 py-3 md:px-6 md:py-4 whitespace-nowrap text-center">
-                                                                <div className={`mx-auto text-xs md:text-sm font-black font-barlow-condensed ${report.xirr >= 12 ? 'text-emerald-500' : 'text-accent'}`}>
-                                                                    {report.xirr.toFixed(1)}%
-                                                                </div>
-                                                            </td>
-                                                            <td className="px-4 py-3 md:px-6 md:py-4 whitespace-nowrap text-center">
-                                                                <span className="text-[9px] md:text-[10px] font-black text-muted-foreground tracking-widest uppercase">
-                                                                    {report.holdingsCount} FUNDS
-                                                                </span>
-                                                            </td>
-                                                            <td className="px-4 py-3 md:px-6 md:py-4 whitespace-nowrap">
-                                                                <div className={`mx-auto px-2 md:px-3 py-1 rounded-lg border text-[8px] md:text-[9px] font-black tracking-widest uppercase w-fit ${report.overlapCount > 2
-                                                                    ? 'bg-red-500/5 border-red-500/20 text-red-500/70'
-                                                                    : 'bg-emerald-500/5 border-emerald-500/20 text-emerald-500/70'
-                                                                    }`}>
-                                                                    {Math.round((report.overlapCount / (report.holdingsCount || 1)) * 100)}% {report.overlapCount > 2 ? 'HIGH' : 'LOW'}
-                                                                </div>
-                                                            </td>
-                                                            <td className="px-4 py-3 md:px-6 md:py-4 text-right whitespace-nowrap">
-                                                                <div className="flex items-center justify-end gap-1.5 md:gap-2 opacity-100 lg:opacity-0 group-hover:opacity-100 transition-opacity">
-                                                                    <button
-                                                                        onClick={() => handlePDF(report.id, 'PORTFOLIO')}
-                                                                        className="p-2.5 rounded-lg text-muted-foreground hover:text-accent hover:bg-accent/10 transition-all active:scale-90 bg-white/5 lg:bg-transparent"
-                                                                        title="Generate Intelligence PDF"
-                                                                    >
-                                                                        <Printer size={14} className="md:w-4 md:h-4" />
-                                                                    </button>
-                                                                    <button
-                                                                        onClick={() => handleDownload(report.id, report.date)}
-                                                                        className="p-2.5 rounded-lg text-muted-foreground hover:text-accent hover:bg-accent/10 transition-all active:scale-90 bg-white/5 lg:bg-transparent"
-                                                                        title="Download Report"
-                                                                    >
-                                                                        <Download size={14} className="md:w-4 md:h-4" />
-                                                                    </button>
-                                                                    <button className="p-2.5 rounded-lg text-muted-foreground hover:text-accent hover:bg-accent/10 transition-all active:scale-90 bg-white/5 lg:bg-transparent" title="Re-simulate">
-                                                                        <RefreshCw size={14} className="md:w-4 md:h-4" />
-                                                                    </button>
-                                                                    <button
-                                                                        onClick={() => openDeleteModal(report.id, 'PORTFOLIO')}
-                                                                        className="p-2.5 rounded-lg text-muted-foreground hover:text-red-400 hover:bg-red-400/10 transition-all active:scale-90 bg-white/5 lg:bg-transparent"
-                                                                        title="Delete Node"
-                                                                    >
-                                                                        <Trash2 size={14} className="md:w-4 md:h-4" />
-                                                                    </button>
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                    ))
-                                                )}
-                                            </tbody>
-                                        </table>
+                                <div className="space-y-4">
+                                    {/* Mobile Card View */}
+                                    <div className="grid grid-cols-1 gap-4 md:hidden">
+                                        {loading ? (
+                                            [1, 2, 3].map(i => (
+                                                <div key={i} className="glass-panel border border-white/5 rounded-2xl p-6 h-40 animate-pulse bg-white/5" />
+                                            ))
+                                        ) : (
+                                            filteredReports.map((report) => (
+                                                <div key={report.id} className="glass-panel border border-white/5 rounded-2xl p-5 group hover:border-accent/30 transition-all flex flex-col gap-4">
+                                                    <div className="flex justify-between items-start">
+                                                        <div>
+                                                            <p className="text-[10px] font-black tracking-widest text-muted-foreground uppercase opacity-60 mb-1">{new Date(report.date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }).toUpperCase()}</p>
+                                                            <div className="text-xl font-black font-barlow-condensed tracking-normal text-foreground">₹ {(report.totalValue || 0).toLocaleString('en-IN')}</div>
+                                                        </div>
+                                                        <div className={`text-lg font-black font-barlow-condensed ${report.xirr >= 12 ? 'text-emerald-500' : 'text-accent'}`}>{report.xirr.toFixed(1)}% <span className="text-[8px] tracking-normal opacity-50">XIRR</span></div>
+                                                    </div>
+                                                    
+                                                    <div className="flex items-center gap-4 py-3 border-y border-white/5">
+                                                        <div className="flex-1">
+                                                            <p className="text-[9px] font-black text-muted-foreground tracking-widest uppercase mb-0.5">FUNDS</p>
+                                                            <p className="text-xs font-bold">{report.holdingsCount}</p>
+                                                        </div>
+                                                        <div className="flex-1">
+                                                            <p className="text-[9px] font-black text-muted-foreground tracking-widest uppercase mb-0.5">OVERLAP</p>
+                                                            <div className={`text-[10px] font-black tracking-widest uppercase ${report.overlapCount > 2 ? 'text-red-500/70' : 'text-emerald-500/70'}`}>
+                                                                {Math.round((report.overlapCount / (report.holdingsCount || 1)) * 100)}% {report.overlapCount > 2 ? 'HIGH' : 'LOW'}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="flex items-center gap-2">
+                                                        <button onClick={() => handlePDF(report.id, 'PORTFOLIO')} className="flex-1 h-11 bg-white/5 rounded-xl border border-white/10 flex items-center justify-center gap-2 text-[10px] font-black tracking-widest uppercase hover:bg-accent/10 hover:text-accent transition-all"><Printer size={14} /> PDF</button>
+                                                        <button onClick={() => handleDownload(report.id, report.date)} className="flex-1 h-11 bg-white/5 rounded-xl border border-white/10 flex items-center justify-center gap-2 text-[10px] font-black tracking-widest uppercase hover:bg-accent/10 hover:text-accent transition-all"><Download size={14} /> BIN</button>
+                                                        <button onClick={() => openDeleteModal(report.id, 'PORTFOLIO')} className="px-4 h-11 bg-red-500/5 rounded-xl border border-red-500/10 flex items-center justify-center text-red-400/50 hover:bg-red-500/10 hover:text-red-400 transition-all"><Trash2 size={14} /></button>
+                                                    </div>
+                                                </div>
+                                            ))
+                                        )}
+                                    </div>
+
+                                    {/* Desktop Table View */}
+                                    <div className="hidden md:block glass-panel border border-white/5 rounded-2xl overflow-hidden shadow-2xl">
+                                        <div className="w-full overflow-x-auto scrollbar-thin scrollbar-thumb-white/10">
+                                            <table className="w-full text-left border-collapse min-w-[750px]">
+                                                <thead>
+                                                    <tr className="border-b border-border/10 bg-white/[0.02]">
+                                                        <th className="px-6 py-4 text-[9px] font-black text-muted-foreground uppercase tracking-[0.2em] w-32">DATE</th>
+                                                        <th className="px-6 py-4 text-[9px] font-black text-muted-foreground uppercase tracking-[0.2em]">PORTFOLIO VALUE</th>
+                                                        <th className="px-6 py-4 text-[9px] font-black text-muted-foreground uppercase tracking-[0.2em] text-center">XIRR</th>
+                                                        <th className="px-6 py-4 text-[9px] font-black text-muted-foreground uppercase tracking-[0.2em] text-center">FUNDS</th>
+                                                        <th className="px-6 py-4 text-[9px] font-black text-muted-foreground uppercase tracking-[0.2em] text-center">OVERLAP</th>
+                                                        <th className="px-6 py-4 text-[9px] font-black text-muted-foreground uppercase tracking-[0.2em] text-right">ACTIONS</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody className="divide-y divide-border/10">
+                                                    {loading ? (
+                                                        [1, 2, 3].map(i => (
+                                                            <tr key={i} className="animate-pulse">
+                                                                <td colSpan={6} className="px-8 py-8 h-20 bg-white/[0.01]" />
+                                                            </tr>
+                                                        ))
+                                                    ) : (
+                                                        filteredReports.map((report) => (
+                                                            <tr key={report.id} className="group hover:bg-accent/[0.02] transition-colors border-l-2 border-l-transparent hover:border-l-accent">
+                                                                <td className="px-6 py-4 whitespace-nowrap">
+                                                                    <span className="text-xs font-bold tracking-tight text-foreground uppercase">
+                                                                        {new Date(report.date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }).toUpperCase()}
+                                                                    </span>
+                                                                </td>
+                                                                <td className="px-6 py-4 whitespace-nowrap">
+                                                                    <div className="text-base font-black font-barlow-condensed tracking-tight text-foreground">
+                                                                        ₹ {(report.totalValue || 0).toLocaleString('en-IN')}
+                                                                    </div>
+                                                                </td>
+                                                                <td className="px-6 py-4 whitespace-nowrap text-center">
+                                                                    <div className={`mx-auto text-sm font-black font-barlow-condensed ${report.xirr >= 12 ? 'text-emerald-500' : 'text-accent'}`}>
+                                                                        {report.xirr.toFixed(1)}%
+                                                                    </div>
+                                                                </td>
+                                                                <td className="px-6 py-4 whitespace-nowrap text-center">
+                                                                    <span className="text-[10px] font-black text-muted-foreground tracking-widest uppercase">
+                                                                        {report.holdingsCount} FUNDS
+                                                                    </span>
+                                                                </td>
+                                                                <td className="px-6 py-4 whitespace-nowrap">
+                                                                    <div className={`mx-auto px-3 py-1 rounded-lg border text-[9px] font-black tracking-widest uppercase w-fit ${report.overlapCount > 2
+                                                                        ? 'bg-red-500/5 border-red-500/20 text-red-500/70'
+                                                                        : 'bg-emerald-500/5 border-emerald-500/20 text-emerald-500/70'
+                                                                        }`}>
+                                                                        {Math.round((report.overlapCount / (report.holdingsCount || 1)) * 100)}% {report.overlapCount > 2 ? 'HIGH' : 'LOW'}
+                                                                    </div>
+                                                                </td>
+                                                                <td className="px-6 py-4 text-right whitespace-nowrap">
+                                                                    <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                                        <button
+                                                                            onClick={() => handlePDF(report.id, 'PORTFOLIO')}
+                                                                            className="p-2.5 rounded-lg text-muted-foreground hover:text-accent hover:bg-accent/10 transition-all active:scale-90"
+                                                                            title="Generate Intelligence PDF"
+                                                                        >
+                                                                            <Printer size={16} />
+                                                                        </button>
+                                                                        <button
+                                                                            onClick={() => handleDownload(report.id, report.date)}
+                                                                            className="p-2.5 rounded-lg text-muted-foreground hover:text-accent hover:bg-accent/10 transition-all active:scale-90"
+                                                                            title="Download Report"
+                                                                        >
+                                                                            <Download size={16} />
+                                                                        </button>
+                                                                        <button
+                                                                            onClick={() => openDeleteModal(report.id, 'PORTFOLIO')}
+                                                                            className="p-2.5 rounded-lg text-muted-foreground hover:text-red-400 hover:bg-red-400/10 transition-all active:scale-90"
+                                                                            title="Delete Node"
+                                                                        >
+                                                                            <Trash2 size={16} />
+                                                                        </button>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        ))
+                                                    )}
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
                             )}

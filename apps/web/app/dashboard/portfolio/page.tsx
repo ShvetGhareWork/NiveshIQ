@@ -405,8 +405,8 @@ export default function PortfolioXRay() {
                                                 </div>
 
                                                 <div className="mt-8 pt-8 border-t border-border/20">
-                                                    <p className="text-[9px] md:text-[10px] font-black tracking-widest text-muted-foreground uppercase mb-4">ASSET ALLOCATION</p>
-                                                    <div className="h-48 w-full">
+                                                    <p className="text-[9px] md:text-[10px] font-black tracking-widest text-muted-foreground uppercase mb-6">ASSET ALLOCATION</p>
+                                                    <div className="h-56 w-full relative flex items-center justify-center">
                                                         <ResponsiveContainer width="100%" height="100%">
                                                             <PieChart>
                                                                 <Pie
@@ -415,14 +415,15 @@ export default function PortfolioXRay() {
                                                                         { name: 'Debt', value: result.insights.allocation.debt },
                                                                         { name: 'Other', value: result.insights.allocation.other }
                                                                     ].filter(d => d.value > 0)}
-                                                                    innerRadius={60}
-                                                                    outerRadius={80}
-                                                                    paddingAngle={5}
+                                                                    innerRadius={65}
+                                                                    outerRadius={85}
+                                                                    paddingAngle={8}
                                                                     dataKey="value"
+                                                                    stroke="none"
                                                                 >
-                                                                    <Cell fill="var(--accent)" />
-                                                                    <Cell fill="rgba(212, 175, 55, 0.4)" />
-                                                                    <Cell fill="rgba(255, 255, 255, 0.1)" />
+                                                                    <Cell fill="#D4AF37" />
+                                                                    <Cell fill="#4A5568" />
+                                                                    <Cell fill="#1A202C" />
                                                                 </Pie>
                                                                 <Tooltip
                                                                     contentStyle={{ backgroundColor: '#0A0A0A', border: '1px solid rgba(212,175,55,0.2)', borderRadius: '12px' }}
@@ -430,15 +431,20 @@ export default function PortfolioXRay() {
                                                                 />
                                                             </PieChart>
                                                         </ResponsiveContainer>
+                                                        {/* Center Label */}
+                                                        <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                                                            <span className="text-2xl font-black font-barlow-condensed text-foreground">{result.insights.allocation.equity}%</span>
+                                                            <span className="text-[8px] font-black tracking-widest text-accent uppercase">EQUITY</span>
+                                                        </div>
                                                     </div>
-                                                    <div className="flex justify-around mt-4">
+                                                    <div className="flex justify-around mt-8 pt-4 border-t border-white/5">
                                                         <div className="text-center">
-                                                            <p className="text-[10px] font-black text-accent">{result.insights.allocation.equity}%</p>
-                                                            <p className="text-[8px] text-muted-foreground uppercase tracking-widest">EQUITY</p>
+                                                            <p className="text-sm font-black text-accent">{result.insights.allocation.equity}%</p>
+                                                            <p className="text-[9px] text-muted-foreground uppercase tracking-[0.2em] font-black">EQUITY</p>
                                                         </div>
                                                         <div className="text-center">
-                                                            <p className="text-[10px] font-black text-accent/60">{result.insights.allocation.debt}%</p>
-                                                            <p className="text-[8px] text-muted-foreground uppercase tracking-widest">DEBT</p>
+                                                            <p className="text-sm font-black text-white/40">{result.insights.allocation.debt}%</p>
+                                                            <p className="text-[9px] text-muted-foreground uppercase tracking-[0.2em] font-black">DEBT</p>
                                                         </div>
                                                     </div>
                                                 </div>
