@@ -2,6 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
+import { useLenis } from 'lenis/react';
 
 // ─── Ticker data ────────────────────────────────────────────────────────────
 const TICKER_ITEMS = [
@@ -17,10 +19,10 @@ const TICKER_ITEMS = [
 
 // ─── Nav links ───────────────────────────────────────────────────────────────
 const NAV_LINKS = [
-  { label: "INTELLIGENCE", href: "/xray" },
-  { label: "LIFE EVENTS", href: "/life-event" },
-  { label: "STRATEGY", href: "/tax" },
-  { label: "PRICING", href: "#" }
+  { label: "INTELLIGENCE", href: "#intelligence" },
+  { label: "PROCESS", href: "#how-it-works" },
+  { label: "STRATEGY", href: "#strategy" },
+  { label: "PRICING", href: "#pricing" }
 ];
 
 // ─── How it works steps ──────────────────────────────────────────────────────
@@ -155,14 +157,32 @@ function Ticker() {
 
 // ─── Mobile menu ─────────────────────────────────────────────────────────────
 function MobileMenu({ open, onClose }: { open: boolean; onClose: () => void }) {
+  const lenis = useLenis();
+
   if (!open) return null;
+
+  const handleMobileClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    e.preventDefault();
+    onClose();
+    const id = href.substring(1);
+    const element = document.getElementById(id);
+    if (element && lenis) {
+      lenis.scrollTo(element, { offset: -80, duration: 1.5 });
+    }
+  };
+
   return (
     <div className="fixed inset-0 z-50 bg-[#0A0F1E]/95 backdrop-blur-md flex flex-col items-center justify-center gap-8">
       <button onClick={onClose} className="absolute top-5 right-5 text-white/50 hover:text-white text-3xl">×</button>
       {NAV_LINKS.map((l) => (
-        <Link key={l.label} href={l.href} className="text-white/70 hover:text-[#D4AF37] tracking-widest text-sm font-mono transition-colors">
+        <a 
+          key={l.label} 
+          href={l.href} 
+          onClick={(e) => handleMobileClick(e, l.href)}
+          className="text-white/70 hover:text-[#D4AF37] tracking-widest text-sm font-mono transition-colors"
+        >
           {l.label}
-        </Link>
+        </a>
       ))}
       <Link href="/auth/login" className="mt-4 px-8 py-3 bg-[#D4AF37] text-[#0A0F1E] text-sm font-bold tracking-widest rounded-sm inline-block">
         GET STARTED
@@ -176,12 +196,74 @@ export default function NiveshIQLanding() {
   const [menuOpen, setMenuOpen] = useState(false);
   const heroRef = useRef<HTMLDivElement>(null);
   const [scrolled, setScrolled] = useState(false);
+  const [activeSection, setActiveSection] = useState("intelligence");
+  const isManualScrolling = useRef(false);
+  const lenis = useLenis();
 
+  // ── Scroll Handling & Spy ──────────────────────────────────────────────────
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
+    const onScroll = () => {
+      setScrolled(window.scrollY > 40);
+
+      // Do not update spy if we are currently manually scrolling to a section
+      if (isManualScrolling.current) return;
+
+      // Check if we are at the bottom of the page
+      const isBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 50;
+      if (isBottom) {
+        setActiveSection(NAV_LINKS[NAV_LINKS.length - 1].href.substring(1));
+        return;
+      }
+
+      // Scroll Spy Logic
+      const sections = NAV_LINKS.map(link => link.href.substring(1));
+      let currentSection = activeSection;
+
+      for (const section of sections) {
+        const element = document.getElementById(section);
+        if (element) {
+          const rect = element.getBoundingClientRect();
+          // Detect the section that is currently crossing the top 30% of the screen
+          const threshold = window.innerHeight * 0.3;
+          if (rect.top <= threshold && rect.bottom >= threshold) {
+            currentSection = section;
+            break;
+          }
+        }
+      }
+      
+      if (currentSection !== activeSection) {
+        setActiveSection(currentSection);
+      }
+    };
+
     window.addEventListener("scroll", onScroll);
+    onScroll(); 
     return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  }, [activeSection]);
+
+  const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    e.preventDefault();
+    const id = href.substring(1);
+    
+    // Set active immediately and lock the spy
+    setActiveSection(id); 
+    isManualScrolling.current = true;
+    
+    const element = document.getElementById(id);
+    if (element && lenis) {
+      lenis.scrollTo(element, { 
+        offset: -80, 
+        duration: 2,
+        onComplete: () => {
+          // Release the lock once the scroll is complete
+          setTimeout(() => {
+            isManualScrolling.current = false;
+          }, 100);
+        }
+      });
+    }
+  };
 
   return (
     <main
@@ -198,21 +280,35 @@ export default function NiveshIQLanding() {
       >
         <div className="max-w-7xl mx-auto px-6 lg:px-10 h-14 flex items-center justify-between">
           {/* Logo */}
-          <a href="#" className="text-[#D4AF37] font-bold text-lg tracking-tight">
-            NiveshIQ
-          </a>
+          <Link href="/" className="flex items-center gap-2 group">
+            <div className="relative w-9 h-9 rounded-lg bg-white/[0.03] backdrop-blur-md flex items-center justify-center p-1.5 overflow-hidden border border-white/10 group-hover:border-[#D4AF37]/30 transition-all shadow-xl">
+              <Image
+                src="/logo.png"
+                alt="NiveshIQ Logo"
+                width={200}
+                height={200}
+                className="w-full h-full object-contain"
+              />
+            </div>
+            <span className="text-[#D4AF37] font-black text-lg tracking-[0.05em] uppercase font-barlowCondensed group-hover:text-white transition-colors">
+              NiveshIQ
+            </span>
+          </Link>
 
           {/* Desktop nav */}
           <div className="hidden md:flex items-center gap-8">
-            {NAV_LINKS.map((l, i) => (
-              <Link
+            {NAV_LINKS.map((l) => (
+              <a
                 key={l.label}
                 href={l.href}
-                className={`nav-link text-xs tracking-widest font-mono transition-colors ${i === 0 ? "active text-[#D4AF37]" : "text-white/50 hover:text-white"
-                  }`}
+                onClick={(e) => scrollToSection(e, l.href)}
+                className={`nav-link text-[12px] tracking-[0.2em] font-mono transition-colors font-bold ${activeSection === l.href.substring(1)
+                  ? "active text-[#D4AF37]"
+                  : "text-white/50 hover:text-white"
+                }`}
               >
                 {l.label}
-              </Link>
+              </a>
             ))}
           </div>
 
@@ -312,8 +408,8 @@ export default function NiveshIQLanding() {
         </div>
       </section>
 
-      {/* ── STAT CARDS ─────────────────────────────────────────────────────── */}
-      <section className="py-16 px-6 lg:px-10" style={{ background: "#080c14" }}>
+      {/* ── STAT CARDS (INTELLIGENCE) ─────────────────────────────────────────────────────── */}
+      <section id="intelligence" className="py-16 px-6 lg:px-10 scroll-mt-20" style={{ background: "#080c14" }}>
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             {[
@@ -369,7 +465,7 @@ export default function NiveshIQLanding() {
       {/* ── HOW IT WORKS ───────────────────────────────────────────────────── */}
       <section
         id="how-it-works"
-        className="py-24 px-6 lg:px-10"
+        className="py-24 px-6 lg:px-10 scroll-mt-20"
         style={{ background: "linear-gradient(180deg, #080c14 0%, #0A0F1E 100%)" }}
       >
         <div className="max-w-7xl mx-auto">
@@ -407,8 +503,8 @@ export default function NiveshIQLanding() {
                   {/* Phase label + dot */}
                   <div
                     className={`absolute top-4 flex items-center gap-3 ${step.align === "right"
-                        ? "right-[calc(50%+20px)] flex-row-reverse"
-                        : "left-[calc(50%+20px)]"
+                      ? "right-[calc(50%+20px)] flex-row-reverse"
+                      : "left-[calc(50%+20px)]"
                       }`}
                   >
                     <span className="text-[#D4AF37]/60 text-xs tracking-widest font-mono">{step.phase}</span>
@@ -497,8 +593,122 @@ export default function NiveshIQLanding() {
         </div>
       </section>
 
+      {/* ── STRATEGY SECTION ─────────────────────────────────────────────────────── */}
+      <section id="strategy" className="py-24 px-6 lg:px-10 scroll-mt-20 border-t border-white/5" style={{ background: "#0A0F1E" }}>
+        <div className="max-w-7xl mx-auto">
+          <div className="flex flex-col md:flex-row items-end justify-between gap-6 mb-16">
+            <div className="max-w-2xl">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="h-px w-8 bg-[#D4AF37]" />
+                <span className="text-[#D4AF37] text-xs tracking-[0.25em] font-mono uppercase">Optimization Engine</span>
+              </div>
+              <h2 className="font-black uppercase text-[clamp(2.5rem,5vw,4.5rem)] leading-none -tracking-[0.02em] mb-6">
+                Precision <span className="gold-text">Strategy</span>
+              </h2>
+              <p className="text-white/40 font-light leading-relaxed">
+                NiveshIQ doesn't just analyze; it orchestrates. Our Strategy Engine computes tax-efficient rebalancing maneuvers designed to maximize your geometric wealth growth while minimizing drag.
+              </p>
+            </div>
+            <div className="hidden lg:block pb-2">
+              <div className="flex items-center gap-2 px-4 py-2 bg-white/[0.03] border border-white/10 rounded-full">
+                <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                <span className="text-[10px] font-mono tracking-widest text-white/40 uppercase">AI Strategy Active</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[
+              { 
+                title: "Tax Harvesting", 
+                desc: "Automatically identify capital gains offset opportunities to neutralize your tax liability.",
+                icon: <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+              },
+              { 
+                title: "Asset Rebalancing", 
+                desc: "Drift alerts that signal when your portfolio weightings stray from your target risk profile.",
+                icon: <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 6l3 12h12l3-12H3z" /></svg>
+              },
+              { 
+                title: "Geometric Growth", 
+                desc: "Focus on re-investing dividends and re-balancing into undervalued sectors for compounding.",
+                icon: <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>
+              }
+            ].map((item, i) => (
+              <div key={i} className="glass-panel p-8 rounded-sm group hover:border-[#D4AF37]/30 transition-all duration-500">
+                <div className="w-12 h-12 rounded bg-[#D4AF37]/10 flex items-center justify-center text-[#D4AF37] mb-6 group-hover:scale-110 transition-transform">
+                  {item.icon}
+                </div>
+                <h3 className="text-white font-bold text-xl mb-3 tracking-tight">{item.title}</h3>
+                <p className="text-white/30 text-sm leading-relaxed font-light">{item.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── PRICING SECTION ──────────────────────────────────────────────────────── */}
+      <section id="pricing" className="py-24 px-6 lg:px-10 scroll-mt-20" style={{ background: "#080c14" }}>
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <span className="text-[#D4AF37] text-xs tracking-[0.4em] font-mono uppercase mb-4 block">Institutional Access</span>
+            <h2 className="font-black uppercase text-[clamp(2.5rem,5vw,4.5rem)] leading-none mb-6">Transparent <span className="gold-text">Pricing</span></h2>
+            <p className="text-white/30 max-w-xl mx-auto font-light">Precision intelligence should be accessible. Choose the tier that matches your investment magnitude.</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            {/* Free Tier */}
+            <div className="glass-panel p-10 rounded-sm relative overflow-hidden border-white/5">
+              <div className="mb-8">
+                <h3 className="text-white/50 font-mono tracking-widest text-xs mb-2 uppercase font-bold">Standard Operator</h3>
+                <div className="flex items-baseline gap-1">
+                  <span className="text-4xl font-black text-white">₹0</span>
+                  <span className="text-white/20 text-xs font-mono tracking-widest uppercase">/ LIFETIME</span>
+                </div>
+              </div>
+              <ul className="space-y-4 mb-10">
+                {["Portfolio X-Ray (1 Profile)", "XIRR Calculation", "Basic Sector Overlap", "PDF Statement Processing"].map((feat, i) => (
+                  <li key={i} className="flex items-center gap-3 text-white/40 text-sm font-light">
+                    <svg className="w-4 h-4 text-emerald-500/50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+                    {feat}
+                  </li>
+                ))}
+              </ul>
+              <Link href="/auth/login" className="block w-full py-4 text-center border border-white/10 text-white font-bold text-xs tracking-[0.2em] font-mono hover:bg-white/[0.03] transition-all rounded-sm">
+                INITIALIZE NODE
+              </Link>
+            </div>
+
+            {/* Pro Tier */}
+            <div className="p-10 rounded-sm relative overflow-hidden border border-[#D4AF37]/30 bg-[#D4AF37]/5 shadow-[0_0_50px_rgba(212,175,55,0.05)]">
+              <div className="absolute top-0 right-0 px-4 py-1 bg-[#D4AF37] text-[#0A0F1E] text-[9px] font-black tracking-widest uppercase rounded-bl-sm">
+                Recommended
+              </div>
+              <div className="mb-8">
+                <h3 className="text-[#D4AF37] font-mono tracking-widest text-xs mb-2 uppercase font-bold">Vault Access</h3>
+                <div className="flex items-baseline gap-1">
+                  <span className="text-4xl font-black text-white">₹999</span>
+                  <span className="text-white/20 text-xs font-mono tracking-widest uppercase">/ YEAR</span>
+                </div>
+              </div>
+              <ul className="space-y-4 mb-10">
+                {["Unlimited Portfolio Profiles", "AI Tax Harvesting Engine", "Deep Institutional Overlap", "Priority Node Processing", "Export Raw Financial Analytics"].map((feat, i) => (
+                  <li key={i} className="flex items-center gap-3 text-white/70 text-sm font-light">
+                    <svg className="w-4 h-4 text-[#D4AF37]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+                    {feat}
+                  </li>
+                ))}
+              </ul>
+              <Link href="/auth/login" className="block w-full py-4 text-center bg-[#D4AF37] text-[#0A0F1E] font-black text-xs tracking-[0.2em] font-mono hover:scale-[1.02] transition-all rounded-sm">
+                AUTHORIZE VAULT
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ── CTA SECTION ────────────────────────────────────────────────────── */}
-      <section className="px-6 lg:px-10 pb-0">
+      <section className="px-6 lg:px-10 pb-0 shadow-[0_10px_60px_-15px_rgba(0,0,0,0.5)]">
         <div className="max-w-7xl mx-auto">
           <div className="cta-section rounded-t-sm px-10 py-14 md:py-16 flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
             <div>
@@ -526,9 +736,20 @@ export default function NiveshIQLanding() {
         <div className="max-w-7xl mx-auto px-6 lg:px-10 py-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
           {/* Logo + tagline */}
           <div>
-            <p className="text-[#D4AF37] font-bold text-base tracking-tight mb-1">
-              NiveshIQ
-            </p>
+            <div className="flex items-center gap-3 mb-3">
+              <div className="relative w-7 h-7 rounded-lg bg-white/[0.03] backdrop-blur-md flex items-center justify-center p-1 border border-white/10 shadow-lg">
+                <Image
+                  src="/logo.png"
+                  alt="NiveshIQ Logo"
+                  width={100}
+                  height={100}
+                  className="w-full h-full object-contain"
+                />
+              </div>
+              <p className="text-[#D4AF37] font-black text-base tracking-[0.05em] uppercase font-barlowCondensed">
+                NiveshIQ
+              </p>
+            </div>
             <p className="text-white/20 text-xs font-mono">
               © 2024 NiveshIQ. Cinematic Intelligence for the Modern Investor.
             </p>
