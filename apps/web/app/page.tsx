@@ -285,9 +285,11 @@ export default function NiveshIQLanding() {
               <Image
                 src="/logo.png"
                 alt="NiveshIQ Logo"
-                width={200}
-                height={200}
+                width={40}
+                height={40}
                 className="w-full h-full object-contain"
+                priority
+                unoptimized
               />
             </div>
             <span className="text-[#D4AF37] font-black text-lg tracking-[0.05em] uppercase font-barlowCondensed group-hover:text-white transition-colors">
@@ -741,9 +743,10 @@ export default function NiveshIQLanding() {
                 <Image
                   src="/logo.png"
                   alt="NiveshIQ Logo"
-                  width={100}
-                  height={100}
+                  width={30}
+                  height={30}
                   className="w-full h-full object-contain"
+                  unoptimized
                 />
               </div>
               <p className="text-[#D4AF37] font-black text-base tracking-[0.05em] uppercase font-barlowCondensed">
