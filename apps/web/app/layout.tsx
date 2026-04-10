@@ -2,6 +2,7 @@ import './globals.css';
 import { Barlow_Condensed, Barlow } from "next/font/google";
 import { AuthProvider } from '../hooks/useAuth';
 import { NotificationProvider } from '../contexts/NotificationContext';
+import { WishlistProvider } from '../contexts/WishlistContext';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import SmoothScroll from '../components/SmoothScroll';
 
@@ -29,7 +30,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || "GOOGLE_CLIENT_ID_NOT_SET"}>
             <AuthProvider>
               <NotificationProvider>
-                {children}
+                <WishlistProvider>
+                  {children}
+                </WishlistProvider>
               </NotificationProvider>
             </AuthProvider>
           </GoogleOAuthProvider>

@@ -20,11 +20,14 @@ import {
     LogOut,
     Shield,
     Inbox,
-    CircleDot
+    CircleDot,
+    Heart,
+    Trash2
 } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { useNotifications } from '@/contexts/NotificationContext';
+import { useWishlist } from '@/contexts/WishlistContext';
 
 interface TopNavProps {
     userName?: string;
@@ -35,12 +38,15 @@ export function TopNav({ userName: propsUserName, customLinks }: TopNavProps) {
     const { user, logout } = useAuth();
     const router = useRouter();
     const { notifications, markAsRead, markAllAsRead } = useNotifications();
+    const { wishlist, removeFromWishlist } = useWishlist();
     const userName = propsUserName || user?.name || 'Operator';
     const pathname = usePathname();
     const [currentHash, setCurrentHash] = useState('');
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [showNotiDropdown, setShowNotiDropdown] = useState(false);
+    const [showWishlistDropdown, setShowWishlistDropdown] = useState(false);
     const notiRef = useRef<HTMLDivElement>(null);
+    const wishlistRef = useRef<HTMLDivElement>(null);
     const unreadCount = notifications.filter(n => !n.read).length;
 
     useEffect(() => {
@@ -73,6 +79,9 @@ export function TopNav({ userName: propsUserName, customLinks }: TopNavProps) {
         const handleClickOutside = (event: MouseEvent) => {
             if (notiRef.current && !notiRef.current.contains(event.target as Node)) {
                 setShowNotiDropdown(false);
+            }
+            if (wishlistRef.current && !wishlistRef.current.contains(event.target as Node)) {
+                setShowWishlistDropdown(false);
             }
         };
         document.addEventListener('mousedown', handleClickOutside);
@@ -197,6 +206,70 @@ export function TopNav({ userName: propsUserName, customLinks }: TopNavProps) {
                                         <Link href="/dashboard/notifications" className="block p-3 text-center border-t border-white/5 hover:bg-accent/5 transition-all rounded-b-2xl">
                                             <span className="text-[9px] font-black text-accent uppercase tracking-[0.3em]">DECRYPT ALL INTEL</span>
                                         </Link>
+                                    </div>
+                                )}
+                            </div>
+
+                            <div className="relative" ref={wishlistRef}>
+                                <button
+                                    onClick={() => setShowWishlistDropdown(!showWishlistDropdown)}
+                                    className="p-2 rounded-xl text-white/40 hover:text-accent hover:bg-white/5 transition-all relative outline-none"
+                                    title="Watchlist"
+                                >
+                                    <Heart size={18} />
+                                    {wishlist.length > 0 && (
+                                        <span className="absolute top-1 right-1.5 w-4 h-4 bg-rose-500 text-white text-[9px] font-black rounded-full flex items-center justify-center border-2 border-[#0A0F1E]">
+                                            {wishlist.length}
+                                        </span>
+                                    )}
+                                </button>
+
+                                {showWishlistDropdown && (
+                                    <div className="fixed sm:absolute top-[70px] sm:top-full left-4 right-4 sm:left-auto sm:-right-2 sm:mt-4 w-auto sm:w-80 bg-[#0D111D]/95 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl z-[100] animate-in fade-in slide-in-from-top-2 duration-300">
+                                        <div className="p-4 border-b border-white/5">
+                                            <h4 className="text-[10px] font-black text-white/40 uppercase tracking-tight">Active Watchlist</h4>
+                                        </div>
+                                        <div className="max-h-[60vh] sm:max-h-96 overflow-y-auto no-scrollbar">
+                                            {wishlist.length > 0 ? (
+                                                wishlist.map(stock => (
+                                                    <div key={stock.symbol} className="p-4 border-b border-white/5 hover:bg-white/[0.04] transition-all flex items-center justify-between group">
+                                                        <div 
+                                                            className="flex-1 cursor-pointer"
+                                                            onClick={() => {
+                                                                router.push(`/dashboard/market/stock/${stock.symbol}`);
+                                                                setShowWishlistDropdown(false);
+                                                            }}
+                                                        >
+                                                            <div className="flex items-center gap-2">
+                                                                <p className="text-[11px] font-black text-white uppercase tracking-normal leading-none">{stock.symbol}</p>
+                                                                <span className={`text-[9px] font-bold ${(stock.change_percent || 0) >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
+                                                                    {(stock.change_percent || 0) >= 0 ? '+' : ''}{(stock.change_percent || 0).toFixed(2)}%
+                                                                </span>
+                                                            </div>
+                                                            <p className="text-[10px] font-bold text-white/50 leading-relaxed truncate uppercase mt-1">{stock.name}</p>
+                                                        </div>
+                                                        <button 
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                removeFromWishlist(stock.symbol);
+                                                                addNotification({
+                                                                    title: 'INTEL REDACTED',
+                                                                    message: `${stock.symbol} REMOVED FROM ACTIVE WATCHLIST.`,
+                                                                    type: 'info'
+                                                                });
+                                                            }}
+                                                            className="p-2 text-white/20 hover:text-rose-500 transition-colors"
+                                                        >
+                                                            <Trash2 size={14} />
+                                                        </button>
+                                                    </div>
+                                                ))
+                                            ) : (
+                                                <div className="p-8 text-center">
+                                                    <p className="text-[10px] font-black text-white/20 uppercase tracking-widest">No Stocks Tracked</p>
+                                                </div>
+                                            )}
+                                        </div>
                                     </div>
                                 )}
                             </div>

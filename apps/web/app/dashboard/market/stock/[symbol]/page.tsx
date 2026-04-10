@@ -24,6 +24,8 @@ import { StockChart } from '@/components/market/StockChart';
 import { AIStockAnalysis } from '@/components/market/AIStockAnalysis';
 import { DashboardSidebar } from '@/components/navigation/DashboardSidebar';
 import { TopNav } from '@/components/navigation/TopNav';
+import { useWishlist } from '@/contexts/WishlistContext';
+import { useNotifications } from '@/contexts/NotificationContext';
 
 interface StockDetail {
     symbol: string;
@@ -56,6 +58,8 @@ export default function StockDetailPage() {
     const { symbol } = useParams();
     const router = useRouter();
     const { token, user } = useAuth();
+    const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
+    const { addNotification } = useNotifications();
     const [stock, setStock] = useState<StockDetail | null>(null);
     const [history, setHistory] = useState([]);
     const [period, setPeriod] = useState('1y');
@@ -120,6 +124,30 @@ export default function StockDetailPage() {
         fetchHistory(p);
     };
 
+    const toggleWishlist = () => {
+        if (!stock) return;
+        if (isInWishlist(stock.symbol)) {
+            removeFromWishlist(stock.symbol);
+            addNotification({
+                title: 'INTEL REDACTED',
+                message: `${stock.symbol} REMOVED FROM ACTIVE WATCHLIST.`,
+                type: 'info'
+            });
+        } else {
+            addToWishlist({
+                symbol: stock.symbol,
+                name: stock.name,
+                price: stock.price,
+                change_percent: stock.change_percent
+            });
+            addNotification({
+                title: 'INTEL CAPTURED',
+                message: `${stock.symbol} ADDED TO ACTIVE WATCHLIST HUB.`,
+                type: 'success'
+            });
+        }
+    };
+
     if (loading || !stock) {
         return (
             <div className="flex h-screen bg-background text-foreground overflow-hidden">
@@ -182,9 +210,16 @@ export default function StockDetailPage() {
                                     </div>
                                 </div>
 
-                                <button className="w-full sm:w-auto flex items-center justify-center gap-2 sm:gap-3 px-5 sm:px-6 py-3 sm:py-3 bg-accent border border-accent rounded-xl sm:rounded-2xl font-black text-[10px] tracking-widest text-background hover:shadow-[0_0_30px_rgba(212,175,55,0.4)] transition-all">
-                                    <Heart size={16} fill="currentColor" />
-                                    ADD TO WATCHLIST
+                                <button 
+                                    onClick={toggleWishlist}
+                                    className={`w-full sm:w-auto flex items-center justify-center gap-2 sm:gap-3 px-5 sm:px-6 py-3 sm:py-3 border rounded-xl sm:rounded-2xl font-black text-[10px] tracking-widest transition-all ${
+                                        isInWishlist(stock.symbol) 
+                                        ? 'bg-rose-500/10 border-rose-500/50 text-rose-400 hover:bg-rose-500/20' 
+                                        : 'bg-accent border-accent text-background hover:shadow-[0_0_30px_rgba(212,175,55,0.4)]'
+                                    }`}
+                                >
+                                    <Heart size={16} fill={isInWishlist(stock.symbol) ? "currentColor" : "currentColor"} />
+                                    {isInWishlist(stock.symbol) ? 'REMOVE FROM WATCHLIST' : 'ADD TO WATCHLIST'}
                                 </button>
                             </div>
                         </div>
