@@ -37,7 +37,7 @@ interface TopNavProps {
 export function TopNav({ userName: propsUserName, customLinks }: TopNavProps) {
     const { user, logout } = useAuth();
     const router = useRouter();
-    const { notifications, markAsRead, markAllAsRead } = useNotifications();
+    const { notifications, markAsRead, markAllAsRead, addNotification } = useNotifications();
     const { wishlist, removeFromWishlist } = useWishlist();
     const userName = propsUserName || user?.name || 'Operator';
     const pathname = usePathname();
